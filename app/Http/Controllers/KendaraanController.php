@@ -163,8 +163,12 @@ class KendaraanController extends Controller
      */
     public function detail(string $slug)
     {
-        $kendaraan = Kendaraan::where('slug', $slug)->firstOrFail();
-        return view('kendaraan.kendaraan-detail', compact('kendaraan'));
+        $kendaraan = Kendaraan::where('slug', $slug)->with('user')->firstOrFail();
+        $pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraan->id)
+            ->orderBy('created_at', 'desc') // Urutkan dari terbaru ke terlama
+            ->limit(3) // Ambil hanya 3 data
+            ->get();
+        return view('kendaraan.kendaraan-detail', compact('kendaraan', 'pemeliharaan'));
     }
 
     /**

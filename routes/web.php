@@ -31,7 +31,7 @@ Route::resource('/rekening', RekeningController::class)->only([
 ]);
 // route kendaraan
 Route::get('/kendaraan/{slug}/edit', [KendaraanController::class, 'edit']);
-Route::get('/kendaraan/{slug}/detail', [KendaraanController::class, 'detail']);
+Route::get('/kendaraan/detail-kendaraan/{slug}', [KendaraanController::class, 'detail']);
 Route::put('/kendaraan/{slug}', [KendaraanController::class, 'update'])->name('kendaraan.update');
 Route::delete('/kendaraan/{slug}', [KendaraanController::class, 'destroy']);
 Route::get('/kendaraan/tambah-kendaraan', [KendaraanController::class, 'create'])->name('kendaraan.kendaraan-create');

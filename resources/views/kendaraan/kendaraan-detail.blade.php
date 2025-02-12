@@ -112,7 +112,86 @@
                     <div class="card">
                         <div class="card-header">Pemeliharaan</div>
                         <div class="card-body">
-                            <!-- Konten Pemeliharaan -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="card mt-3 bg-primary">
+                                        <div class="card-body text-white">
+                                            <h4 class="card-title text-white">Pemeliharaan</h4>
+                                            <h4 class="text-center "><b>2x</b></h4>
+                                        </div>
+                                        <div class="card-footer bg-primary text-center">
+                                            <a href="#" class="text-white">Detail <i
+                                                    class="bi bi-arrow-down-right-square"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="card mt-3 bg-warning">
+                                        <div class="card-body text-white">
+                                            <h4 class="card-title text-white">Total Biaya</h4>
+                                            <h4 class="text-center "><b>Rp.120.000</b></h4>
+
+                                        </div>
+                                        <div class="card-footer bg-warning text-center">
+                                            <a href="#" class="text-white">Detail <i
+                                                    class="bi bi-arrow-down-right-square"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header">3 Pemeliharaan Terakhir</div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Nama Bengkel</th>
+                                    <th>Tanggal</th>
+                                    <th>Deskripsi</th>
+                                    <th>Biaya</th>
+                                </tr>
+                                @foreach ($pemeliharaan as $p)
+                                    <tr>
+                                        <td>{{ $p->bengkel }}</td>
+                                        <td>{{ FormatHelper::formatTanggal($p->tanggal) }}</td>
+                                        <td>{{ $p->deskripsi }}</td>
+                                        <td>{{ FormatHelper::formatRupiah($p->biaya) }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header">3 Pembelian BBM Terakhir</div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Biaya</th>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header">Pengguna</div>
+                        <div class="card-body">
+                            <div class="card">
+                                <div class="card-header bg-success text-white d-flex align-items-center">
+                                    <img src="/assets/img/profil.png" width="80" alt="Profile" class="rounded-circle me-3">
+                                    <div>
+                                        <h5 class="mb-0">{{ $kendaraan->user->name }}</h5>
+                                        <small>NIP {{ $kendaraan->user->nip }}</small>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <p class="mb-0">Pemakai</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
