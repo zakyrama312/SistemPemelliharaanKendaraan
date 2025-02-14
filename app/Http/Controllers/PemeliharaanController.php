@@ -15,38 +15,38 @@ class PemeliharaanController extends Controller
      */
     public function index()
     {
-        $pemeliharaan = Pemeliharaan::with('kendaraan', 'rekening')->get();
-        // $tanggal_sekarang = Carbon::now();
-        // $tanggal_reminder = $tanggal_sekarang->addWeek();
+        // $pemeliharaan = Pemeliharaan::with('kendaraan', 'rekening')->get();
+        $kendaraanData = Kendaraan::with([
+            'pemeliharaan' => function ($query) {
+                $query->orderByDesc('tanggal_pemeliharaan_sebelumnya')->limit(1); // Ambil pemeliharaan terbaru
+            }
+        ])
+            ->withCount('pemeliharaan') // Hitung frekuensi pemeliharaan
+            ->withSum('pemeliharaan', 'biaya') // Hitung total biaya
+            ->get();
+        // Tambahkan status berdasarkan tanggal pemeliharaan berikutnya
+        $kendaraanData->transform(function ($kendaraan) {
+            $tanggalBerikutnya = optional($kendaraan->pemeliharaan->first())->tanggal_pemeliharaan_berikutnya;
 
-        // $pemeliharaan = Pemeliharaan::select(
-        //     'id_kendaraan',
-        //     'tanggal_pemeliharaan',
-        //     'frekuensi_bulan',
-        //     'bengkel',
-        //     'deskripsi',
-        //     'biaya',
-        //     DB::raw('(tanggal_pemeliharaan + INTERVAL frekuensi_bulan MONTH) as jadwal_pemeliharaan')
-        // )
-        //     ->whereRaw('(tanggal_pemeliharaan + INTERVAL frekuensi_bulan MONTH) BETWEEN NOW() AND ?', [$tanggal_reminder])
-        //     ->orderBy('id_kendaraan', 'desc')
-        //     ->get();
-        // $pemeliharaan = Pemeliharaan::select(
-        //     'id_kendaraan',
-        //     'tanggal_pemeliharaan',
-        //     'frekuensi_bulan',
-        //     'bengkel',
-        //     'deskripsi',
-        //     'biaya',
-        //     DB::raw('(tanggal_pemeliharaan + INTERVAL frekuensi_bulan MONTH) as jadwal_pemeliharaan'),
-        //     DB::raw('(SELECT SUM(biaya) FROM pemeliharaan WHERE pemeliharaan.id_kendaraan = p.id_kendaraan) as total_biaya')
-        // )
-        //     ->from('pemeliharaan as p')
-        //     ->whereRaw('(tanggal_pemeliharaan + INTERVAL frekuensi_bulan MONTH) BETWEEN NOW() AND ?', [$tanggal_reminder])
-        //     ->orderBy('id_kendaraan', 'desc')
-        //     ->get();
+            if ($tanggalBerikutnya) {
+                $hariIni = now()->format('Y-m-d');
+                $batasPeringatan = now()->addDays(5)->format('Y-m-d');
 
-        return view('pemeliharaan.index', compact('pemeliharaan'));
+                if ($tanggalBerikutnya < $hariIni) {
+                    $kendaraan->status_pemeliharaan = "🚨 Terlambat";
+                } elseif ($tanggalBerikutnya <= $batasPeringatan) {
+                    $kendaraan->status_pemeliharaan = "⚠️ Segera Servis";
+                } else {
+                    $kendaraan->status_pemeliharaan = "✅ Aman";
+                }
+            } else {
+                $kendaraan->status_pemeliharaan = "❓ Tidak Ada Jadwal";
+            }
+
+            return $kendaraan;
+        });
+
+        return view('pemeliharaan.index', compact('kendaraanData'));
     }
 
     /**
@@ -72,12 +72,13 @@ class PemeliharaanController extends Controller
             'deskripsi.required' => 'Deskripsi wajib diisi!',
         ]);
 
+
         Pemeliharaan::create([
             'id_kendaraan' => $request->id_kendaraan,
-            'tanggal_pemeliharaan' => now(),
-            'bengkel' => $request->nama_bengkel,
-            'deskripsi' => $request->deskripsi,
-            'biaya' => $request->biaya,
+            'tanggal_pemeliharaan_sebelumnya' => now(),
+            'bengkel' => $request->bengkel ?? '-',
+            'deskripsi' => $request->deskripsi ?? '-',
+            'biaya' => $request->biaya ?? 0, // Jika biaya tidak diisi, default 0
             'id_rekening' => $request->id_rekening
         ]);
 

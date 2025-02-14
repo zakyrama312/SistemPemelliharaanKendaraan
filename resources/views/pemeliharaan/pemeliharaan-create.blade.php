@@ -159,8 +159,8 @@
                                         @foreach ($view_pemeliharaan as $pm)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ FormatHelper::formatTanggal($pm->tanggal_pemeliharaan) }}</td>
-                                                <td>{{ FormatHelper::formatTanggal($pm->jadwal_pemeliharaan) }}</td>
+                                                <td>{{ FormatHelper::formatTanggal($pm->tanggal_pemeliharaan_sebelumnya) }}</td>
+                                                <td>{{ FormatHelper::formatTanggal($pm->tanggal_pemeliharaan_berikutnya) }}</td>
                                                 <!-- <td>{{ $pm->kendaraan->no_polisi }}</td> -->
 
                                                 <td>{{ $pm->bengkel }}</td>

@@ -20,4 +20,25 @@ class Pemeliharaan extends Model
     {
         return $this->belongsTo(Rekening::class, 'id_rekening');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($pemeliharaan) {
+            if (!$pemeliharaan->tanggal_pemeliharaan_berikutnya) {
+                $kendaraan = Kendaraan::find($pemeliharaan->id_kendaraan);
+                $intervalBulan = $kendaraan->interval_bulan ?? 3; // Default 3 bulan
+                $pemeliharaan->tanggal_pemeliharaan_berikutnya = date('Y-m-d', strtotime($pemeliharaan->tanggal_pemeliharaan_sebelumnya . " +{$intervalBulan} months"));
+            }
+        });
+
+        static::updating(function ($pemeliharaan) {
+            if ($pemeliharaan->isDirty('tanggal_pemeliharaan_sebelumnya')) {
+                $kendaraan = Kendaraan::find($pemeliharaan->id_kendaraan);
+                $intervalBulan = $kendaraan->interval_bulan ?? 3;
+                $pemeliharaan->tanggal_pemeliharaan_berikutnya = date('Y-m-d', strtotime($pemeliharaan->tanggal_pemeliharaan_sebelumnya . " +{$intervalBulan} months"));
+            }
+        });
+    }
 }

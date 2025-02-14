@@ -117,13 +117,29 @@ class KendaraanController extends Controller
             'masa_aktif_pajak_tahunan' => $request->masa_aktif_pajak_tahunan,
             'masa_aktif_plat' => $request->masa_aktif_plat,
             'warna' => $request->warna,
-            'frekuensi_bulan' => 3,
+            'interval_bulan' => 3,
             'no_rangka' => $request->no_rangka,
             'no_mesin' => $request->no_mesin,
             'bahan_bakar' => $request->bahan_bakar,
             'jumlah_roda' => $request->jumlah_roda,
             'bidang' => $request->bidang,
             'status' => 'aktif'
+        ]);
+
+        // Ambil interval bulan dari kendaraan (default 3 bulan jika null)
+        $intervalBulan = $kendaraan->interval_bulan ?? 3;
+
+        // Hitung tanggal pemeliharaan berikutnya
+        $tanggalPemeliharaanBerikutnya = date('Y-m-d', strtotime($request->tanggal_pemeliharaan . " +{$intervalBulan} months"));
+
+        Pemeliharaan::create([
+            'id_kendaraan' => $kendaraan->id,
+            'id_rekening' => $request->id_rek,
+            'tanggal_pemeliharaan_sebelumnya' => $request->tanggal_pemeliharaan,
+            'tanggal_pemeliharaan_berikutnya' => $tanggalPemeliharaanBerikutnya,
+            'bengkel' => '-',
+            'deskripsi' => '-',
+            'biaya' => $request->biaya_pemeliharaan
         ]);
 
         Pajak::create([
@@ -142,14 +158,7 @@ class KendaraanController extends Controller
             'nominal' => 0
         ]);
 
-        Pemeliharaan::create([
-            'id_kendaraan' => $kendaraan->id,
-            'id_rekening' => $request->id_rek,
-            'tanggal_pemeliharaan' => $request->tanggal_pemeliharaan,
-            'bengkel' => '-',
-            'deskripsi' => '-',
-            'biaya' => $request->biaya_pemeliharaan
-        ]);
+
 
         Rekening::where('id', $request->id_rek)->update([
             'saldo_akhir' => DB::raw('saldo_akhir - ' . $request->biaya_pemeliharaan)
