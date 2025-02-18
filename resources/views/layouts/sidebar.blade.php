@@ -8,6 +8,7 @@
         <span>Dashboard</span>
       </a>
     </li><!-- End Dashboard Nav -->
+    <li class="nav-heading">Master Data</li>
     <li class="nav-item">
       <a class="nav-link {{ Request::is('pegawai') ? 'active' : 'collapsed' }}" href="/pegawai">
         <i class="bi bi-people"></i>
@@ -26,30 +27,35 @@
         <span>Data Kendaraan</span>
       </a>
     </li>
+
+    <li class="nav-heading">Pengeluaran</li>
     <li class="nav-item">
       <a class="nav-link {{ Request::is('pemeliharaan') ? 'active' : 'collapsed' }}" href="/pemeliharaan">
         <i class="bi bi-gear-wide-connected"></i>
         <span>Pemeliharaan</span>
       </a>
     </li>
-
-    <!-- <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-journal-text"></i><span>Master Data</span><i class="bi bi-chevron-down ms-auto"></i>
+    <li class="nav-item">
+      <a class="nav-link {{ Request::is('pengeluaran-bbm') ? 'active' : 'collapsed' }}" href="/pengeluaran-bbm">
+        <i class="bi bi-fuel-pump"></i>
+        <span>Bahan Bakar</span>
       </a>
-      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li>
-          <a class="nav-link {{ Request::is('pegawai') ? 'active' : 'collapsed' }}" href="/pegawai">
-            <i class=" bi bi-people"></i><span>Data Pegawai</span>
-          </a>
-        </li>
-        <li>
-          <a class="{{ Request::is('rekening') ? 'active' : 'collapsed' }}" href="/rekening">
-            <i class=" bi bi-wallet"></i><span>Data Rekening</span>
-          </a>
-        </li>
-      </ul>
-    </li> -->
+    </li>
+
+    <li class="nav-heading">Pajak</li>
+    <li class="nav-item">
+      <a class="nav-link {{ Request::is('pajak-tahunan') ? 'active' : 'collapsed' }}" href="/pajak-tahunan">
+        <i class="bi bi-cash"></i>
+        <span>Pajak Tahunan</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {{ Request::is('pajak-plat') ? 'active' : 'collapsed' }}" href="/pajak-plat">
+        <i class="bi bi-cash"></i>
+        <span>Pajak Plat</span>
+      </a>
+    </li>
+
 
 
 

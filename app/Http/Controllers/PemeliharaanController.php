@@ -15,7 +15,6 @@ class PemeliharaanController extends Controller
      */
     public function index()
     {
-        // $pemeliharaan = Pemeliharaan::with('kendaraan', 'rekening')->get();
         $kendaraanData = Kendaraan::with([
             'pemeliharaan' => function ($query) {
                 $query->orderByDesc('tanggal_pemeliharaan_sebelumnya')->limit(1); // Ambil pemeliharaan terbaru
@@ -28,6 +27,32 @@ class PemeliharaanController extends Controller
         $kendaraanData->transform(function ($kendaraan) {
             $tanggalBerikutnya = optional($kendaraan->pemeliharaan->first())->tanggal_pemeliharaan_berikutnya;
 
+            // if ($tanggalBerikutnya) {
+            //     $hariIni = now();
+            //     $selisihHari = $hariIni->diffInDays($tanggalBerikutnya, false);
+
+            //     // Format "H+X" atau "H-X"
+            //     $kendaraan->status_hari = $selisihHari >= 0 ? "H+$selisihHari" : "H$selisihHari";
+
+            //     // Tentukan status berdasarkan selisih hari
+            //     if ($selisihHari < 0) {
+            //         $kendaraan->status_pemeliharaan = "Sudah lewat jatuh tempo pemeliharaan";
+            //         $kendaraan->icon = "bi-exclamation-octagon";
+            //         $kendaraan->alert = "alert-danger";
+            //     } elseif ($selisihHari <= 5) {
+            //         $kendaraan->status_pemeliharaan = "Persiapan memasuki masa pemeliharaan";
+            //         $kendaraan->icon = "bi-exclamation-triangle";
+            //         $kendaraan->alert = "alert-warning";
+            //     } else {
+            //         $kendaraan->status_pemeliharaan = "Masih dalam masa aman";
+            //         $kendaraan->icon = "bi-check-circle";
+            //         $kendaraan->alert = "alert-success";
+            //     }
+            // } else {
+            //     $kendaraan->status_hari = "H-?";
+            //     $kendaraan->status_pemeliharaan = "Jadwal pemeliharaan belum tersedia";
+            //     $kendaraan->warna_status = "bg-gray-500 text-white";
+            // }
             if ($tanggalBerikutnya) {
                 $hariIni = now()->format('Y-m-d');
                 $batasPeringatan = now()->addDays(5)->format('Y-m-d');
@@ -72,19 +97,23 @@ class PemeliharaanController extends Controller
             'deskripsi.required' => 'Deskripsi wajib diisi!',
         ]);
 
+        Kendaraan::where('id', $request->id_kendaraan)->update([
+            'interval_bulan' => $request->interval
+        ]);
 
         Pemeliharaan::create([
             'id_kendaraan' => $request->id_kendaraan,
             'tanggal_pemeliharaan_sebelumnya' => now(),
-            'bengkel' => $request->bengkel ?? '-',
+            'bengkel' => $request->nama_bengkel ?? '-',
             'deskripsi' => $request->deskripsi ?? '-',
-            'biaya' => $request->biaya ?? 0, // Jika biaya tidak diisi, default 0
+            'biaya' => $request->biaya ?? 0,
             'id_rekening' => $request->id_rekening
         ]);
 
         Rekening::where('id', $request->id_rekening)->decrement('saldo_akhir', $request->biaya);
 
-        return redirect('pemeliharaan')->with('success', 'Data Pemeliharan berhasil ditambahkan!');
+        return redirect('pemeliharaan/' . $request->slug . '/show')
+            ->with('success', 'Data Pemeliharaan berhasil ditambahkan!');
     }
 
     /**
@@ -93,7 +122,10 @@ class PemeliharaanController extends Controller
     public function show(string $slug)
     {
         $kendaraan = Kendaraan::where('slug', $slug)->first();
-        $view_pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraan->id)->with('kendaraan', 'rekening')->get();
+        $view_pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraan->id)
+            ->with('kendaraan', 'rekening')
+            ->orderBy('created_at', 'desc') // Urut dari yang terbaru
+            ->get();
         $pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraan->id)->with('kendaraan', 'rekening')->first();
         return view('pemeliharaan.pemeliharaan-create', compact('pemeliharaan', 'view_pemeliharaan'));
     }

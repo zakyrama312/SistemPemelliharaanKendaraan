@@ -22,8 +22,14 @@ class Kendaraan extends Model
         return $this->hasMany(Pemeliharaan::class, 'id_kendaraan');
     }
 
+    public function pengeluaran_bbm()
+    {
+        return $this->hasMany(Bahanbakar::class, 'id_kendaraan');
+    }
+
     public function pajak()
     {
         return $this->hasMany(Pajak::class, 'id_kendaraan');
     }
+
 }

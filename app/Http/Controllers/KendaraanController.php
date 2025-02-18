@@ -126,21 +126,7 @@ class KendaraanController extends Controller
             'status' => 'aktif'
         ]);
 
-        // Ambil interval bulan dari kendaraan (default 3 bulan jika null)
-        $intervalBulan = $kendaraan->interval_bulan ?? 3;
 
-        // Hitung tanggal pemeliharaan berikutnya
-        $tanggalPemeliharaanBerikutnya = date('Y-m-d', strtotime($request->tanggal_pemeliharaan . " +{$intervalBulan} months"));
-
-        Pemeliharaan::create([
-            'id_kendaraan' => $kendaraan->id,
-            'id_rekening' => $request->id_rek,
-            'tanggal_pemeliharaan_sebelumnya' => $request->tanggal_pemeliharaan,
-            'tanggal_pemeliharaan_berikutnya' => $tanggalPemeliharaanBerikutnya,
-            'bengkel' => '-',
-            'deskripsi' => '-',
-            'biaya' => $request->biaya_pemeliharaan
-        ]);
 
         Pajak::create([
             'id_kendaraan' => $kendaraan->id,
@@ -158,7 +144,21 @@ class KendaraanController extends Controller
             'nominal' => 0
         ]);
 
+        // Ambil interval bulan dari kendaraan (default 3 bulan jika null)
+        $intervalBulan = $kendaraan->interval_bulan ?? 3;
 
+        // Hitung tanggal pemeliharaan berikutnya
+        $tanggalPemeliharaanBerikutnya = date('Y-m-d', strtotime($request->tanggal_pemeliharaan . " +{$intervalBulan} months"));
+
+        Pemeliharaan::create([
+            'id_kendaraan' => $kendaraan->id,
+            'id_rekening' => $request->id_rek,
+            'tanggal_pemeliharaan_sebelumnya' => $request->tanggal_pemeliharaan,
+            'tanggal_pemeliharaan_berikutnya' => $tanggalPemeliharaanBerikutnya,
+            'bengkel' => '-',
+            'deskripsi' => '-',
+            'biaya' => $request->biaya_pemeliharaan
+        ]);
 
         Rekening::where('id', $request->id_rek)->update([
             'saldo_akhir' => DB::raw('saldo_akhir - ' . $request->biaya_pemeliharaan)
@@ -172,12 +172,45 @@ class KendaraanController extends Controller
      */
     public function detail(string $slug)
     {
-        $kendaraan = Kendaraan::where('slug', $slug)->with('user')->firstOrFail();
-        $pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraan->id)
+        $kendaraanData = Kendaraan::with([
+            'pemeliharaan' => function ($query) {
+                $query->orderByDesc('tanggal_pemeliharaan_sebelumnya')->limit(1); // Ambil pemeliharaan terbaru
+            }
+        ], 'user')
+            ->where('slug', $slug)
+            ->withCount('pemeliharaan') // Hitung frekuensi pemeliharaan
+            ->withSum('pemeliharaan', 'biaya') // Hitung total biaya
+            ->firstOrFail();
+
+        $tanggalBerikutnya = optional($kendaraanData->pemeliharaan->first())->tanggal_pemeliharaan_berikutnya;
+
+        if ($tanggalBerikutnya) {
+            $hariIni = now()->format('Y-m-d');
+            $batasPeringatan = now()->addDays(5)->format('Y-m-d');
+
+            if ($tanggalBerikutnya < $hariIni) {
+                $kendaraanData->status_pemeliharaan = "Sudah lewat jatuh tempo pemeliharaan";
+                $kendaraanData->icon = "bi-exclamation-octagon";
+                $kendaraanData->alert = "alert-danger";
+            } elseif ($tanggalBerikutnya <= $batasPeringatan) {
+                $kendaraanData->status_pemeliharaan = "Persiapan memasuki masa pemeliharaan";
+                $kendaraanData->icon = "bi-exclamation-triangle";
+                $kendaraanData->alert = "alert-warning";
+            } else {
+                $kendaraanData->status_pemeliharaan = "Masih dalam masa aman";
+                $kendaraanData->icon = "bi-check-circle";
+                $kendaraanData->alert = "alert-success";
+            }
+        } else {
+            $kendaraanData->status_pemeliharaan = "❓ Tidak Ada Jadwal";
+        }
+
+        $pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraanData->id)
             ->orderBy('created_at', 'desc') // Urutkan dari terbaru ke terlama
             ->limit(3) // Ambil hanya 3 data
             ->get();
-        return view('kendaraan.kendaraan-detail', compact('kendaraan', 'pemeliharaan'));
+
+        return view('kendaraan.kendaraan-detail', compact('kendaraanData', 'pemeliharaan'));
     }
 
     /**

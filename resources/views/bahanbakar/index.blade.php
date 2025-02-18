@@ -6,7 +6,7 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Pemeliharaan Kendaraan</h1>
+            <h1>Pengeluaran Bahan Bakar Kendaraan</h1>
 
         </div><!-- End Page Title -->
 
@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                        class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                                                        class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -32,39 +32,30 @@
                                 <table class="table datatable ">
                                     <thead>
                                         <tr>
-                                            <th class="border border-gray-400 px-4 py-2 text-center">No</th>
-                                            <th class="border border-gray-400 px-4 py-2">Status</th>
+                                            <th class="border border-gray-400 px-4 py-2">No</th>
                                             <th class="border border-gray-400 px-4 py-2">Nomor Polisi</th>
                                             <th class="border border-gray-400 px-4 py-2">Frekuensi</th>
-                                            <th class="border border-gray-400 px-4 py-2">Jadwal Berikutnya</th>
+                                            <th class="border border-gray-400 px-4 py-2">Jenis BBM</th>
                                             <th class="border border-gray-400 px-4 py-2">Total Biaya</th>
-                                            <th class="border border-gray-400 px-4 py-2">Aksi</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($kendaraanData as $kendaraan)
+
                                             <tr>
                                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                                <td>{{ $kendaraan->status_pemeliharaan }}</td>
-                                                <!-- <td>
-                                                                    <div class="alert {{ $kendaraan->alert }} alert-dismissible fade show"
-                                                                        role="alert">
-                                                                        <i class="bi {{ $kendaraan->icon }} me-1"></i>
-                                                                        {{ $kendaraan->status_hari }} {{ $kendaraan->status_pemeliharaan }}
-                                                                    </div>
-                                                                </td> -->
                                                 <td>{{ $kendaraan->no_polisi }} - {{ $kendaraan->merk }} -
                                                     {{ $kendaraan->model }}
                                                 </td>
-                                                <td>{{ $kendaraan->pemeliharaan_count }}</td>
-                                                <td>{{ FormatHelper::formatTanggal(optional($kendaraan->pemeliharaan->first())->tanggal_pemeliharaan_berikutnya ?? '-') }}
-                                                </td>
-                                                <td>{{ FormatHelper::formatRupiah($kendaraan->pemeliharaan_sum_biaya) }}</td>
+                                                <td>{{ $kendaraan->pengeluaran_bbm_count }}</td>
+                                                <td>{{ $kendaraan->bahan_bakar }}</td>
+                                                <td>{{ FormatHelper::formatRupiah($kendaraan->pengeluaran_bbm_sum_biaya) }}</td>
 
 
-                                                <td>
+                                                <td class="text-center">
 
-                                                    <a href="{{ url('pemeliharaan/' . $kendaraan->slug . '/show') }}"><span
+                                                    <a href="{{ url('pengeluaran-bbm/' . $kendaraan->slug . '/show') }}"><span
                                                             class="btn btn-danger "><i
                                                                 class="bi bi-exclamation-triangle me-1"></i> Servis</span></a>
                                                     <a href="{{ url('kendaraan/detail-kendaraan/' . $kendaraan->slug) }}"><span

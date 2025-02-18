@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BahanbakarController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\PemeliharaanController;
@@ -37,6 +38,7 @@ Route::delete('/kendaraan/{slug}', [KendaraanController::class, 'destroy']);
 Route::get('/kendaraan/tambah-kendaraan', [KendaraanController::class, 'create'])->name('kendaraan.kendaraan-create');
 Route::post('/kendaraan/store', [KendaraanController::class, 'store'])->name('kendaraan.store');
 Route::get('/kendaraan', [KendaraanController::class, 'index'])->name('kendaraan.index');
+
 // route pemeliharaan
 Route::get('/pemeliharaan/{slug}/edit', [PemeliharaanController::class, 'edit']);
 Route::get('/pemeliharaan/{slug}/show', [PemeliharaanController::class, 'show']);
@@ -45,3 +47,11 @@ Route::delete('/pemeliharaan/{slug}', [PemeliharaanController::class, 'destroy']
 Route::get('/pemeliharaan/tambah-pemeliharaan', [PemeliharaanController::class, 'create'])->name('pemeliharaan.pemeliharaan-create');
 Route::post('/pemeliharaan/store', [PemeliharaanController::class, 'store'])->name('pemeliharaan.store');
 Route::get('/pemeliharaan', [PemeliharaanController::class, 'index'])->name('pemeliharaan.index');
+// route pengeluaran bbm
+Route::get('/pengeluaran-bbm/{slug}/edit', [BahanbakarController::class, 'edit']);
+Route::get('/pengeluaran-bbm/{slug}/show', [BahanbakarController::class, 'show']);
+Route::put('/pengeluaran-bbm/{slug}', [BahanbakarController::class, 'update'])->name('bahanbakar.update');
+Route::delete('/pengeluaran-bbm/{slug}', [BahanbakarController::class, 'destroy']);
+Route::get('/pengeluaran-bbm/tambah-pengeluaran-bbm', [BahanbakarController::class, 'create'])->name('bahanbakar.bahanbakar-create');
+Route::post('/pengeluaran-bbm/store', [BahanbakarController::class, 'store'])->name('bahanbakar.store');
+Route::get('/pengeluaran-bbm', [BahanbakarController::class, 'index'])->name('bahanbakar.index');
