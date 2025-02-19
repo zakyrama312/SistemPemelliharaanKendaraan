@@ -16,6 +16,10 @@ class Kendaraan extends Model
     {
         return $this->belongsTo(User::class, 'id_users');
     }
+    public function rekening()
+    {
+        return $this->belongsTo(Rekening::class, 'id_rekening');
+    }
 
     public function pemeliharaan()
     {

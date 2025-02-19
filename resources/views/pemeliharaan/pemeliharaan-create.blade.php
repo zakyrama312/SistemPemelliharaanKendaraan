@@ -65,11 +65,10 @@
                                     <label for="inputEmail" class="col-sm-2 col-form-label">Frekuensi per berapa bulan <sup
                                             class="text-danger">*</sup></label>
                                     <div class="col-sm-3">
-                                        <input type="text" class="form-control @error('interval') is-invalid @enderror"
-                                            name="interval"
-                                            value="{{ old('interval', $pemeliharaan->kendaraan->interval_bulan) }}">
+                                        <input type="text" class="form-control @error('frekuensi') is-invalid @enderror"
+                                            name="frekuensi" value="{{ old('frekuensi') }}">
 
-                                        @error('interval')
+                                        @error('frekuensi')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -130,7 +129,7 @@
                                 <div class="row mb-3">
                                     <div class="col-sm-6">
                                         <small><i>Tanda bintang (<sup class="text-danger"> * </sup>) di samping label
-                                                kontrol formulir
+                                                kolom formulir
                                                 menunjukkan bahwa kolom tersebut wajib diisi</i></small>
                                     </div>
                                     <div class="col-sm-6">
@@ -144,6 +143,13 @@
 
 
                             <h5 class="card-title">Detail Pemeliharaan</h5>
+                            @if (session()->has('success'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    {{ session('success') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
                             <div class="table-responsive">
                                 <table class="table datatable ">
                                     <thead>
@@ -168,10 +174,13 @@
                                                 <td>{{ $pm->bengkel }}</td>
                                                 <td>{{ $pm->deskripsi }}</td>
                                                 <td>{{ FormatHelper::formatRupiah($pm->biaya) }}</td>
-                                                <td>
+                                                <td class="text-center">
                                                     <a href="#" data-bs-toggle="modal"
                                                         data-bs-target="#largeModal{{ $pm->id }}"><i
                                                             class="bi bi-pencil-square text-warning"></i></a>
+                                                    <a href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#basicModal{{ $pm->id }}"><i
+                                                            class="bi bi-trash text-danger"></i></a>
 
                                                 </td>
                                             </tr>

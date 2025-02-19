@@ -16,4 +16,5 @@ class Rekening extends Model
     {
         return $this->hasMany(Rekening::class, 'id_rekening');
     }
+
 }

@@ -97,15 +97,14 @@ class PemeliharaanController extends Controller
             'deskripsi.required' => 'Deskripsi wajib diisi!',
         ]);
 
-        Kendaraan::where('id', $request->id_kendaraan)->update([
-            'interval_bulan' => $request->interval
-        ]);
+
 
         Pemeliharaan::create([
             'id_kendaraan' => $request->id_kendaraan,
             'tanggal_pemeliharaan_sebelumnya' => now(),
             'bengkel' => $request->nama_bengkel ?? '-',
             'deskripsi' => $request->deskripsi ?? '-',
+            'interval_bulan' => $request->frekuensi,
             'biaya' => $request->biaya ?? 0,
             'id_rekening' => $request->id_rekening
         ]);
@@ -141,16 +140,97 @@ class PemeliharaanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pemeliharaan $pemeliharaan)
+    public function update(Request $request, $id)
     {
-        //
+
+        $request->validate([
+            'nama_bengkel' => 'required|string|max:255',
+            'biaya' => 'required|numeric|min:0',
+            'deskripsi' => 'required|string',
+            'frekuensi' => 'required|integer|min:1',
+        ], [
+            'nama_bengkel.required' => 'Nama Bengkel wajib diisi!',
+            'biaya.required' => 'Biaya wajib diisi!',
+            'biaya.min' => 'Biaya tidak boleh kurang dari 0!',
+            'deskripsi.required' => 'Deskripsi wajib diisi!',
+            'frekuensi.required' => 'Frekuensi wajib diisi!',
+        ]);
+
+        // Cari data pemeliharaan yang ingin diupdate
+        $pemeliharaan = Pemeliharaan::findOrFail($id);
+
+        $rekening = Rekening::find($pemeliharaan->id_rekening);
+
+        if (!$rekening) {
+            return redirect()->back()->with('error', 'Rekening tidak ditemukan.');
+        }
+
+        // Kembalikan biaya lama ke saldo_akhir rekening
+        $rekening->saldo_akhir += $pemeliharaan->biaya;
+
+        // Kurangi saldo dengan biaya baru
+        $rekening->saldo_akhir -= $request->biaya;
+
+        // Simpan perubahan saldo rekening
+        $rekening->save();
+
+        // Periksa apakah interval berubah
+        if ($request->frekuensi != $pemeliharaan->interval_bulan) {
+            // Hitung tanggal berikutnya berdasarkan interval baru
+            $tanggalBerikutnya = date('Y-m-d', strtotime($pemeliharaan->tanggal_pemeliharaan_sebelumnya . " +{$request->frekuensi} months"));
+        } else {
+            $tanggalBerikutnya = $pemeliharaan->tanggal_pemeliharaan_berikutnya;
+        }
+
+        // Update data pemeliharaan
+        $pemeliharaan->update([
+            'interval_bulan' => $request->frekuensi,
+            'tanggal_pemeliharaan_berikutnya' => $tanggalBerikutnya,
+            'bengkel' => $request->nama_bengkel,
+            'biaya' => $request->biaya,
+            'deskripsi' => $request->deskripsi,
+        ]);
+
+        return redirect('pemeliharaan/' . $request->slug . '/show')
+            ->with('success', 'Data Pemeliharaan berhasil diupdate!');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pemeliharaan $pemeliharaan)
+    public function destroy($id)
     {
-        //
+        // Gunakan transaction untuk memastikan data konsisten
+        DB::beginTransaction();
+
+        try {
+            // Ambil data pemeliharaan yang akan dihapus
+            $pemeliharaan = Pemeliharaan::findOrFail($id);
+            $kendaraan = Kendaraan::where('id', $pemeliharaan->id_kendaraan)->first();
+
+            // Ambil data rekening terkait
+            $rekening = Rekening::find($pemeliharaan->id_rekening);
+
+            if (!$rekening) {
+                return redirect()->back()->with('error', 'Rekening tidak ditemukan.');
+            }
+
+            // Kembalikan biaya pemeliharaan ke saldo akhir rekening
+            $rekening->saldo_akhir += $pemeliharaan->biaya;
+            $rekening->save();
+
+            // Hapus data pemeliharaan
+            $pemeliharaan->delete();
+
+            // Commit transaksi jika semuanya berhasil
+            DB::commit();
+
+            return redirect('pemeliharaan/' . $kendaraan->slug . '/show')->with('success', 'Data pemeliharaan berhasil dihapus dan saldo rekening diperbarui.');
+        } catch (\Exception $e) {
+            // Rollback jika ada kesalahan
+            DB::rollBack();
+            return redirect('pemeliharaan/' . $kendaraan->slug . '/show')->with('success', 'Gagal menghapus data pemeliharaan: ' . $e->getMessage());
+        }
     }
 }

@@ -78,12 +78,14 @@ class RekeningController extends Controller
             // 'saldo.numeric' => 'Saldo harus berupa angka!',
             'saldo.min' => 'Saldo tidak boleh kurang dari 0!',
         ]);
+        $selisih = $rekening->saldo_awal - $rekening->saldo_akhir;
 
+        $saldo_akhir = $request->saldo - $selisih;
         Rekening::where('id', $rekening->id)->update([
             'nama_rekening' => $request->nama_rek,
             'slug' => Str::slug($request->nama_rek),
             'saldo_awal' => $request->saldo,
-            'saldo_akhir' => $request->saldo,
+            'saldo_akhir' => $saldo_akhir,
         ]);
 
         return redirect('rekening')->with('success', 'Data Rekening berhasil diperbarui!');
@@ -92,9 +94,9 @@ class RekeningController extends Controller
     /**
      * Menghapus rekening.
      */
-    public function destroy(string $slug)
+    public function destroy($id)
     {
-        $rekening = Rekening::where('slug', $slug)->first();
+        $rekening = Rekening::findOrFail($id);
         $rekening->delete();
 
         return redirect('rekening')->with('success', 'Data Rekening berhasil dihapus!');

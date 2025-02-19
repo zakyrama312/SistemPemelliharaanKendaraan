@@ -24,7 +24,6 @@ return new class extends Migration {
             $table->date('masa_aktif_plat');
             $table->string('warna');
             $table->string('no_rangka');
-            $table->integer('interval_bulan')->nullable();
             $table->string('no_mesin');
             $table->string('bahan_bakar')->nullable();
             $table->string('jumlah_roda')->nullable();

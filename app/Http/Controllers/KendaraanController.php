@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Http\Requests\UpdateKendaraanRequest;
+use App\Models\Bahanbakar;
 
 class KendaraanController extends Controller
 {
@@ -117,13 +118,13 @@ class KendaraanController extends Controller
             'masa_aktif_pajak_tahunan' => $request->masa_aktif_pajak_tahunan,
             'masa_aktif_plat' => $request->masa_aktif_plat,
             'warna' => $request->warna,
-            'interval_bulan' => 3,
             'no_rangka' => $request->no_rangka,
             'no_mesin' => $request->no_mesin,
             'bahan_bakar' => $request->bahan_bakar,
             'jumlah_roda' => $request->jumlah_roda,
             'bidang' => $request->bidang,
-            'status' => 'aktif'
+            'status' => 'aktif',
+            'id_rekening' => $request->id_rek
         ]);
 
 
@@ -156,6 +157,7 @@ class KendaraanController extends Controller
             'tanggal_pemeliharaan_sebelumnya' => $request->tanggal_pemeliharaan,
             'tanggal_pemeliharaan_berikutnya' => $tanggalPemeliharaanBerikutnya,
             'bengkel' => '-',
+            'interval_bulan' => 3,
             'deskripsi' => '-',
             'biaya' => $request->biaya_pemeliharaan
         ]);
@@ -327,7 +329,8 @@ class KendaraanController extends Controller
             'bahan_bakar' => $request->bahan_bakar,
             'jumlah_roda' => $request->jumlah_roda,
             'bidang' => $request->bidang,
-            'status' => 'aktif'
+            'status' => 'aktif',
+            'id_rekening' => $request->id_rek,
         ]);
 
         // Update atau insert pajak tahunan
@@ -348,12 +351,16 @@ class KendaraanController extends Controller
             ]
         );
 
-        Pemeliharaan::findOrFail($kendaraan->id)->update([
+        Pemeliharaan::where('id_kendaraan', $kendaraan->id)->update([
+            'id_kendaraan' => $kendaraan->id,
+            'id_rekening' => $request->id_rek,
+        ]);
+        Bahanbakar::where('id_kendaraan', $kendaraan->id)->update([
             'id_kendaraan' => $kendaraan->id,
             'id_rekening' => $request->id_rek,
         ]);
 
-        return redirect('kendaraan')->with('success', 'Kendaraan berhasil ditambahkan.');
+        return redirect('kendaraan')->with('success', 'Kendaraan berhasil diedit.');
     }
 
     /**
@@ -361,9 +368,60 @@ class KendaraanController extends Controller
      */
     public function destroy(string $slug)
     {
-        $kendaraan = Kendaraan::where('slug', $slug)->firstOrFail();
-        $kendaraan->delete();
+        // $kendaraanslug = Kendaraan::where('slug', $slug)->firstOrFail();
+        DB::beginTransaction();
 
-        return redirect('kendaraan')->with('success', 'Data Kendaraan berhasil dihapus!');
+        try {
+            // Ambil kendaraan yang akan dihapus
+            $kendaraan = Kendaraan::where('slug', $slug)->firstOrFail();
+            $id = $kendaraan->id;
+
+            // Ambil semua pajak, pemeliharaan, dan pengeluaran BBM terkait kendaraan ini
+            // $pajaks = Pajak::where('id_kendaraan', $id)->get();
+            $pemeliharaans = Pemeliharaan::where('id_kendaraan', $id)->get();
+            $pengeluaranBBMs = Bahanbakar::where('id_kendaraan', $id)->get();
+
+            // Proses pengembalian saldo ke rekening terkait
+            // foreach ($pajaks as $pajak) {
+            //     $rekening = Rekening::find($pajak->id_rekening);
+            //     if ($rekening) {
+            //         $rekening->saldo_akhir += $pajak->nominal;
+            //         $rekening->save();
+            //     }
+            // }
+
+            foreach ($pemeliharaans as $pemeliharaan) {
+                $rekening = Rekening::find($pemeliharaan->id_rekening);
+                if ($rekening) {
+                    $rekening->saldo_akhir += $pemeliharaan->biaya;
+                    $rekening->save();
+                }
+            }
+
+            foreach ($pengeluaranBBMs as $pengeluaranBBM) {
+                $rekening = Rekening::find($pengeluaranBBM->id_rekening);
+                if ($rekening) {
+                    $rekening->saldo_akhir += $pengeluaranBBM->nominal;
+                    $rekening->save();
+                }
+            }
+
+            // Hapus semua data terkait sebelum menghapus kendaraan
+            // Pajak::where('id_kendaraan', $id)->delete();
+            Pemeliharaan::where('id_kendaraan', $id)->delete();
+            Bahanbakar::where('id_kendaraan', $id)->delete();
+
+            // Hapus kendaraan setelah semua data terkait dihapus
+            $kendaraan->delete();
+
+            // Commit transaksi jika semuanya berhasil
+            DB::commit();
+
+            return redirect('kendaraan')->with('success', 'Kendaraan dan semua data terkait berhasil dihapus, saldo rekening telah diperbarui.');
+        } catch (\Exception $e) {
+            // Rollback jika ada kesalahan
+            DB::rollBack();
+            return redirect('kendaraan')->with('success', 'Gagal menghapus kendaraan: ' . $e->getMessage());
+        }
     }
 }

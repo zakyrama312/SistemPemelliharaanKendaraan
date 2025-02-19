@@ -24,7 +24,7 @@ Route::resource('/pegawai', Users::class)->only([
 // route rekening
 Route::get('/rekening/{slug}/edit', [RekeningController::class, 'edit']);
 Route::put('/rekening/{slug}', [RekeningController::class, 'update']);
-Route::delete('/rekening/{slug}', [RekeningController::class, 'destroy']);
+Route::delete('/rekening/{id}', [RekeningController::class, 'destroy']);
 Route::get('/rekening/tambah-rekening', [RekeningController::class, 'create'])->name('rekening.rekening-create');
 Route::resource('/rekening', RekeningController::class)->only([
         'index',
@@ -42,16 +42,17 @@ Route::get('/kendaraan', [KendaraanController::class, 'index'])->name('kendaraan
 // route pemeliharaan
 Route::get('/pemeliharaan/{slug}/edit', [PemeliharaanController::class, 'edit']);
 Route::get('/pemeliharaan/{slug}/show', [PemeliharaanController::class, 'show']);
-Route::put('/pemeliharaan/{slug}', [PemeliharaanController::class, 'update'])->name('pemeliharaan.update');
-Route::delete('/pemeliharaan/{slug}', [PemeliharaanController::class, 'destroy']);
+Route::put('/pemeliharaan/{id}', [PemeliharaanController::class, 'update'])->name('pemeliharaan.update');
+Route::delete('/pemeliharaan/{id}', [PemeliharaanController::class, 'destroy']);
 Route::get('/pemeliharaan/tambah-pemeliharaan', [PemeliharaanController::class, 'create'])->name('pemeliharaan.pemeliharaan-create');
 Route::post('/pemeliharaan/store', [PemeliharaanController::class, 'store'])->name('pemeliharaan.store');
 Route::get('/pemeliharaan', [PemeliharaanController::class, 'index'])->name('pemeliharaan.index');
+
 // route pengeluaran bbm
 Route::get('/pengeluaran-bbm/{slug}/edit', [BahanbakarController::class, 'edit']);
 Route::get('/pengeluaran-bbm/{slug}/show', [BahanbakarController::class, 'show']);
-Route::put('/pengeluaran-bbm/{slug}', [BahanbakarController::class, 'update'])->name('bahanbakar.update');
-Route::delete('/pengeluaran-bbm/{slug}', [BahanbakarController::class, 'destroy']);
-Route::get('/pengeluaran-bbm/tambah-pengeluaran-bbm', [BahanbakarController::class, 'create'])->name('bahanbakar.bahanbakar-create');
-Route::post('/pengeluaran-bbm/store', [BahanbakarController::class, 'store'])->name('bahanbakar.store');
-Route::get('/pengeluaran-bbm', [BahanbakarController::class, 'index'])->name('bahanbakar.index');
+Route::put('/pengeluaran-bbm/{id}', [BahanbakarController::class, 'update'])->name('pengeluaran-bbm.update');
+Route::delete('/pengeluaran-bbm/{id}', [BahanbakarController::class, 'destroy']);
+Route::get('/pengeluaran-bbm/tambah-pengeluaran-bbm', [BahanbakarController::class, 'create'])->name('pengeluaran-bbm.bahanbakar-create');
+Route::post('/pengeluaran-bbm/store', [BahanbakarController::class, 'store'])->name('pengeluaran-bbm.store');
+Route::get('/pengeluaran-bbm', [BahanbakarController::class, 'index'])->name('pengeluaran-bbm.index');

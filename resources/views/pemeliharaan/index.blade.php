@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                        class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                            class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -38,7 +38,7 @@
                                             <th class="border border-gray-400 px-4 py-2">Frekuensi</th>
                                             <th class="border border-gray-400 px-4 py-2">Jadwal Berikutnya</th>
                                             <th class="border border-gray-400 px-4 py-2">Total Biaya</th>
-                                            <th class="border border-gray-400 px-4 py-2">Aksi</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -47,12 +47,12 @@
                                                 <td class="text-center">{{ $loop->iteration }}</td>
                                                 <td>{{ $kendaraan->status_pemeliharaan }}</td>
                                                 <!-- <td>
-                                                                    <div class="alert {{ $kendaraan->alert }} alert-dismissible fade show"
-                                                                        role="alert">
-                                                                        <i class="bi {{ $kendaraan->icon }} me-1"></i>
-                                                                        {{ $kendaraan->status_hari }} {{ $kendaraan->status_pemeliharaan }}
-                                                                    </div>
-                                                                </td> -->
+                                                                            <div class="alert {{ $kendaraan->alert }} alert-dismissible fade show"
+                                                                                role="alert">
+                                                                                <i class="bi {{ $kendaraan->icon }} me-1"></i>
+                                                                                {{ $kendaraan->status_hari }} {{ $kendaraan->status_pemeliharaan }}
+                                                                            </div>
+                                                                        </td> -->
                                                 <td>{{ $kendaraan->no_polisi }} - {{ $kendaraan->merk }} -
                                                     {{ $kendaraan->model }}
                                                 </td>
@@ -62,7 +62,7 @@
                                                 <td>{{ FormatHelper::formatRupiah($kendaraan->pemeliharaan_sum_biaya) }}</td>
 
 
-                                                <td>
+                                                <td class="text-center">
 
                                                     <a href="{{ url('pemeliharaan/' . $kendaraan->slug . '/show') }}"><span
                                                             class="btn btn-danger "><i

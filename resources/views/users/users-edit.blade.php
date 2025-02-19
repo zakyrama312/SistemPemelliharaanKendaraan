@@ -30,7 +30,7 @@
                                     <input type="number" class="form-control @error('nip') is-invalid @enderror"
                                         name="nip" value="{{ old('nip', $pegawai->nip) }}">
                                     @error('nip')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -41,7 +41,7 @@
                                     <input type="text" class="form-control @error('nama') is-invalid @enderror"
                                         name="nama" value="{{ old('nama', $pegawai->name) }}">
                                     @error('nama')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                                     <input type="text" class="form-control @error('username') is-invalid @enderror"
                                         name="username" value="{{ old('username', $pegawai->username) }}">
                                     @error('username')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                                     <input type="password" class="form-control @error('password') is-invalid @enderror"
                                         name="password">
                                     @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -75,12 +75,18 @@
                                 <div class="col-sm-10">
                                     <select class="form-select @error('role') is-invalid @enderror" name="role">
                                         <option value="">--Pilih-Role--</option>
-                                        <option value="super admin" {{ old('role', $pegawai->role) == 'super admin' ? 'selected' : '' }}>SuperAdmin</option>
-                                        <option value="admin" {{ old('role', $pegawai->role) == 'admin' ? 'selected' : '' }}>Admin</option>
-                                        <option value="user" {{ old('role', $pegawai->role) == 'user' ? 'selected' : '' }}>Pengguna</option>
+                                        <option value="super admin"
+                                            {{ old('role', $pegawai->role) == 'super admin' ? 'selected' : '' }}>
+                                            SuperAdmin</option>
+                                        <option value="admin"
+                                            {{ old('role', $pegawai->role) == 'admin' ? 'selected' : '' }}>Admin
+                                        </option>
+                                        <option value="user"
+                                            {{ old('role', $pegawai->role) == 'user' ? 'selected' : '' }}>Pengguna
+                                        </option>
                                     </select>
                                     @error('role')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -88,7 +94,7 @@
                             <div class="row mb-3">
                                 <div class="col-sm-6">
                                     <small><i>Tanda bintang (<sup class="text-danger"> * </sup>) di samping label
-                                            kontrol formulir menunjukkan bahwa kolom tersebut wajib diisi</i></small>
+                                            kolom formulir menunjukkan bahwa kolom tersebut wajib diisi</i></small>
                                 </div>
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-primary float-end ms-3">Update</button>

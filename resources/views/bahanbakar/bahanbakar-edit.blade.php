@@ -1,94 +1,117 @@
-@foreach ($view_pemeliharaan as $pm)
-<div class="modal fade" id="largeModal{{ $pm->id }}" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Data Pemeliharaan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('pemeliharaan.store') }}" method="POST">
-                    @csrf
-
-
-                    <div class="row mb-3">
-                        <label for="inputEmail" class="col-sm-4 col-form-label">Frekuensi per berapa bulan <sup
-                                class="text-danger">*</sup></label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control @error('frekuensi') is-invalid @enderror"
-                                name="frekuensi"
-                                value="{{ old('frekuensi', $pemeliharaan->kendaraan->frekuensi_bulan) }}">
-
-                            @error('frekuensi')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+@foreach ($view_bbm as $pm)
+    <div class="modal fade" id="largeModal{{ $pm->id }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Pengeluaran Bahan Bakar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url('pengeluaran-bbm/' . $pm->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="row mb-3">
+                            <label for="inputText" class="col-sm-2 col-form-label">Kendaraan </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control @error('kendaraan') is-invalid @enderror"
+                                    name="kendaraan" value="{{ old('kendaraan', $kendaraan->no_polisi) }}" readonly>
+                                @error('nama_rek')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                        <label class="col-sm-4 col-form-label">Bulan</label>
-                    </div>
 
-                    <div class="row mb-3">
-                        <div class="col-sm-8">
-                            <input type="hidden" readonly class="form-control " name="id_kendaraan"
-                                value="{{ old('id_kendaraan', $pemeliharaan->id_kendaraan) }}">
-                            <input type="hidden" readonly class="form-control " name="id_rekening"
-                                value="{{ old('id_rekening', $pemeliharaan->id_rekening) }}">
-
-
+                        <div class="row mb-3">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Merk </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control @error('merk') is-invalid @enderror" name="merk"
+                                    value="{{ old('merk', $kendaraan->merk) }}" readonly>
+                                @error('merk')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <label for="inputEmail" class="col-sm-4 col-form-label">Nama Bengkel <sup
-                                class="text-danger">*</sup></label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control @error('nama_bengkel') is-invalid @enderror"
-                                name="nama_bengkel" value="{{ old('nama_bengkel', $pm->bengkel) }}">
-                            @error('nama_bengkel')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="row mb-3">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Model </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control @error('model') is-invalid @enderror" name="model"
+                                    value="{{ old('model', $kendaraan->model) }}" readonly>
+                                @error('model')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <label for="inputEmail" class="col-sm-4 col-form-label">Biaya <sup
-                                class="text-danger">*</sup></label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control @error('biaya') is-invalid @enderror" name="biaya"
-                                value="{{ old('biaya', $pm->biaya) }}">
-                            @error('biaya')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="row mb-3">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Jumlah Liter <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control @error('jumlah_liter') is-invalid @enderror"
+                                    name="jumlah_liter" value="{{ old('jumlah_liter', $pm->jumlah_liter) }}">
+
+                                @error('jumlah_liter')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <label class="col-sm-2 col-form-label">Liter</label>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <label for="inputEmail" class="col-sm-4 col-form-label">Deskripsi Pemeliharaan <sup
-                                class="text-danger">*</sup></label>
-                        <div class="col-sm-8">
-                            <textarea name="deskripsi" class="form-control @error('deskripsi') is-invalid @enderror"
-                                id="">{{ old('deskripsi', $pm->deskripsi) }}</textarea>
-                            @error('deskripsi')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="row mb-3">
+                            <div class="col-sm-10">
+                                <input type="hidden" readonly class="form-control " name="id_kendaraan"
+                                    value="{{ old('id_kendaraan', $kendaraan->id) }}">
+                                <input type="hidden" readonly class="form-control " name="id_rekening"
+                                    value="{{ old('id_rekening', $kendaraan->id_rekening) }}">
+                                <input type="hidden" readonly class="form-control " name="slug"
+                                    value="{{ old('slug', $kendaraan->slug) }}">
+
+
+                            </div>
                         </div>
-                    </div>
 
-
-                    <div class="row mb-3">
-                        <div class="col-sm-12">
-                            <small><i>Tanda bintang (<sup class="text-danger"> * </sup>) di samping label
-                                    kontrol formulir
-                                    menunjukkan bahwa kolom tersebut wajib diisi</i></small>
+                        <div class="row mb-3">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Foto Struk</label>
+                            <div class="col-sm-10">
+                                <input type="file" class="form-control @error('foto_struk') is-invalid @enderror"
+                                    name="foto_struk" value="{{ old('foto_struk') }}">
+                                @if ($pm->foto_struk)
+                                    <img src="{{ asset('strukImage/' . $pm->foto_struk) }}" class="img-thumbnail mt-2"
+                                        width="150">
+                                @endif
+                                @error('foto_struk')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-outline-warning">Edit</button>
-                </form>
+
+                        <div class="row mb-3">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Biaya <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control @error('biaya') is-invalid @enderror" name="biaya"
+                                    value="{{ old('biaya', $pm->nominal) }}">
+                                @error('biaya')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <small><i>Tanda bintang (<sup class="text-danger"> * </sup>) di samping label
+                                        kolom formulir
+                                        menunjukkan bahwa kolom tersebut wajib diisi</i></small>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-outline-warning">Edit</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</div><!-- End Basic Modal-->
+    </div><!-- End Basic Modal-->
 @endforeach

@@ -24,9 +24,10 @@
       </div>
     @endif
         <!-- Table with stripped rows -->
-        <table class="table datatable">
+        <div class="table-responsive">
+          <table class="table datatable">
           <thead>
-          <tr>
+            <tr>
             <th>No</th>
             <th>NIP</th>
             <th>Nama</th>
@@ -34,10 +35,10 @@
             <th>Username</th>
             <th>Role</th>
             <th>Aksi</th>
-          </tr>
+            </tr>
           </thead>
           <tbody>
-          @foreach ($users as $user)
+            @foreach ($users as $user)
         <tr>
         <td>{{ $loop->iteration }}</td>
         <td>{{ $user->nip }}</td>
@@ -46,16 +47,17 @@
         <td>{{ $user->username  }}</td>
         <td>{{ $user->role == 'user' ? 'Pengguna' : $user->role }}</td>
         <td>
-        <a href="{{ url('pegawai/' . $user->slug . '/edit') }}"><i
+          <a href="{{ url('pegawai/' . $user->slug . '/edit') }}"><i
           class="bi bi-pencil-square text-warning"></i></a>
-        <a href="#" data-bs-toggle="modal" data-bs-target="#basicModal{{ $user->id }}"><i
+          <a href="#" data-bs-toggle="modal" data-bs-target="#basicModal{{ $user->id }}"><i
           class="bi bi-trash text-danger"></i></a>
         </td>
         </tr>
 
       @endforeach
           </tbody>
-        </table>
+          </table>
+        </div>
         <!-- End Table with stripped rows -->
 
         </div>

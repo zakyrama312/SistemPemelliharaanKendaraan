@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                                                                        class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                                                                class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -56,8 +56,8 @@
                                                 <td class="text-center">
 
                                                     <a href="{{ url('pengeluaran-bbm/' . $kendaraan->slug . '/show') }}"><span
-                                                            class="btn btn-danger "><i
-                                                                class="bi bi-exclamation-triangle me-1"></i> Servis</span></a>
+                                                            class="btn btn-danger "><i class="bi bi-fuel-pump me-1"></i>
+                                                            Fuel</span></a>
                                                     <a href="{{ url('kendaraan/detail-kendaraan/' . $kendaraan->slug) }}"><span
                                                             class="btn btn-info "><i class="bi bi-info-square me-1"></i>
                                                             Detail</span></a>

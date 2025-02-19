@@ -25,8 +25,34 @@
 <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/assets/vendor/php-email-form/validate.js"></script>
 
+
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
+<script>
+  window.onload = function () {
+    new AutoNumeric('#saldo', {
+      digitGroupSeparator: '.',
+      decimalCharacter: ',',
+      currencySymbol: 'Rp ',
+      currencySymbolPlacement: 'p',
+      unformatOnSubmit: true
+    });
+
+
+  };
+  window.onload = function () {
+    new AutoNumeric('#saldoEdit', {
+      digitGroupSeparator: '.',
+      decimalCharacter: ',',
+      currencySymbol: 'Rp ',
+      currencySymbolPlacement: 'p',
+      unformatOnSubmit: true // Mengirim angka sebagai integer
+    });
+  };
+</script>
+<script>
+
+</script>
 
 </body>
 

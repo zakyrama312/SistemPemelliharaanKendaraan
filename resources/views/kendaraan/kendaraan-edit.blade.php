@@ -17,7 +17,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Edit Data Kendaraan</h5>
-                        <form action="{{ route('kendaraan.update', $kendaraan->slug) }}" method="POST"
+                        <form action="{{ url('kendaraan/' . $kendaraan->slug) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -65,10 +65,18 @@
 
                                     <select class="form-control @error('jenis') is-invalid @enderror" name="jenis">
                                         <option value="">-- Pilih Jenis Kendaraan --</option>
-                                        <option value="Mobil" {{ old('jenis', $kendaraan->jenis) == 'Mobil' ? 'selected' : '' }}>Mobil</option>
-                                        <option value="Motor" {{ old('jenis', $kendaraan->jenis) == 'Motor' ? 'selected' : '' }}>Motor</option>
-                                        <option value="Truk" {{ old('jenis', $kendaraan->jenis) == 'Truk' ? 'selected' : '' }}>Truk</option>
-                                        <option value="Alat Berat" {{ old('jenis', $kendaraan->jenis) == 'Alat Berat' ? 'selected' : '' }}>Alat Berat</option>
+                                        <option value="Mobil"
+                                            {{ old('jenis', $kendaraan->jenis) == 'Mobil' ? 'selected' : '' }}>Mobil
+                                        </option>
+                                        <option value="Motor"
+                                            {{ old('jenis', $kendaraan->jenis) == 'Motor' ? 'selected' : '' }}>Motor
+                                        </option>
+                                        <option value="Truk"
+                                            {{ old('jenis', $kendaraan->jenis) == 'Truk' ? 'selected' : '' }}>Truk
+                                        </option>
+                                        <option value="Alat Berat"
+                                            {{ old('jenis', $kendaraan->jenis) == 'Alat Berat' ? 'selected' : '' }}>Alat
+                                            Berat</option>
                                     </select>
                                     @error('jenis')
                                     <div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -78,8 +86,8 @@
                                     <label class="col-form-label">Foto Kendaraan</label>
                                     <input type="file" class="form-control" name="foto" value="{{ $kendaraan->foto }}">
                                     @if ($kendaraan->foto)
-                                        <img src="{{ asset('kendaraanImage/' . $kendaraan->foto) }}"
-                                            class="img-thumbnail mt-2" width="150">
+                                    <img src="{{ asset('kendaraanImage/' . $kendaraan->foto) }}"
+                                        class="img-thumbnail mt-2" width="150">
                                     @endif
                                 </div>
                                 <div class="col-sm-4 mb-3">
@@ -90,7 +98,7 @@
                                         name="tahun_pembuatan"
                                         value="{{ old('tahun_pembuatan', $kendaraan->tahun_pembuatan) }}">
                                     @error('tahun_pembuatan')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-sm-4 mb-3">
@@ -145,8 +153,10 @@
                                         name="id_users">
                                         <option value="">--Pilih Pengguna--</option>
                                         @foreach ($user as $usr)
-                                            <option value="{{ $usr->id }}" {{ old('id_users', $usr->id) == $kendaraan->id_users ? 'selected' : '' }}>{{ $usr->name }}
-                                            </option>
+                                        <option value="{{ $usr->id }}"
+                                            {{ old('id_users', $usr->id) == $kendaraan->id_users ? 'selected' : '' }}>
+                                            {{ $usr->name }}
+                                        </option>
                                         @endforeach
                                     </select>
                                     @error('id_users')
@@ -157,9 +167,10 @@
                                     <select class="form-control @error('id_rek') is-invalid @enderror" name="id_rek">
                                         <option value="">--Pilih Rekening--</option>
                                         @foreach ($rekening as $rek)
-                                            <option value="{{ $rek->id }}" {{ old('id_rek', $rek->id) == $pemeliharaan->id_rekening ? 'selected' : '' }}>
-                                                {{ $rek->nama_rekening }}
-                                            </option>
+                                        <option value="{{ $rek->id }}"
+                                            {{ old('id_rek', $rek->id) == $pemeliharaan->id_rekening ? 'selected' : '' }}>
+                                            {{ $rek->nama_rekening }}
+                                        </option>
                                         @endforeach
                                     </select>
                                     @error('id_rek')
@@ -169,7 +180,7 @@
                             <div class="row mb-3">
                                 <div class="col-sm-6">
                                     <small><i>Tanda bintang (<sup class="text-danger"> * </sup>) di samping label
-                                            kontrol formulir menunjukkan bahwa kolom tersebut wajib diisi</i></small>
+                                            kolom formulir menunjukkan bahwa kolom tersebut wajib diisi</i></small>
                                 </div>
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-primary float-end ms-3">Simpan</button>

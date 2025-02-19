@@ -10,14 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('pengeluaran_bbm', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('id_kendaraan')->constrained('kendaraan')->cascadeOnDelete();
+        Schema::table('kendaraan', function (Blueprint $table) {
             $table->foreignId('id_rekening')->constrained('rekening')->cascadeOnDelete();
-            $table->string('foto_struk')->nullable();
-            $table->integer('jumlah_liter')->nullable();
-            $table->integer('nominal');
-            $table->timestamps();
         });
     }
 
@@ -26,6 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengeluaran_bbm');
+        Schema::table('kendaraan', function (Blueprint $table) {
+            //
+        });
     }
 };
