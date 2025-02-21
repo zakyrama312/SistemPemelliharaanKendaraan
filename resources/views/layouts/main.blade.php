@@ -34,18 +34,32 @@
 
   <!-- Format Rupiah -->
   <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
-
+  <!-- select2 -->
+  <!-- <link rel="stylesheet" href="/assets/select2/select2.min.css" /> -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+  <!-- datepicker -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
+  <style>
+    .select2-container--bootstrap-5 .select2-selection {
+      border: 1px solid #ced4da !important;
+      /* Warna border Bootstrap */
+      border-radius: 0.375rem;
+      /* Sudut border */
+      height: calc(2.25rem + 2px);
+      /* Sesuaikan tinggi */
+      padding: 0.375rem 0.75rem;
+      /* Sesuaikan padding */
+    }
 
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+    .select2-container--bootstrap-5 .select2-selection__arrow {
+      height: 100%;
+      /* Pastikan panah dropdown tetap sejajar */
+    }
+  </style>
 </head>
 
 <body>

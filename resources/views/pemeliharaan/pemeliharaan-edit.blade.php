@@ -1,3 +1,6 @@
+@php
+    use App\Helpers\FormatHelper;
+@endphp
 @foreach ($view_pemeliharaan as $pm)
     <div class="modal fade" id="largeModal{{ $pm->id }}" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -54,8 +57,8 @@
                             <label for="inputEmail" class="col-sm-4 col-form-label">Biaya <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control @error('biaya') is-invalid @enderror" name="biaya"
-                                    value="{{ old('biaya', $pm->biaya) }}">
+                                <input type="text" class="form-control format-rupiah @error('biaya') is-invalid @enderror"
+                                    name="biaya" value="{{ old('biaya', FormatHelper::formatRupiah($pm->biaya)) }}">
                                 @error('biaya')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

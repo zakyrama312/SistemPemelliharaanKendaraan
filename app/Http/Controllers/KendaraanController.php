@@ -3,20 +3,22 @@
 namespace App\Http\Controllers;
 
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Pajak;
+use App\Models\Keuangan;
 use App\Models\Rekening;
 use App\Models\Kendaraan;
+use App\Models\Bahanbakar;
+use Illuminate\Support\Str;
 use App\Models\Pemeliharaan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Intervention\Image\ImageManager;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Http\Requests\UpdateKendaraanRequest;
-use App\Models\Bahanbakar;
 
 class KendaraanController extends Controller
 {
@@ -44,6 +46,7 @@ class KendaraanController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'no_polisi' => 'required|string|max:20|unique:kendaraan,no_polisi',
             'merk' => 'required|string|max:50',
@@ -53,9 +56,9 @@ class KendaraanController extends Controller
             'jenis' => 'required|in:Mobil,Motor,Truk,Alat Berat',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
             'tahun_pembuatan' => 'required|date',
-            'masa_aktif_pajak_tahunan' => 'required|date',
-            'masa_aktif_plat' => 'required|date',
-            'tanggal_pemeliharaan' => 'required|date',
+            'masa_aktif_pajak_tahunan' => 'required',
+            'masa_aktif_plat' => 'required',
+            'tanggal_pemeliharaan' => 'required',
             'biaya_pemeliharaan' => 'required|integer',
             'no_rangka' => 'required|string|max:50|unique:kendaraan,no_rangka',
             'no_mesin' => 'required|string|max:50|unique:kendaraan,no_mesin',
@@ -92,81 +95,104 @@ class KendaraanController extends Controller
             'id_rek.required' => 'Rekening wajib dipilih.',
             'id_rek.exists' => 'Rekening tidak valid.',
         ]);
-        $fotoPath = null;
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '.jpg';
+        DB::beginTransaction();
 
-            $manager = new ImageManager(new Driver());
-            $image = $manager->read($file)
-                ->scale(width: 800)
-                ->toJpeg(75);
+        try {
 
-            $image->save(public_path("kendaraanImage/{$filename}"));
-            $fotoPath = "{$filename}";
+
+            $fotoPath = null;
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $filename = time() . '.jpg';
+
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($file)
+                    ->scale(width: 800)
+                    ->toJpeg(75);
+
+                $image->save(public_path("kendaraanImage/{$filename}"));
+                $fotoPath = "{$filename}";
+            }
+
+            $tahun_pembuatan = Carbon::createFromFormat('d/m/Y', $request->tahun_pembuatan)->format('Y-m-d');
+            $masa_aktif_pajak_tahunan = Carbon::createFromFormat('d/m/Y', $request->masa_aktif_pajak_tahunan)->format('Y-m-d');
+            $masa_aktif_plat = Carbon::createFromFormat('d/m/Y', $request->masa_aktif_plat)->format('Y-m-d');
+
+            $kendaraan = Kendaraan::create([
+                'id_users' => $request->id_users,
+                'no_polisi' => $request->no_polisi,
+                'slug' => Str::slug($request->no_polisi),
+                'merk' => $request->merk,
+                'model' => $request->model,
+                'jenis' => $request->jenis,
+                'foto' => $fotoPath,
+                'tahun_pembuatan' => $tahun_pembuatan,
+                'masa_aktif_pajak_tahunan' => $masa_aktif_pajak_tahunan,
+                'masa_aktif_plat' => $masa_aktif_plat,
+                'warna' => $request->warna,
+                'no_rangka' => $request->no_rangka,
+                'no_mesin' => $request->no_mesin,
+                'bahan_bakar' => $request->bahan_bakar,
+                'jumlah_roda' => $request->jumlah_roda,
+                'bidang' => $request->bidang,
+                'status' => 'aktif',
+                'id_rekening' => $request->id_rek
+            ]);
+
+            Pajak::create([
+                'id_kendaraan' => $kendaraan->id,
+                'id_rekening' => $request->id_rek,
+                'masa_berlaku' => $kendaraan->masa_aktif_pajak_tahunan,
+                'jenis_pajak' => 'pajak_tahunan',
+                'nominal' => 0
+            ]);
+
+            Pajak::create([
+                'id_kendaraan' => $kendaraan->id,
+                'id_rekening' => $request->id_rek,
+                'masa_berlaku' => $kendaraan->masa_aktif_plat,
+                'jenis_pajak' => 'pajak_plat',
+                'nominal' => 0
+            ]);
+
+            $tanggal_pemeliharaan = Carbon::createFromFormat('d/m/Y', $request->tanggal_pemeliharaan)->format('Y-m-d');
+
+            $intervalBulan = $kendaraan->interval_bulan ?? 3;
+            $tanggalPemeliharaanBerikutnya = date('Y-m-d', strtotime($tanggal_pemeliharaan . " +{$intervalBulan} months"));
+
+            $pemeliharaan = Pemeliharaan::create([
+                'id_kendaraan' => $kendaraan->id,
+                'id_rekening' => $request->id_rek,
+                'tanggal_pemeliharaan_sebelumnya' => $tanggal_pemeliharaan,
+                'tanggal_pemeliharaan_berikutnya' => $tanggalPemeliharaanBerikutnya,
+                'bengkel' => '-',
+                'interval_bulan' => 3,
+                'deskripsi' => '-',
+                'biaya' => $request->biaya_pemeliharaan
+            ]);
+
+            // Kurangi saldo rekening
+            $rekening = Rekening::findOrFail($request->id_rek);
+            $saldo_akhir = $rekening->saldo_akhir - $request->biaya_pemeliharaan;
+            $rekening->update(['saldo_akhir' => $saldo_akhir]);
+            // Tambahkan transaksi keuangan untuk pengeluaran pemeliharaan
+            Keuangan::create([
+                'id_rekening' => $request->id_rek,
+                'id_sumber' => $pemeliharaan->id,
+                'tanggal' => now(),
+                'jenis_transaksi' => 'pengeluaran',
+                'sumber_transaksi' => 'pemeliharaan',
+                'nominal' => $request->biaya_pemeliharaan,
+                'saldo_setelah' => $saldo_akhir
+            ]);
+
+            DB::commit();
+
+            return redirect('kendaraan')->with('success', 'Kendaraan berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect('kendaraan')->with('error', 'Gagal menambahkan kendaraan: ' . $e->getMessage());
         }
-
-        $kendaraan = Kendaraan::create([
-            'id_users' => $request->id_users,
-            'no_polisi' => $request->no_polisi,
-            'slug' => Str::slug($request->no_polisi),
-            'merk' => $request->merk,
-            'model' => $request->model,
-            'jenis' => $request->jenis,
-            'foto' => $fotoPath,
-            'tahun_pembuatan' => $request->tahun_pembuatan,
-            'masa_aktif_pajak_tahunan' => $request->masa_aktif_pajak_tahunan,
-            'masa_aktif_plat' => $request->masa_aktif_plat,
-            'warna' => $request->warna,
-            'no_rangka' => $request->no_rangka,
-            'no_mesin' => $request->no_mesin,
-            'bahan_bakar' => $request->bahan_bakar,
-            'jumlah_roda' => $request->jumlah_roda,
-            'bidang' => $request->bidang,
-            'status' => 'aktif',
-            'id_rekening' => $request->id_rek
-        ]);
-
-
-
-        Pajak::create([
-            'id_kendaraan' => $kendaraan->id,
-            'id_rekening' => $request->id_rek,
-            'masa_berlaku' => $kendaraan->masa_aktif_pajak_tahunan,
-            'jenis_pajak' => 'pajak_tahunan',
-            'nominal' => 0
-        ]);
-
-        Pajak::create([
-            'id_kendaraan' => $kendaraan->id,
-            'id_rekening' => $request->id_rek,
-            'masa_berlaku' => $kendaraan->masa_aktif_plat,
-            'jenis_pajak' => 'pajak_plat',
-            'nominal' => 0
-        ]);
-
-        // Ambil interval bulan dari kendaraan (default 3 bulan jika null)
-        $intervalBulan = $kendaraan->interval_bulan ?? 3;
-
-        // Hitung tanggal pemeliharaan berikutnya
-        $tanggalPemeliharaanBerikutnya = date('Y-m-d', strtotime($request->tanggal_pemeliharaan . " +{$intervalBulan} months"));
-
-        Pemeliharaan::create([
-            'id_kendaraan' => $kendaraan->id,
-            'id_rekening' => $request->id_rek,
-            'tanggal_pemeliharaan_sebelumnya' => $request->tanggal_pemeliharaan,
-            'tanggal_pemeliharaan_berikutnya' => $tanggalPemeliharaanBerikutnya,
-            'bengkel' => '-',
-            'interval_bulan' => 3,
-            'deskripsi' => '-',
-            'biaya' => $request->biaya_pemeliharaan
-        ]);
-
-        Rekening::where('id', $request->id_rek)->update([
-            'saldo_akhir' => DB::raw('saldo_akhir - ' . $request->biaya_pemeliharaan)
-        ]);
-
-        return redirect('kendaraan')->with('success', 'Kendaraan berhasil ditambahkan.');
     }
 
     /**

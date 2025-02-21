@@ -18,12 +18,19 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                                                                                class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                                                                                    class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <i class="bi bi-check-circle me-1"></i>
                                     {{ session('success') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
+                            @if (session()->has('error'))
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-exclamation-octagon me-1"></i>
+                                    {{ session('error') }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
@@ -50,7 +57,8 @@
                                                 </td>
                                                 <td>{{ $kendaraan->pengeluaran_bbm_count }}</td>
                                                 <td>{{ $kendaraan->bahan_bakar }}</td>
-                                                <td>{{ FormatHelper::formatRupiah($kendaraan->pengeluaran_bbm_sum_biaya) }}</td>
+                                                <td>{{ FormatHelper::formatRupiah($kendaraan->pengeluaran_bbm_sum_nominal) }}
+                                                </td>
 
 
                                                 <td class="text-center">

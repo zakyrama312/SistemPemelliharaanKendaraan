@@ -2,7 +2,9 @@
 @section('main')
     @php
         use App\Helpers\FormatHelper;
+
     @endphp
+
     <main id="main" class="main">
 
         <div class="pagetitle">
@@ -104,7 +106,8 @@
                                     <label for="inputEmail" class="col-sm-2 col-form-label">Biaya <sup
                                             class="text-danger">*</sup></label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control @error('biaya') is-invalid @enderror"
+                                        <input type="text"
+                                            class="form-control format-rupiah @error('biaya') is-invalid @enderror"
                                             name="biaya" value="{{ old('biaya') }}">
                                         @error('biaya')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -147,6 +150,13 @@
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <i class="bi bi-check-circle me-1"></i>
                                     {{ session('success') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
+                            @if (session()->has('error'))
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-exclamation-octagon me-1"></i>
+                                    {{ session('error') }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
