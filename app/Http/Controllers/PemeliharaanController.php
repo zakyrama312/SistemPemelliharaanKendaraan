@@ -125,7 +125,7 @@ class PemeliharaanController extends Controller
             'id_rekening' => $request->id_rekening,
             'tanggal' => now(),
             'jenis_transaksi' => 'pengeluaran',
-            'sumber_transaksi' => 'pemeliharaan', // Menandakan transaksi dari pemeliharaan
+            'sumber_transaksi' => 'Pemeliharaan', // Menandakan transaksi dari pemeliharaan
             'id_sumber' => $pemeliharaan->id, // ID dari pemeliharaan
             'nominal' => $request->biaya,
             'saldo_setelah' => $saldo_akhir
@@ -212,7 +212,7 @@ class PemeliharaanController extends Controller
 
             // Update transaksi keuangan jika ada perubahan biaya
             $transaksi = Keuangan::where('id_sumber', $pemeliharaan->id)
-                ->where('sumber_transaksi', 'pemeliharaan')
+                ->where('sumber_transaksi', 'Pemeliharaan')
                 ->first();
 
             if ($transaksi) {
@@ -253,7 +253,7 @@ class PemeliharaanController extends Controller
 
             // Ambil data keuangan yang terkait dengan pemeliharaan ini
             $keuangan = Keuangan::where('id_sumber', $pemeliharaan->id)
-                ->where('jenis_transaksi', 'Pengeluaran Pemeliharaan')
+                ->where('sumber_transaksi', 'Pemeliharaan')
                 ->first();
 
             // Jika ada data di keuangan, hapus terlebih dahulu

@@ -93,7 +93,7 @@
                                     class="text-danger">*</sup></label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control format-rupiah @error('biaya') is-invalid @enderror"
-                                    name="biaya" value="{{ old('biaya', FormatHelper::formatRupiah($pm->nominal)) }}">
+                                    name="biaya" value="{{ old('biaya', $pm->nominal) }}">
                                 @error('biaya')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

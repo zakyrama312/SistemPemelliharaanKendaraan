@@ -34,7 +34,7 @@
     @endif
         <!-- Table with stripped rows -->
         <div class="table-responsive">
-          <table class="table datatable">
+          <table class="table datatable table-hover">
           <thead>
             <tr>
             <th>No</th>

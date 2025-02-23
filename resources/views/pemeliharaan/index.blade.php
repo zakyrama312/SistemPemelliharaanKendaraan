@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                    class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                            class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -36,7 +36,7 @@
                             @endif
                             <!-- Table with stripped rows -->
                             <div class="table-responsive">
-                                <table class="table datatable ">
+                                <table class="table datatable table-hover">
                                     <thead>
                                         <tr>
                                             <th class="border border-gray-400 px-4 py-2 text-center">No</th>
@@ -54,12 +54,12 @@
                                                 <td class="text-center">{{ $loop->iteration }}</td>
                                                 <td>{{ $kendaraan->status_pemeliharaan }}</td>
                                                 <!-- <td>
-                                                                                        <div class="alert {{ $kendaraan->alert }} alert-dismissible fade show"
-                                                                                            role="alert">
-                                                                                            <i class="bi {{ $kendaraan->icon }} me-1"></i>
-                                                                                            {{ $kendaraan->status_hari }} {{ $kendaraan->status_pemeliharaan }}
-                                                                                        </div>
-                                                                                    </td> -->
+                                                                                                    <div class="alert {{ $kendaraan->alert }} alert-dismissible fade show"
+                                                                                                        role="alert">
+                                                                                                        <i class="bi {{ $kendaraan->icon }} me-1"></i>
+                                                                                                        {{ $kendaraan->status_hari }} {{ $kendaraan->status_pemeliharaan }}
+                                                                                                    </div>
+                                                                                                </td> -->
                                                 <td>{{ $kendaraan->no_polisi }} - {{ $kendaraan->merk }} -
                                                     {{ $kendaraan->model }}
                                                 </td>

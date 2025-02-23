@@ -16,4 +16,8 @@ class Pajak extends Model
   {
     return $this->belongsTo(Kendaraan::class, 'id_kendaraan');
   }
+  public function rekening()
+  {
+    return $this->belongsTo(Rekening::class, 'id_rekening');
+  }
 }

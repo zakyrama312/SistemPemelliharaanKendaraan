@@ -2,7 +2,9 @@
 @section('main')
     @php
         use App\Helpers\FormatHelper;
+
     @endphp
+
     <main id="main" class="main">
 
         <div class="pagetitle">
@@ -10,7 +12,7 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/pemeliharaan">Kembali</a></li>
-                    <li class="breadcrumb-item active">Tambah Data Pemeliharaan</li>
+                    <li class="breadcrumb-item active">Tambah Data Pajak Tahunan</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -21,10 +23,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Tambah Pengeluaran Bahan Bakar</h5>
+                            <h5 class="card-title">Tambah Pajak Tahunan</h5>
 
                             <!-- General Form Elements -->
-                            <form action="{{ route('pengeluaran-bbm.store') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('pajak-tahunan.store') }}" method="POST">
                                 @csrf
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Kendaraan </label>
@@ -60,20 +62,6 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label for="inputEmail" class="col-sm-2 col-form-label">Jumlah Liter <sup
-                                            class="text-danger">*</sup></label>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control @error('jumlah_liter') is-invalid @enderror"
-                                            name="jumlah_liter" value="{{ old('jumlah_liter') }}">
-
-                                        @error('jumlah_liter')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <label class="col-sm-2 col-form-label">Liter</label>
-                                </div>
-
-                                <div class="row mb-3">
                                     <div class="col-sm-10">
                                         <input type="hidden" readonly class="form-control " name="id_kendaraan"
                                             value="{{ old('id_kendaraan', $kendaraan->id) }}">
@@ -87,13 +75,14 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label for="inputEmail" class="col-sm-2 col-form-label">Foto Struk</label>
+                                    <label for="inputEmail" class="col-sm-2 col-form-label">Masa Berlaku <sup
+                                            class="text-danger">*</sup></label>
                                     <div class="col-sm-10">
-                                        <input type="file" class="form-control @error('foto_struk') is-invalid @enderror"
-                                            name="foto_struk" value="{{ old('foto_struk') }}">
-                                        @error('foto_struk')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                        <input type="text"
+                                            class="form-control format-tanggal @error('masa_berlaku') is-invalid @enderror"
+                                            name="masa_berlaku" value="{{ old('masa_berlaku') }}">
+                                        @error('masa_berlaku')
+                                        <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                 </div>
 
@@ -125,6 +114,9 @@
                             </form>
                             <!-- End General Form Elements -->
 
+
+
+                            <h5 class="card-title">Detail Pajak Tahunan</h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <i class="bi bi-check-circle me-1"></i>
@@ -139,33 +131,22 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
-
-                            <h5 class="card-title">Detail Pemeliharaan</h5>
                             <div class="table-responsive">
-                                <table class="table datatable table-hover">
+                                <table class="table datatable ">
                                     <thead>
                                         <tr>
-                                            <th class="border border-gray-400  text-center">No.</th>
-                                            <th class="border border-gray-400 px-4 py-2">Liter</th>
+                                            <th class="border border-gray-400 px-4 py-2">No.</th>
+                                            <th class="border border-gray-400 px-4 py-2">Masa Aktif</th>
                                             <th class="border border-gray-400 px-4 py-2">Biaya</th>
-                                            <th class="border border-gray-400 px-4 py-2">Foto Struk</th>
-                                            <th class="border border-gray-400 px-4 py-2">Tanggal</th>
-                                            <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th>
+                                            <th class="border border-gray-400 px-4 py-2">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($view_bbm as $pm)
+                                        @foreach ($view_pajakTahunan as $pm)
                                             <tr>
-                                                <td class="text-center">{{ $loop->iteration }}</td>
-                                                <td>{{ $pm->jumlah_liter }}</td>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ FormatHelper::formatTanggal($pm->masa_berlaku) }}</td>
                                                 <td>{{ FormatHelper::formatRupiah($pm->nominal) }}</td>
-                                                <td>
-                                                    <a href="{{ asset('strukImage/' . $pm->foto_struk) }}"
-                                                        data-lightbox="gallery">
-                                                        <img src="{{ asset('strukImage/' . $pm->foto_struk) }}" width="100">
-                                                    </a>
-                                                </td>
-                                                <td>{{ FormatHelper::formatTanggal($pm->created_at) }}</td>
                                                 <td class="text-center">
                                                     <a href="#" data-bs-toggle="modal"
                                                         data-bs-target="#largeModal{{ $pm->id }}"><i
@@ -191,7 +172,7 @@
     </main>
 
     {{-- Modal Update --}}
-    @include('bahanbakar.bahanbakar-edit')
+    @include('pajaktahunan.pajaktahunan-edit')
     {{-- Modal Delete --}}
-    @include('bahanbakar.bahanbakar-delete')
+    @include('pajaktahunan.pajaktahunan-delete')
 @endsection

@@ -6,7 +6,7 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Pengeluaran Bahan Bakar Kendaraan</h1>
+            <h1>Pajak Tahunan Kendaraan</h1>
 
         </div><!-- End Page Title -->
 
@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                                                                                                            class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                                                class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -39,34 +39,42 @@
                                 <table class="table datatable table-hover">
                                     <thead>
                                         <tr>
-                                            <th class="border border-gray-400 px-4 py-2">No</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">No</th>
+                                            <th class="border border-gray-400 px-4 py-2">Status</th>
                                             <th class="border border-gray-400 px-4 py-2">Nomor Polisi</th>
-                                            <th class="border border-gray-400 px-4 py-2">Frekuensi</th>
-                                            <th class="border border-gray-400 px-4 py-2">Jenis BBM</th>
-                                            <th class="border border-gray-400 px-4 py-2">Total Biaya</th>
+                                            <!-- <th class="border border-gray-400 px-4 py-2">Frekuensi</th> -->
+                                            <th class="border border-gray-400 px-4 py-2">Tanggal Bayar Pajak Tahunan</th>
+                                            <!-- <th class="border border-gray-400 px-4 py-2">Total Biaya</th> -->
                                             <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($kendaraanData as $kendaraan)
-
+                                        @foreach ($pajakTahunan as $pajak)
                                             <tr>
                                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                                <td>{{ $kendaraan->no_polisi }} - {{ $kendaraan->merk }} -
-                                                    {{ $kendaraan->model }}
+                                                <td>{{ $pajak->status_pemeliharaan }}</td>
+                                                <!-- <td>
+                                                                                                            <div class="alert {{ $pajak->alert }} alert-dismissible fade show"
+                                                                                                                role="alert">
+                                                                                                                <i class="bi {{ $pajak->icon }} me-1"></i>
+                                                                                                                {{ $pajak->status_hari }} {{ $pajak->status_pemeliharaan }}
+                                                                                                            </div>
+                                                                                                        </td> -->
+                                                <td>{{ $pajak->no_polisi }} - {{ $pajak->merk }} -
+                                                    {{ $pajak->model }}
                                                 </td>
-                                                <td>{{ $kendaraan->pengeluaran_bbm_count }}</td>
-                                                <td>{{ $kendaraan->bahan_bakar }}</td>
-                                                <td>{{ FormatHelper::formatRupiah($kendaraan->pengeluaran_bbm_sum_nominal) }}
+                                                <!-- <td>{{ $pajak->total_pajak_tahunan }}</td> -->
+                                                <td>{{ FormatHelper::formatTanggal(optional($pajak->pajak->first())->masa_berlaku ?? '-') }}
                                                 </td>
+                                                <!-- <td>{{ FormatHelper::formatRupiah($pajak->pajak_sum_nominal) }}</td> -->
 
 
                                                 <td class="text-center">
 
-                                                    <a href="{{ url('pengeluaran-bbm/' . $kendaraan->slug . '/show') }}"><span
-                                                            class="btn btn-danger "><i class="bi bi-fuel-pump me-1"></i>
-                                                            Fuel</span></a>
-                                                    <a href="{{ url('kendaraan/detail-kendaraan/' . $kendaraan->slug) }}"><span
+                                                    <a href="{{ url('pajak-tahunan/' . $pajak->slug . '/show') }}"><span
+                                                            class="btn btn-danger "><i
+                                                                class="bi bi-exclamation-triangle me-1"></i> Servis</span></a>
+                                                    <a href="{{ url('kendaraan/detail-kendaraan/' . $pajak->slug) }}"><span
                                                             class="btn btn-info "><i class="bi bi-info-square me-1"></i>
                                                             Detail</span></a>
 

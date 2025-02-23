@@ -161,7 +161,7 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
-                                <table class="table datatable ">
+                                <table class="table datatable table-hover">
                                     <thead>
                                         <tr>
                                             <th class="border border-gray-400 px-4 py-2">No.</th>

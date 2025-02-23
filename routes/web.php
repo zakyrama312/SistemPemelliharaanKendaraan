@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BahanbakarController;
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\PajakTahunanController;
 use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\PemeliharaanController;
 use App\Http\Controllers\Users;
@@ -56,3 +57,12 @@ Route::delete('/pengeluaran-bbm/{id}', [BahanbakarController::class, 'destroy'])
 Route::get('/pengeluaran-bbm/tambah-pengeluaran-bbm', [BahanbakarController::class, 'create'])->name('pengeluaran-bbm.bahanbakar-create');
 Route::post('/pengeluaran-bbm/store', [BahanbakarController::class, 'store'])->name('pengeluaran-bbm.store');
 Route::get('/pengeluaran-bbm', [BahanbakarController::class, 'index'])->name('pengeluaran-bbm.index');
+
+// route pajak tahunan
+Route::get('/pajak-tahunan/{slug}/edit', [PajakTahunanController::class, 'edit']);
+Route::get('/pajak-tahunan/{slug}/show', [PajakTahunanController::class, 'show']);
+Route::put('/pajak-tahunan/{id}', [PajakTahunanController::class, 'update'])->name('pajak-tahunan.update');
+Route::delete('/pajak-tahunan/{id}', [PajakTahunanController::class, 'destroy']);
+Route::get('/pajak-tahunan/tambah-pajak-tahunan', [PajakTahunanController::class, 'create'])->name('pajak-tahunan.pajaktahunan-create');
+Route::post('/pajak-tahunan/store', [PajakTahunanController::class, 'store'])->name('pajak-tahunan.store');
+Route::get('/pajak-tahunan', [PajakTahunanController::class, 'index'])->name('pajak-tahunan.index');

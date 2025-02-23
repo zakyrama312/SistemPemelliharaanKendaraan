@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('id_rekening')->constrained('rekening')->onDelete('cascade');
             $table->date('tanggal');
             $table->enum('jenis_transaksi', ['pemasukan', 'pengeluaran']);
-            $table->enum('sumber_transaksi', ['pajak', 'pengeluaran_bbm', 'pemeliharaan']);
+            $table->enum('sumber_transaksi', ['Pajak Tahunan', 'Pajak Plat', 'Pengeluaran BBM', 'Pemeliharaan']);
             $table->unsignedBigInteger('id_sumber'); // ID dari pajak, pengeluaran_bbm, atau pemeliharaan
             $table->integer('nominal');
             $table->integer('saldo_setelah');
