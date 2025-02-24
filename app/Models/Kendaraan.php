@@ -33,7 +33,7 @@ class Kendaraan extends Model
 
     public function pajak()
     {
-        return $this->hasMany(Pajak::class, 'id_kendaraan');
+        return $this->hasMany(Pajak::class, 'id_kendaraan', 'id');
     }
 
 }

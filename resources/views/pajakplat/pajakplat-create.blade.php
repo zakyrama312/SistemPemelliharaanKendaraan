@@ -12,7 +12,7 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/pemeliharaan">Kembali</a></li>
-                    <li class="breadcrumb-item active">Tambah Data Pajak Tahunan</li>
+                    <li class="breadcrumb-item active">Tambah Data Pajak Plat</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -23,10 +23,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Tambah Pajak Tahunan</h5>
+                            <h5 class="card-title">Tambah Pajak Plat</h5>
 
                             <!-- General Form Elements -->
-                            <form action="{{ route('pajak-tahunan.store') }}" method="POST">
+                            <form action="{{ route('pajak-plat.store') }}" method="POST">
                                 @csrf
                                 <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">Kendaraan </label>
@@ -108,7 +108,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <button type="submit" class="btn btn-primary float-end ms-3">Simpan</button>
-                                        <a href="/pajak-tahunan" class="btn btn-outline-primary float-end">Kembali</a>
+                                        <a href="/pajak-plat" class="btn btn-outline-primary float-end">Kembali</a>
                                     </div>
                                 </div>
                             </form>
@@ -142,7 +142,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($view_pajakTahunan as $pm)
+                                        @foreach ($view_pajakPlat as $pm)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ FormatHelper::formatTanggal($pm->masa_berlaku) }}</td>
@@ -172,7 +172,7 @@
     </main>
 
     {{-- Modal Update --}}
-    @include('pajaktahunan.pajaktahunan-edit')
+    @include('pajakplat.pajakplat-edit')
     {{-- Modal Delete --}}
-    @include('pajaktahunan.pajaktahunan-delete')
+    @include('pajakplat.pajakplat-delete')
 @endsection

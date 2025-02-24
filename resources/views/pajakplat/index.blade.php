@@ -6,7 +6,7 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Pajak Tahunan Kendaraan</h1>
+            <h1>Pajak Plat Kendaraan</h1>
 
         </div><!-- End Page Title -->
 
@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                                                                            class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -47,7 +47,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($pajakTahunan as $index => $pajak)
+                                        @foreach ($pajakPlat as $index => $pajak)
                                             <tr>
                                                 <td class="text-center align-middle">{{ $loop->iteration }}</td>
                                                 <td class="align-middle">
@@ -77,7 +77,7 @@
 
                                                 <td class="text-center align-middle">
                                                     @if ($pajak['status'] == 'warning' || $pajak['status'] == 'danger')
-                                                        <a href="{{ url('pajak-tahunan/' . $pajak['slug'] . '/show') }}"><span
+                                                        <a href="{{ url('pajak-plat/' . $pajak['slug'] . '/show') }}"><span
                                                                 class="btn btn-warning "><i
                                                                     class="bi bi-exclamation-triangle me-1"></i> Bayar</span></a>
                                                     @endif

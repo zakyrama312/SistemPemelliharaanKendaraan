@@ -45,6 +45,15 @@
   });
 </script>
 <script>
+  new AutoNumeric('.format-rupiahEdit', {
+    digitGroupSeparator: '.',
+    decimalCharacter: ',',
+    currencySymbol: 'Rp ',
+    currencySymbolPlacement: 'p',
+    unformatOnSubmit: true
+  });
+</script>
+<script>
   $(".select2").select2({
     placeholder: "Pilih Nama",
     allowClear: true,

@@ -12,6 +12,11 @@ class Pajak extends Model
   protected $table = 'pajak';
   protected $guarded = ['id'];
 
+  protected $casts = [
+    'masa_berlaku' => 'date',
+  ];
+
+
   public function kendaraan()
   {
     return $this->belongsTo(Kendaraan::class, 'id_kendaraan');

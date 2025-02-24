@@ -9,7 +9,7 @@
             {{-- <h1>Data Rekening</h1> --}}
             <nav>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/pemeliharaan">Kembali</a></li>
+                    <li class="breadcrumb-item"><a href="/pengeluaran-bbm">Kembali</a></li>
                     <li class="breadcrumb-item active">Tambah Data Pemeliharaan</li>
                 </ol>
             </nav>

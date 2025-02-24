@@ -1,32 +1,18 @@
 @php
     use App\Helpers\FormatHelper;
 @endphp
-@foreach ($view_pemeliharaan as $pm)
+@foreach ($view_pajakPlat as $pm)
     <div class="modal fade" id="largeModal{{ $pm->id }}" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Data Pemeliharaan </h5>
+                    <h5 class="modal-title">Edit Data Pajak Plat </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('pemeliharaan/' . $pm->id) }}" method="POST">
+                    <form action="{{ url('pajak-plat/' . $pm->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-
-                        <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-4 col-form-label">Frekuensi per berapa bulan <sup
-                                    class="text-danger">*</sup></label>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control @error('frekuensi') is-invalid @enderror"
-                                    name="frekuensi" value="{{ old('frekuensi', $pm->interval_bulan) }}">
-
-                                @error('frekuensi')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <label class="col-sm-4 col-form-label">Bulan</label>
-                        </div>
 
                         <div class="row mb-3">
                             <div class="col-sm-8">
@@ -35,21 +21,21 @@
                                 <input type="hidden" readonly class="form-control " name="id_rekening"
                                     value="{{ old('id_rekening', $pm->id_rekening) }}">
                                 <input type="hidden" readonly class="form-control " name="slug"
-                                    value="{{ old('slug', $pemeliharaan->kendaraan->slug) }}">
+                                    value="{{ old('slug', $kendaraan->slug) }}">
 
 
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-4 col-form-label">Nama Bengkel <sup
+                            <label for="inputEmail" class="col-sm-4 col-form-label">Masa Berlaku <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control @error('nama_bengkel') is-invalid @enderror"
-                                    name="nama_bengkel" value="{{ old('nama_bengkel', $pm->bengkel) }}">
-                                @error('nama_bengkel')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <input type="text"
+                                    class="form-control format-tanggal @error('masa_berlaku') is-invalid @enderror"
+                                    name="masa_berlaku" value="{{ old('masa_berlaku', $masa_berlaku) }}">
+                                @error('masa_berlaku')
+                                <div class=" invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
 
@@ -59,20 +45,8 @@
                             <div class="col-sm-8">
                                 <input type="text"
                                     class="form-control format-rupiahEdit @error('biaya') is-invalid @enderror" name="biaya"
-                                    value="{{ old('biaya', FormatHelper::formatRupiah($pm->biaya)) }}">
+                                    value="{{ old('biaya', FormatHelper::formatRupiah($pm->nominal)) }}">
                                 @error('biaya')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-4 col-form-label">Deskripsi Pemeliharaan <sup
-                                    class="text-danger">*</sup></label>
-                            <div class="col-sm-8">
-                                <textarea name="deskripsi" class="form-control @error('deskripsi') is-invalid @enderror"
-                                    id="">{{ old('deskripsi', $pm->deskripsi) }}</textarea>
-                                @error('deskripsi')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

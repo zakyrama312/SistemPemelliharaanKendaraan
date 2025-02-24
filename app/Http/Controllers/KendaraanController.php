@@ -55,7 +55,7 @@ class KendaraanController extends Controller
             'bahan_bakar' => 'required|string|max:30',
             'jenis' => 'required|in:Mobil,Motor,Truk,Alat Berat',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
-            'tahun_pembuatan' => 'required|date',
+            'tahun_pembuatan' => 'required',
             'masa_aktif_pajak_tahunan' => 'required',
             'masa_aktif_plat' => 'required',
             'tanggal_pemeliharaan' => 'required',
@@ -181,7 +181,7 @@ class KendaraanController extends Controller
                 'id_sumber' => $pemeliharaan->id,
                 'tanggal' => now(),
                 'jenis_transaksi' => 'pengeluaran',
-                'sumber_transaksi' => 'pemeliharaan',
+                'sumber_transaksi' => 'Pemeliharaan',
                 'nominal' => $request->biaya_pemeliharaan,
                 'saldo_setelah' => $saldo_akhir
             ]);

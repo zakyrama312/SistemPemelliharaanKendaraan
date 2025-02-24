@@ -10,28 +10,25 @@ use App\Models\Kendaraan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class PajakTahunanController extends Controller
+class PajakPlatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $pajakTahunan = Kendaraan::with([
+        $pajakPlat = Kendaraan::with([
             'pajak' => function ($query) {
-                $query->where('jenis_pajak', 'pajak_tahunan')
+                $query->where('jenis_pajak', 'pajak_plat')
                     ->latest('masa_berlaku') // Ambil pajak terbaru berdasarkan masa berlaku
                     ->take(1); // Ambil satu pajak terbaru per kendaraan
             }
         ])
             ->withCount([
-                'pajak as total_pajak_tahunan' => function ($query) {
-                    $query->where('jenis_pajak', 'pajak_tahunan');
+                'pajak as total_pajak_plat' => function ($query) {
+                    $query->where('jenis_pajak', 'pajak_plat');
                 }
             ])
             ->withSum('pajak', 'nominal') // Hitung total biaya
             ->whereHas('pajak', function ($query) {
-                $query->where('jenis_pajak', 'pajak_tahunan');
+                $query->where('jenis_pajak', 'pajak_plat');
             })
             ->get()
             ->flatMap(function ($kendaraan) {
@@ -67,11 +64,7 @@ class PajakTahunanController extends Controller
                 });
             });
 
-
-
-
-
-        return view('pajaktahunan.index', compact('pajakTahunan'));
+        return view('pajakplat.index', compact('pajakPlat'));
     }
 
     /**
@@ -112,7 +105,7 @@ class PajakTahunanController extends Controller
                 'id_kendaraan' => $request->id_kendaraan,
                 'id_rekening' => $request->id_rekening,
                 'masa_berlaku' => $masaBerlaku,
-                'jenis_pajak' => 'pajak_tahunan',
+                'jenis_pajak' => 'pajak_plat',
                 'nominal' => $request->biaya
             ]);
             // Kurangi saldo rekening
@@ -125,7 +118,7 @@ class PajakTahunanController extends Controller
                 'id_rekening' => $request->id_rekening,
                 'jenis_transaksi' => 'pengeluaran',
                 'id_sumber' => $pajak->id, // Relasi ke tabel pengeluaran Pajak
-                'sumber_transaksi' => 'Pajak Tahunan',
+                'sumber_transaksi' => 'Pajak Plat',
                 'nominal' => $request->biaya,
                 'tanggal' => now(),
                 'saldo_setelah' => $saldo_akhir
@@ -145,8 +138,8 @@ class PajakTahunanController extends Controller
     public function show(string $slug)
     {
         $kendaraan = Kendaraan::where('slug', $slug)->with('rekening', 'pajak')->first();
-        $view_pajakTahunan = Pajak::where('id_kendaraan', $kendaraan->id)
-            ->where('jenis_pajak', 'pajak_tahunan')
+        $view_pajakPlat = Pajak::where('id_kendaraan', $kendaraan->id)
+            ->where('jenis_pajak', 'pajak_plat')
             ->with('kendaraan', 'rekening')
             ->orderBy('created_at', 'desc') // Urut dari yang terbaru
             ->get();
@@ -155,7 +148,7 @@ class PajakTahunanController extends Controller
             ->first();
         $masa_berlaku = $pajakTerbaru ? Carbon::parse($pajakTerbaru->masa_berlaku)->format('d/m/Y') : null;
 
-        return view('pajaktahunan.pajaktahunan-create', compact('kendaraan', 'view_pajakTahunan', 'masa_berlaku'));
+        return view('pajakplat.pajakplat-create', compact('kendaraan', 'view_pajakPlat', 'masa_berlaku'));
     }
 
     /**
@@ -174,12 +167,12 @@ class PajakTahunanController extends Controller
         DB::beginTransaction();
         try {
             // Cari data bahan bakar
-            $pajakTahunan = Pajak::findOrFail($id);
-            $rekening = Rekening::findOrFail($pajakTahunan->id_rekening);
+            $pajakPlat = Pajak::findOrFail($id);
+            $rekening = Rekening::findOrFail($pajakPlat->id_rekening);
 
             // Ambil transaksi keuangan terkait bahan bakar ini
-            $keuangan = Keuangan::where('id_sumber', $pajakTahunan->id)
-                ->where('sumber_transaksi', 'Pajak Tahunan')
+            $keuangan = Keuangan::where('id_sumber', $pajakPlat->id)
+                ->where('sumber_transaksi', 'Pajak Plat')
                 ->first();
 
             if (!$keuangan) {
@@ -187,7 +180,7 @@ class PajakTahunanController extends Controller
             }
 
             // Kembalikan saldo rekening dengan nominal lama
-            $rekening->saldo_akhir += $pajakTahunan->nominal;
+            $rekening->saldo_akhir += $pajakPlat->nominal;
 
             // Cek apakah saldo cukup untuk biaya baru
             if ($rekening->saldo_akhir < $request->biaya) {
@@ -200,7 +193,7 @@ class PajakTahunanController extends Controller
 
             $masaBerlaku = Carbon::createFromFormat('d/m/Y', $request->masa_berlaku)->format('Y-m-d');
 
-            $pajakTahunan->update([
+            $pajakPlat->update([
                 'masa_berlaku' => $masaBerlaku,
                 'nominal' => $request->biaya
             ]);
@@ -229,14 +222,14 @@ class PajakTahunanController extends Controller
 
         try {
             // Ambil data Pajak yang akan dihapus
-            $pajakTahunan = Pajak::findOrFail($id);
+            $pajakPlat = Pajak::findOrFail($id);
 
             // Ambil data rekening terkait
-            $rekening = Rekening::findOrFail($pajakTahunan->id_rekening);
+            $rekening = Rekening::findOrFail($pajakPlat->id_rekening);
 
             // Ambil data keuangan yang terkait dengan bahan bakar ini
-            $keuangan = Keuangan::where('id_sumber', $pajakTahunan->id)
-                ->where('sumber_transaksi', 'Pajak Tahunan')
+            $keuangan = Keuangan::where('id_sumber', $pajakPlat->id)
+                ->where('sumber_transaksi', 'Pajak Plat')
                 ->first();
 
             // Jika data keuangan ada, hapus dulu sebelum hapus bahan bakar
@@ -245,21 +238,21 @@ class PajakTahunanController extends Controller
             }
 
             // Kembalikan saldo rekening dengan nominal bahan bakar yang dihapus
-            $rekening->saldo_akhir += $pajakTahunan->nominal;
+            $rekening->saldo_akhir += $pajakPlat->nominal;
             $rekening->save();
 
 
             // Hapus data bahan bakar
-            $pajakTahunan->delete();
+            $pajakPlat->delete();
 
             // Commit transaksi jika semuanya berhasil
             DB::commit();
 
-            return redirect()->back()->with('success', 'Data Pajak Tahunan berhasil dihapus dan saldo rekening diperbarui.');
+            return redirect()->back()->with('success', 'Data Pajak Plat berhasil dihapus dan saldo rekening diperbarui.');
         } catch (\Exception $e) {
             // Rollback jika ada kesalahan
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menghapus data Pajak Tahunan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menghapus data Pajak Plat: ' . $e->getMessage());
         }
     }
 }

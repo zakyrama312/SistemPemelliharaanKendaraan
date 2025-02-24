@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\BahanbakarController;
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\PajakPlatController;
 use App\Http\Controllers\PajakTahunanController;
 use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\PemeliharaanController;
@@ -66,3 +68,15 @@ Route::delete('/pajak-tahunan/{id}', [PajakTahunanController::class, 'destroy'])
 Route::get('/pajak-tahunan/tambah-pajak-tahunan', [PajakTahunanController::class, 'create'])->name('pajak-tahunan.pajaktahunan-create');
 Route::post('/pajak-tahunan/store', [PajakTahunanController::class, 'store'])->name('pajak-tahunan.store');
 Route::get('/pajak-tahunan', [PajakTahunanController::class, 'index'])->name('pajak-tahunan.index');
+
+// route pajak tahunan
+Route::get('/pajak-plat/{slug}/edit', [PajakPlatController::class, 'edit']);
+Route::get('/pajak-plat/{slug}/show', [PajakPlatController::class, 'show']);
+Route::put('/pajak-plat/{id}', [PajakPlatController::class, 'update'])->name('pajak-plat.update');
+Route::delete('/pajak-plat/{id}', [PajakPlatController::class, 'destroy']);
+Route::get('/pajak-plat/tambah-pajak-plat', [PajakPlatController::class, 'create'])->name('pajak-plat.pajaktahunan-create');
+Route::post('/pajak-plat/store', [PajakPlatController::class, 'store'])->name('pajak-plat.store');
+Route::get('/pajak-plat', [PajakPlatController::class, 'index'])->name('pajak-plat.index');
+
+// pengeluaran keuangan
+Route::get('/pengeluaran', [KeuanganController::class, 'index'])->name('pajak-plat.index');

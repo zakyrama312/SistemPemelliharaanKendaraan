@@ -27,6 +27,12 @@
         <span>Data Kendaraan</span>
       </a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link {{ Request::is('pengeluaran') ? 'active' : 'collapsed' }}" href="/pengeluaran">
+        <i class="bi bi-journal"></i>
+        <span>Data Pengeluaran</span>
+      </a>
+    </li>
 
     <li class="nav-heading">Pengeluaran</li>
     <li class="nav-item">
