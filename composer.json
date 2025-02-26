@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.2",
         "intervention/image": "^3.11",
+        "itsgoingd/clockwork": "^5.3",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "laravolt/avatar": "^6.0"

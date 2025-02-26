@@ -29,7 +29,63 @@ class DashboardController extends Controller
             ->pluck('total', 'jenis')
             ->toArray();
 
-        return view('dashboard.index', compact('totalBiayaPemeliharaan', 'totalBiayaBBM', 'totalBiayaPajakPlat', 'totalBiayaPajakTahunan', 'totalKendaraan', 'jumlahKendaraanPerJenis', 'totalPengeluaran', 'rekening'));
+
+        $pajakTerbaru = Kendaraan::with([
+            'pajak' => function ($query) {
+                $query->whereIn('jenis_pajak', ['pajak_plat', 'pajak_tahunan'])
+                    ->whereIn('id', function ($subquery) {
+                        $subquery->select(DB::raw('MAX(id)'))
+                            ->from('pajak')
+                            ->whereIn('jenis_pajak', ['pajak_plat', 'pajak_tahunan'])
+                            ->groupBy('id_kendaraan', 'jenis_pajak');
+                    });
+            }
+        ])->get()->flatMap(function ($kendaraan) {
+            return $kendaraan->pajak->map(function ($pajak) use ($kendaraan) {
+                if (!$pajak->masa_berlaku) {
+                    $peringatan = null;
+                    $status = 'safe';
+                } else {
+
+                    $masaBerlaku = Carbon::parse($pajak->masa_berlaku->format('Y-m-d'));
+                    $hariSisa = ceil(now()->diffInDays($masaBerlaku, false));
+
+                    $jenis_pajak = $pajak->jenis_pajak == 'pajak_tahunan' ? 'Pajak Tahunan' : 'Pajak Plat';
+                    $routes = $pajak->jenis_pajak == 'pajak_tahunan' ? 'pajak-tahunan/' : 'pajak-plat/';
+                    $no_plat = $kendaraan->no_polisi . '-' . $kendaraan->model;
+
+                    if ($hariSisa > 0 && $hariSisa <= 7) {
+                        $peringatan = "<strong>$no_plat $hariSisa hari</strong> lagi segera membayar ";
+                        $status = 'warning';
+                        $icon = 'bi-exclamation-triangle';
+                        $route = $routes;
+                    } elseif ($hariSisa < 0) {
+                        $peringatan = "<strong>$no_plat</strong> Sudah Melewati Jatuh Tempo  <strong>" . abs($hariSisa) . " hari</strong> $jenis_pajak";
+                        $status = 'danger';
+                        $icon = 'bi-exclamation-octagon';
+                        $route = $routes;
+                    } else {
+                        $peringatan = "Aman";
+                        $status = 'safe';
+                        $icon = 'bi-check-circle';
+                        $route = '-';
+                    }
+                }
+
+                return [
+                    'slug' => $kendaraan->slug,
+                    'nomor_polisi' => $kendaraan->no_polisi,
+                    'merk' => $kendaraan->merk,
+                    'model' => $kendaraan->model,
+                    'masa_berlaku' => $pajak->masa_berlaku,
+                    'peringatan' => $peringatan,
+                    'status' => $status,
+                    'icon' => $icon,
+                    'route' => $route,
+                ];
+            });
+        });
+        return view('dashboard.index', compact('totalBiayaPemeliharaan', 'totalBiayaBBM', 'totalBiayaPajakPlat', 'totalBiayaPajakTahunan', 'totalKendaraan', 'jumlahKendaraanPerJenis', 'totalPengeluaran', 'rekening', 'pajakTerbaru'));
     }
 
 

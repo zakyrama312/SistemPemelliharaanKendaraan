@@ -36,7 +36,7 @@
                             <h5 class="card-title">Daftar Kendaraan yang Perlu Pemeliharan</h5>
 
                             <!-- List group With Scrollable -->
-                            <ul class="list-group overflow-auto" style="max-height: 200px;">
+                            <ul class="list-group overflow-auto" style="max-height: 300px;">
                                 <li class="list-group-item"><i class="bi bi-star me-1 text-success"></i> An item</li>
                                 <li class="list-group-item"><i class="bi bi-collection me-1 text-primary"></i> A second item
                                 </li>
@@ -61,19 +61,19 @@
                             <h5 class="card-title">Daftar Kendaraan yang Perlu Membayar Pajak</h5>
 
                             <!-- List group With Scrollable -->
-                            <ul class="list-group overflow-auto" style="max-height: 200px;">
-                                <li class="list-group-item"><i class="bi bi-star me-1 text-success"></i> An item</li>
-                                <li class="list-group-item"><i class="bi bi-collection me-1 text-primary"></i> A second item
-                                </li>
-                                <li class="list-group-item"><i class="bi bi-check-circle me-1 text-danger"></i> A third item
-                                </li>
-                                <li class="list-group-item"><i class="bi bi-exclamation-octagon me-1 text-warning"></i> A
-                                    fourth item</li>
-                                <li class="list-group-item"><i class="bi bi-star me-1 text-success"></i> Item 5</li>
-                                <li class="list-group-item"><i class="bi bi-collection me-1 text-primary"></i> Item 6</li>
-                                <li class="list-group-item"><i class="bi bi-check-circle me-1 text-danger"></i> Item 7</li>
-                                <li class="list-group-item"><i class="bi bi-exclamation-octagon me-1 text-warning"></i> Item
-                                    8</li>
+                            <ul class="list-group overflow-auto" style="max-height: 300px;">
+                                @foreach ($pajakTerbaru as $index => $p)
+                                    @if ($p['status'] != 'safe')
+                                        <a href="{{ $p['route'] }}{{ $p['slug'] }}/show">
+                                            <div class="alert alert-{{ $p['status'] }} alert-dismissible fade show" role="alert">
+                                                <i class="bi {{ $p['icon'] }} me-1"></i>
+                                                {!! $p['peringatan'] !!}
+                                            </div>
+                                        </a>
+                                    @endif
+
+                                @endforeach
+
                             </ul><!-- End List group With Scrollable -->
 
                         </div>
