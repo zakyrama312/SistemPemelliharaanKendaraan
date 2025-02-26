@@ -202,14 +202,99 @@ class KendaraanController extends Controller
     {
         $kendaraanData = Kendaraan::with([
             'pemeliharaan' => function ($query) {
-                $query->orderByDesc('tanggal_pemeliharaan_sebelumnya')->limit(1); // Ambil pemeliharaan terbaru
-            }
-        ], 'user')
+                $query->orderByDesc('tanggal_pemeliharaan_sebelumnya')->limit(1);
+            },
+            'pajak' => function ($query) { // Ambil Pajak Plat & Pajak Tahunan
+                $query->whereIn('jenis_pajak', ['pajak_plat', 'pajak_tahunan'])
+                    ->latest('masa_berlaku');
+            },
+            'user',
+            'pengeluaran_bbm'
+        ])
             ->where('slug', $slug)
             ->withCount('pemeliharaan') // Hitung frekuensi pemeliharaan
-            ->withSum('pemeliharaan', 'biaya') // Hitung total biaya
+            ->withCount('pengeluaran_bbm') // Hitung frekuensi pemeliharaan
+            ->withSum('pemeliharaan', 'biaya') // Hitung total biaya pemeliharaan
+            ->withSum('pengeluaran_bbm', 'nominal') // Hitung total biaya pemeliharaan
+            ->withCount([
+                'pajak as total_pajak_plat' => function ($query) {
+                    $query->where('jenis_pajak', 'pajak_plat');
+                },
+                'pajak as total_pajak_tahunan' => function ($query) {
+                    $query->where('jenis_pajak', 'pajak_tahunan');
+                }
+            ])
             ->firstOrFail();
 
+        // ===========================
+// CEK STATUS PAJAK PLAT
+// ===========================
+        $pajakPlat = $kendaraanData->pajak->where('jenis_pajak', 'pajak_plat')->sortByDesc('masa_berlaku')->first();
+
+        if ($pajakPlat) {
+            $masaBerlakuPlat = Carbon::parse($pajakPlat->masa_berlaku->format('Y-m-d'));
+            $hariSisaPlat = ceil(now()->diffInDays($masaBerlakuPlat, false));
+
+            if ($hariSisaPlat > 0 && $hariSisaPlat <= 7) {
+                $peringatanPajakPlat = "<strong>$hariSisaPlat hari</strong> lagi segera membayar pajak";
+                $statusPajakPlat = 'warning';
+                $iconsPlat = 'bi-exclamation-triangle';
+            } elseif ($hariSisaPlat < 0) {
+                $peringatanPajakPlat = "Sudah Melewati Jatuh Tempo <strong>" . abs($hariSisaPlat) . " hari</strong>";
+                $statusPajakPlat = 'danger';
+                $iconsPlat = 'bi-exclamation-octagon';
+            } else {
+                $peringatanPajakPlat = "Aman";
+                $statusPajakPlat = 'success';
+                $iconsPlat = 'bi-check-circle';
+            }
+
+            // Tambahkan ke kendaraanData
+            $kendaraanData->masa_berlaku_pajak_plat = $pajakPlat->masa_berlaku;
+            $kendaraanData->peringatan_pajak_plat = $peringatanPajakPlat;
+            $kendaraanData->status_pajak_plat = $statusPajakPlat;
+            $kendaraanData->icons_plat = $iconsPlat;
+        } else {
+            $kendaraanData->peringatan_pajak_plat = "Tidak ada data pajak plat";
+            $kendaraanData->status_pajak_plat = 'unknown';
+        }
+
+        // ===========================
+        // CEK STATUS PAJAK TAHUNAN
+        // ===========================
+
+        $pajakTahunan = $kendaraanData->pajak->where('jenis_pajak', 'pajak_tahunan')->sortByDesc('masa_berlaku')->first();
+        if ($pajakTahunan) {
+            $masaBerlakuTahunan = Carbon::parse($pajakTahunan->masa_berlaku->format('Y-m-d'));
+            $hariSisaTahunan = ceil(now()->diffInDays($masaBerlakuTahunan, false));
+
+            if ($hariSisaTahunan > 0 && $hariSisaTahunan <= 7) {
+                $peringatanPajakTahunan = "<strong>$hariSisaTahunan hari</strong> lagi segera membayar pajak";
+                $statusPajakTahunan = 'warning';
+                $iconsTahunan = 'bi-exclamation-triangle';
+            } elseif ($hariSisaTahunan < 0) {
+                $peringatanPajakTahunan = "Sudah Melewati Jatuh Tempo <strong>" . abs($hariSisaTahunan) . " hari</strong>";
+                $statusPajakTahunan = 'danger';
+                $iconsTahunan = 'bi-exclamation-octagon';
+            } else {
+                $peringatanPajakTahunan = "Aman";
+                $statusPajakTahunan = 'success';
+                $iconsTahunan = 'bi-check-circle';
+            }
+
+            // Tambahkan ke kendaraanData
+            $kendaraanData->masa_berlaku_pajak_tahunan = $pajakTahunan->masa_berlaku;
+            $kendaraanData->peringatan_pajak_tahunan = $peringatanPajakTahunan;
+            $kendaraanData->status_pajak_tahunan = $statusPajakTahunan;
+            $kendaraanData->icons_tahunan = $iconsTahunan;
+        } else {
+            $kendaraanData->peringatan_pajak_tahunan = "Tidak ada data pajak tahunan";
+            $kendaraanData->status_pajak_tahunan = 'unknown';
+        }
+
+        // ===========================
+        // CEK STATUS PEMELIHARAAN
+        // ===========================
         $tanggalBerikutnya = optional($kendaraanData->pemeliharaan->first())->tanggal_pemeliharaan_berikutnya;
 
         if ($tanggalBerikutnya) {
@@ -233,12 +318,18 @@ class KendaraanController extends Controller
             $kendaraanData->status_pemeliharaan = "❓ Tidak Ada Jadwal";
         }
 
+
+
         $pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraanData->id)
             ->orderBy('created_at', 'desc') // Urutkan dari terbaru ke terlama
             ->limit(3) // Ambil hanya 3 data
             ->get();
+        $bbm = Bahanbakar::where('id_kendaraan', $kendaraanData->id)
+            ->orderBy('created_at', 'desc') // Urutkan dari terbaru ke terlama
+            ->limit(3) // Ambil hanya 3 data
+            ->get();
 
-        return view('kendaraan.kendaraan-detail', compact('kendaraanData', 'pemeliharaan'));
+        return view('kendaraan.kendaraan-detail', compact('kendaraanData', 'pemeliharaan', 'bbm'));
     }
 
     /**

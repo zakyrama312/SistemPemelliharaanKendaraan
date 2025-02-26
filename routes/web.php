@@ -1,19 +1,19 @@
 <?php
 
-use App\Http\Controllers\BahanbakarController;
-use App\Http\Controllers\KendaraanController;
-use App\Http\Controllers\KeuanganController;
-use App\Http\Controllers\PajakPlatController;
-use App\Http\Controllers\PajakTahunanController;
-use App\Http\Controllers\RekeningController;
-use App\Http\Controllers\PemeliharaanController;
-use App\Http\Controllers\Users;
 use App\Models\Pemeliharaan;
+use App\Http\Controllers\Users;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\RekeningController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\PajakPlatController;
+use App\Http\Controllers\BahanbakarController;
+use App\Http\Controllers\PajakTahunanController;
+use App\Http\Controllers\PemeliharaanController;
 
-Route::get('/', function () {
-        return view('dashboard.index');
-});
+
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
 // route pegawai
 Route::get('/pegawai/{slug}/edit', [Users::class, 'edit']);
@@ -80,3 +80,5 @@ Route::get('/pajak-plat', [PajakPlatController::class, 'index'])->name('pajak-pl
 
 // pengeluaran keuangan
 Route::get('/pengeluaran', [KeuanganController::class, 'index'])->name('pajak-plat.index');
+
+Route::get('/chart-data', [DashboardController::class, 'getChartData']);

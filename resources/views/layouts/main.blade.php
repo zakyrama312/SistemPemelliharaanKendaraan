@@ -59,6 +59,23 @@
       height: 100%;
       /* Pastikan panah dropdown tetap sejajar */
     }
+
+    ul.list-group::-webkit-scrollbar {
+      width: 6px;
+      /* Lebar scrollbar */
+    }
+
+    ul.list-group::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      /* Warna thumb (bagian yang bisa digeser) */
+      border-radius: 10px;
+      /* Membuat ujungnya melengkung */
+    }
+
+    ul.list-group::-webkit-scrollbar-track {
+      background: transparent;
+      /* Warna latar belakang scrollbar */
+    }
   </style>
 </head>
 
@@ -70,7 +87,7 @@
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.html" class="logo d-flex align-items-center">
         <img src="/assets/img/logo.png" alt="">
-        <span class="d-none d-lg-block">NiceAdmin</span>
+        <span class="d-none d-lg-block">Sipemda</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
