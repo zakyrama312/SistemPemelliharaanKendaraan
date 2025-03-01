@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                                                                                            class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                                                                                class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -76,11 +76,10 @@
                                                 </td>
 
                                                 <td class="text-center align-middle">
-                                                    @if ($pajak['status'] == 'warning' || $pajak['status'] == 'danger')
-                                                        <a href="{{ url('pajak-plat/' . $pajak['slug'] . '/show') }}"><span
-                                                                class="btn btn-warning "><i
-                                                                    class="bi bi-exclamation-triangle me-1"></i> Bayar</span></a>
-                                                    @endif
+                                                    <a href="{{ url('pajak-plat/' . $pajak['slug'] . '/show') }}"><span
+                                                            class="btn btn-warning "><i
+                                                                class="bi bi-exclamation-triangle me-1"></i> Bayar</span></a>
+
                                                     <a href="{{ url('kendaraan/detail-kendaraan/' . $pajak['slug']) }}"><span
                                                             class="btn btn-info "><i class="bi bi-info-square me-1"></i>
                                                             Detail</span></a>

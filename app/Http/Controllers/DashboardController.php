@@ -60,7 +60,7 @@ class DashboardController extends Controller
                         $icon = 'bi-exclamation-triangle';
                         $route = $routes;
                     } elseif ($hariSisa < 0) {
-                        $peringatan = "<strong>$no_plat</strong> Sudah Melewati Jatuh Tempo  <strong>" . abs($hariSisa) . " hari</strong> $jenis_pajak";
+                        $peringatan = "<strong>$no_plat</strong> Sudah Jatuh Tempo  <strong>" . abs($hariSisa) . " hari</strong> $jenis_pajak";
                         $status = 'danger';
                         $icon = 'bi-exclamation-octagon';
                         $route = $routes;
@@ -73,6 +73,7 @@ class DashboardController extends Controller
                 }
 
                 return [
+                    'id' => $kendaraan->id,
                     'slug' => $kendaraan->slug,
                     'nomor_polisi' => $kendaraan->no_polisi,
                     'merk' => $kendaraan->merk,
@@ -85,7 +86,50 @@ class DashboardController extends Controller
                 ];
             });
         });
-        return view('dashboard.index', compact('totalBiayaPemeliharaan', 'totalBiayaBBM', 'totalBiayaPajakPlat', 'totalBiayaPajakTahunan', 'totalKendaraan', 'jumlahKendaraanPerJenis', 'totalPengeluaran', 'rekening', 'pajakTerbaru'));
+        $kendaraanData = Kendaraan::with([
+            'pemeliharaan' => function ($query) {
+                $query->orderByDesc('tanggal_pemeliharaan_sebelumnya')->limit(1); // Ambil pemeliharaan terbaru
+            }
+        ])
+            ->withCount('pemeliharaan') // Hitung frekuensi pemeliharaan
+            ->withSum('pemeliharaan', 'biaya') // Hitung total biaya
+            ->get();
+
+        // Tambahkan status berdasarkan tanggal pemeliharaan berikutnya
+        $kendaraanData->transform(function ($kendaraan) {
+            $tanggalBerikutnya = optional($kendaraan->pemeliharaan->first())->tanggal_pemeliharaan_berikutnya;
+
+            if ($tanggalBerikutnya) {
+                $hariIni = now();
+                $batasPeringatan = (now()->addDays(5));
+                $masaBerlaku = Carbon::parse($tanggalBerikutnya);
+                $hariSisa = ceil(now()->diffInDays($masaBerlaku, false)); // Menghitung selisih hari dengan negatif jika terlambat
+
+                if ($hariSisa < 0) {
+                    $no_plat = $kendaraan->no_polisi . '-' . $kendaraan->model;
+                    $kendaraan->status_pemeliharaan = "<strong>$no_plat</strong> Sudah lewat jatuh tempo pemeliharaan <strong>" . abs($hariSisa) . " hari</strong>";
+                    $kendaraan->icon = "bi-exclamation-octagon";
+                    $kendaraan->alert = "alert-danger";
+                } elseif ($hariSisa <= 5) {
+                    $no_plat = $kendaraan->no_polisi . '-' . $kendaraan->model;
+                    $kendaraan->status_pemeliharaan = "<strong>$no_plat $hariSisa hari</strong> lagi segera servis";
+                    $kendaraan->icon = "bi-exclamation-triangle";
+                    $kendaraan->alert = "alert-warning";
+                } else {
+                    $no_plat = $kendaraan->no_polisi . '-' . $kendaraan->model;
+                    $kendaraan->status_pemeliharaan = "✅ Aman";
+                    $kendaraan->icon = "bi-exclamation-triangle";
+                    $kendaraan->alert = "alert-success";
+                }
+            } else {
+                $kendaraan->status_pemeliharaan = "❓ Tidak Ada Jadwal";
+            }
+
+            return $kendaraan;
+        });
+
+
+        return view('dashboard.index', compact('totalBiayaPemeliharaan', 'totalBiayaBBM', 'totalBiayaPajakPlat', 'totalBiayaPajakTahunan', 'totalKendaraan', 'jumlahKendaraanPerJenis', 'totalPengeluaran', 'rekening', 'pajakTerbaru', 'kendaraanData'));
     }
 
 

@@ -53,13 +53,6 @@
                                             <tr>
                                                 <td class="text-center">{{ $loop->iteration }}</td>
                                                 <td>{{ $kendaraan->status_pemeliharaan }}</td>
-                                                <!-- <td>
-                                                                                                    <div class="alert {{ $kendaraan->alert }} alert-dismissible fade show"
-                                                                                                        role="alert">
-                                                                                                        <i class="bi {{ $kendaraan->icon }} me-1"></i>
-                                                                                                        {{ $kendaraan->status_hari }} {{ $kendaraan->status_pemeliharaan }}
-                                                                                                    </div>
-                                                                                                </td> -->
                                                 <td>{{ $kendaraan->no_polisi }} - {{ $kendaraan->merk }} -
                                                     {{ $kendaraan->model }}
                                                 </td>

@@ -16,10 +16,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">
-                                <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                                                                                                                        class="btn btn-outline-primary">Tambah Rekening</a> -->
-                            </h5>
+                            <div class="card-title">
+
+
+                            </div>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <i class="bi bi-check-circle me-1"></i>
@@ -34,9 +34,23 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6"></div>
+
+                                    <label for="" style="color: black" class="mb-3">Filter Tanggal</label>
+                                    <div class="col-md-6">
+                                        <input type="date" id="start_date" name="start_date" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="date" id="end_date" name="end_date" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Table with stripped rows -->
                             <div class="table-responsive">
-                                <table class="table datatable table-hover">
+                                <table class="table table-hover" id="tableKeuangan">
                                     <thead>
                                         <tr>
                                             <th class="border border-gray-400 px-4 py-2 text-center">No</th>
@@ -51,20 +65,23 @@
                                         @foreach ($keuangan as $p)
                                             <tr>
                                                 <td class="text-center">{{ $loop->iteration }}</td>
-
-                                                <td>{{ $p->no_polisi }} - {{ $p->merk }} -
-                                                    {{ $p->model }}
-                                                </td>
-                                                <td>{{ FormatHelper::formatTanggal($p->tanggal) }}
+                                                <td>{{ $p->no_polisi }} - {{ $p->merk }} - {{ $p->model }}</td>
+                                                <td data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('Y-m-d') }}">
+                                                    {{ FormatHelper::formatTanggal($p->tanggal) }}
                                                 </td>
                                                 <td>{{ $p->sumber_transaksi }}</td>
-                                                <td>{{ FormatHelper::formatRupiah($p->nominal) }}</td>
-
-
+                                                <td data-nominal="{{ $p->nominal }}">
+                                                    {{ FormatHelper::formatRupiah($p->nominal) }}
+                                                </td>
                                             </tr>
-
                                         @endforeach
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4" style="text-align:right">Total</th>
+                                            <th id="totalNominal">Rp 0</th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                             <!-- End Table with stripped rows -->

@@ -46,4 +46,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Kendaraan::class, 'id_users');
     }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isUser()
+    {
+        return $this->role === 'user';
+    }
 }

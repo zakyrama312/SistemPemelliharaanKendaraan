@@ -1,6 +1,8 @@
 @extends('layouts.main')
 @section('main')
-
+    @php
+        use App\Helpers\FormatHelper;
+    @endphp
     <main id="main" class="main">
 
         <div class="pagetitle">
@@ -36,29 +38,25 @@
                                 <table class="table datatable table-hover">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Waktu Pembayaran</th>
-                                            <th>Tanggal Berlaku</th>
-                                            <th>Nomor Polisi</th>
-                                            <th>Foto</th>
-                                            <th>Pengguna</th>
-                                            <th>Status</th>
-                                            <th>Aksi</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">No</th>
+                                            <th class="border border-gray-400 px-4 py-2">Nomor Polisi</th>
+                                            <th class="border border-gray-400 px-4 py-2">Foto</th>
+                                            <th class="border border-gray-400 px-4 py-2">Pengguna</th>
+                                            <th class="border border-gray-400 px-4 py-2">Status</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($kendaraan as $kndr)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td></td>
-                                                <td>{{ $kndr->masa_aktif_pajak_tahunan }}</td>
+                                                <td class="text-center">{{ $loop->iteration }}</td>
                                                 <td>{{ $kndr->no_polisi }} - {{ $kndr->merk }} - {{ $kndr->model }}</td>
                                                 <td><img src="{{ asset('kendaraanImage/' . $kndr->foto) }}" alt="Foto Kendaraan"
                                                         width="100">
                                                 </td>
                                                 <td>{{ $kndr->user->name }}</td>
                                                 <td>{{ $kndr->status }}</td>
-                                                <td>
+                                                <td class="text-center">
                                                     <a href="{{ url('kendaraan/' . $kndr->slug . '/edit') }}"><i
                                                             class="bi bi-pencil-square text-warning"></i></a>
                                                     <a href="#" data-bs-toggle="modal"
