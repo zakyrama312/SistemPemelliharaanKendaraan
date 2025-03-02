@@ -55,7 +55,12 @@
                                                         width="100">
                                                 </td>
                                                 <td>{{ $kndr->user->name }}</td>
-                                                <td>{{ $kndr->status }}</td>
+                                                <td class="text-center">
+                                                    <span
+                                                        class="badge bg-{{ $kndr->status == 'aktif' ? 'success' : 'danger' }}"><i
+                                                            class="bi bi-{{ $kndr->status == 'aktif' ? 'check-circle' : 'exclamation-octagon' }} me-1"></i>{{ $kndr->status == 'aktif' ? 'Aktif' : 'Tidak Aktif' }}</span>
+
+                                                </td>
                                                 <td class="text-center">
                                                     <a href="{{ url('kendaraan/' . $kndr->slug . '/edit') }}"><i
                                                             class="bi bi-pencil-square text-warning"></i></a>

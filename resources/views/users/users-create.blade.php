@@ -77,8 +77,8 @@
                                     <div class="col-sm-10">
                                         <select class="form-select @error('role') is-invalid @enderror" name="role">
                                             <option value="">--Pilih-Role--</option>
-                                            <option value="super admin" {{ old('role') == 'super admin' ? 'selected' : '' }}>
-                                                SuperAdmin</option>
+                                            <!-- <option value="super admin" {{ old('role') == 'super admin' ? 'selected' : '' }}>
+                                                    SuperAdmin</option> -->
                                             <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin
                                             </option>
                                             <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>Pengguna

@@ -384,6 +384,7 @@ class KendaraanController extends Controller
             'bidang' => 'required|string|max:50',
             'id_users' => 'required|exists:users,id',
             'id_rek' => 'required|exists:rekening,id',
+            'status' => 'required|in:aktif,nonaktif',
         ], [
             'no_polisi.required' => 'Nomor Polisi wajib diisi.',
             'no_polisi.unique' => 'Nomor Polisi sudah digunakan.',
@@ -408,6 +409,7 @@ class KendaraanController extends Controller
             'id_users.required' => 'Pengguna wajib dipilih.',
             'id_users.exists' => 'Pengguna tidak valid.',
             'id_rek.required' => 'Rekening wajib dipilih.',
+            'status.required' => 'Status wajib dipilih.',
             'id_rek.exists' => 'Rekening tidak valid.',
         ]);
         $fotoPath = $kendaraan->foto;
@@ -446,8 +448,8 @@ class KendaraanController extends Controller
             'bahan_bakar' => $request->bahan_bakar,
             'jumlah_roda' => $request->jumlah_roda,
             'bidang' => $request->bidang,
-            'status' => 'aktif',
             'id_rekening' => $request->id_rek,
+            'status' => $request->status,
         ]);
 
         // Update atau insert pajak tahunan

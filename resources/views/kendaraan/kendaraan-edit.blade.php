@@ -149,7 +149,7 @@
                                 </div>
                                 <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Pengguna <sup class="text-danger">*</sup></label>
-                                    <select class="form-control @error('id_users') is-invalid @enderror"
+                                    <select class="form-control @error('id_users') is-invalid @enderror select2"
                                         name="id_users">
                                         <option value="">--Pilih Pengguna--</option>
                                         @foreach ($user as $usr)
@@ -175,6 +175,24 @@
                                     </select>
                                     @error('id_rek')
                                     <div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-sm-4 mb-3">
+                                    <label class="col-form-label">Status Kendaraan <sup
+                                            class="text-danger">*</sup></label>
+
+                                    <select class="form-control @error('status') is-invalid @enderror" name="status">
+                                        <option value="">-- Pilih Status Kendaraan --</option>
+                                        <option value="aktif"
+                                            {{ old('status', $kendaraan->status) == 'aktif' ? 'selected' : '' }}>Aktif
+                                        </option>
+                                        <option value="nonaktif"
+                                            {{ old('status', $kendaraan->status) == 'nonaktif' ? 'selected' : '' }}>
+                                            Nonaktif
+                                        </option>
+                                    </select>
+                                    @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>@enderror
+
                                 </div>
                             </div>
                             <div class="row mb-3">
