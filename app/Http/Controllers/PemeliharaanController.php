@@ -81,9 +81,10 @@ class PemeliharaanController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function data()
     {
-        //
+        $kendaraanData = Pemeliharaan::with('kendaraan')->get();
+        return view('pemeliharaan.pemeliharaan-data', compact('kendaraanData'));
     }
 
     /**

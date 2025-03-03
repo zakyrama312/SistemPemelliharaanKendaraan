@@ -6,7 +6,7 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Data Pengeluaran</h1>
+            <h1>Data Pemeliharaan Kendaraan</h1>
 
         </div><!-- End Page Title -->
 
@@ -16,10 +16,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <div class="card-title">
-
-
-                            </div>
+                            <h5 class="card-title">
+                                <!-- <a href="/rekening/tambah-rekening"
+                                                                                                                                                                                                                                                                                                                    class="btn btn-outline-primary">Tambah Rekening</a> -->
+                            </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <i class="bi bi-check-circle me-1"></i>
@@ -47,33 +47,39 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Table with stripped rows -->
                             <div class="table-responsive">
-                                <table class="table table-hover" id="tableKeuangan">
+                                <table class="table table-hover" id="tablePemeliharaan">
                                     <thead>
                                         <tr>
                                             <th class="border border-gray-400 px-4 py-2 text-center">No</th>
                                             <th class="border border-gray-400 px-4 py-2">Nomor Polisi</th>
-                                            <th class="border border-gray-400 px-4 py-2">Tanggal Pengeluaran</th>
-                                            <th class="border border-gray-400 px-4 py-2">Jenis Transaksi</th>
-                                            <th class="border border-gray-400 px-4 py-2">Nominal</th>
-                                            <!-- <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th> -->
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Jenis Kendaraan</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Tempat</th>
+                                            <th class="border border-gray-400 px-4 py-2">Tanggal Pemeliharaan</th>
+                                            <th class="border border-gray-400 px-4 py-2">Biaya</th>
+                                            <th class="border border-gray-400 px-4 py-2">Ket</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($keuangan as $p)
+                                        @foreach ($kendaraanData as $kendaraan)
                                             <tr>
                                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                                <td>{{ $p->no_polisi }} - {{ $p->merk }} - {{ $p->model }}</td>
-                                                <td data-tanggal="{{ \Carbon\Carbon::parse($p->tanggal)->format('Y-m-d') }}">
-                                                    {{ FormatHelper::formatTanggal($p->tanggal) }}
+                                                <td>{{ $kendaraan->kendaraan->no_polisi }} - {{ $kendaraan->kendaraan->merk }} -
+                                                    {{ $kendaraan->kendaraan->model }}
                                                 </td>
-                                                <td>{{ $p->sumber_transaksi }}</td>
-                                                <td data-nominal="{{ $p->nominal }}">
-                                                    {{ FormatHelper::formatRupiah($p->nominal) }}
+                                                <td class="text-center">{{ $kendaraan->kendaraan->jenis }}</td>
+                                                <td class="text-center">{{ $kendaraan->bengkel }}</td>
+                                                <td
+                                                    data-tanggal="{{ \Carbon\Carbon::parse($kendaraan->created_at)->format('Y-m-d') }}">
+                                                    {{ FormatHelper::formatTanggal($kendaraan->created_at) }}
                                                 </td>
+                                                <td data-biaya="{{ $kendaraan->biaya }}">
+                                                    {{ FormatHelper::formatRupiah($kendaraan->biaya) }}
+                                                </td>
+                                                <td>{{ $kendaraan->deskripsi }}</td>
                                             </tr>
+
                                         @endforeach
                                     </tbody>
                                     <tfoot>
@@ -81,8 +87,9 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
+                                            <th></th>
                                             <th style="text-align:right">Total</th>
-                                            <th id="totalNominal">Rp 0</th>
+                                            <th id="totalBiaya">Rp 0</th>
                                         </tr>
                                     </tfoot>
                                 </table>

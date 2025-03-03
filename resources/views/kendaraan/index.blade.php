@@ -51,8 +51,13 @@
                                             <tr>
                                                 <td class="text-center">{{ $loop->iteration }}</td>
                                                 <td>{{ $kndr->no_polisi }} - {{ $kndr->merk }} - {{ $kndr->model }}</td>
-                                                <td><img src="{{ asset('kendaraanImage/' . $kndr->foto) }}" alt="Foto Kendaraan"
-                                                        width="100">
+                                                <td>
+                                                    @if (empty($kndr->foto))
+                                                        -
+                                                    @else
+                                                        <img src="{{ asset('kendaraanImage/' . $kndr->foto) }}" alt="Foto Kendaraan"
+                                                            width="100">
+                                                    @endif
                                                 </td>
                                                 <td>{{ $kndr->user->name }}</td>
                                                 <td class="text-center">

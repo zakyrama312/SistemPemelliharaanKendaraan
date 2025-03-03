@@ -1,4 +1,5 @@
 @php
+    use Carbon\Carbon;
     use App\Helpers\FormatHelper;
 @endphp
 @foreach ($view_pajakPlat as $pm)
@@ -33,7 +34,8 @@
                             <div class="col-sm-8">
                                 <input type="text"
                                     class="form-control format-tanggal @error('masa_berlaku') is-invalid @enderror"
-                                    name="masa_berlaku" value="{{ old('masa_berlaku', $masa_berlaku) }}">
+                                    name="masa_berlaku"
+                                    value="{{ old('masa_berlaku', Carbon::parse($pm->masa_berlaku)->format('d/m/Y')) }}">
                                 @error('masa_berlaku')
                                 <div class=" invalid-feedback">{{ $message }}</div>@enderror
                             </div>

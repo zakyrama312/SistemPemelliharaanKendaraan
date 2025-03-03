@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                                                                                                            class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                                                                                                    class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -41,7 +41,7 @@
                                         <tr>
                                             <th class="border border-gray-400 px-4 py-2">No</th>
                                             <th class="border border-gray-400 px-4 py-2">Nomor Polisi</th>
-                                            <th class="border border-gray-400 px-4 py-2">Frekuensi</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Frekuensi</th>
                                             <th class="border border-gray-400 px-4 py-2">Jenis BBM</th>
                                             <th class="border border-gray-400 px-4 py-2">Total Biaya</th>
                                             <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th>
@@ -55,7 +55,7 @@
                                                 <td>{{ $kendaraan->no_polisi }} - {{ $kendaraan->merk }} -
                                                     {{ $kendaraan->model }}
                                                 </td>
-                                                <td>{{ $kendaraan->pengeluaran_bbm_count }}</td>
+                                                <td class="text-center">{{ $kendaraan->pengeluaran_bbm_count }}</td>
                                                 <td>{{ $kendaraan->bahan_bakar }}</td>
                                                 <td>{{ FormatHelper::formatRupiah($kendaraan->pengeluaran_bbm_sum_nominal) }}
                                                 </td>

@@ -108,24 +108,17 @@
       buttons: [{
         extend: 'excelHtml5',
         footer: true,
+        text: '<i class="fa-solid fa-file-excel"></i>',
         exportOptions: {
           modifier: {
             page: 'all'
           }
-        }
-      },
-      {
-        extend: 'pdfHtml5',
-        footer: true,
-        exportOptions: {
-          modifier: {
-            page: 'all'
-          }
-        }
+        },
       },
       {
         extend: 'print',
         footer: true,
+        text: '<i class="fa-solid fa-print"></i>',
         exportOptions: {
           modifier: {
             page: 'all'
@@ -171,6 +164,80 @@
       });
 
       tableKeuangan.draw();
+    }
+
+    $('#start_date, #end_date').on('change', filterByDate);
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    // Inisialisasi DataTable
+    var tablePemeliharaan = $('#tablePemeliharaan').DataTable({
+      lengthMenu: [
+        [10, 25, 50, 100, -1],
+        [10, 25, 50, 100, "All"]
+      ],
+      dom: 'Blfrtip',
+      buttons: [{
+        extend: 'excelHtml5',
+        footer: true,
+        text: '<i class="fa-solid fa-file-excel"></i>',
+        exportOptions: {
+          modifier: {
+            page: 'all'
+          }
+        },
+      },
+      {
+        extend: 'print',
+        footer: true,
+        text: '<i class="fa-solid fa-print"></i>',
+        exportOptions: {
+          modifier: {
+            page: 'all'
+          }
+        }
+      }
+      ],
+      footerCallback: function (row, data, start, end, display) {
+        var api = this.api();
+
+        var intVal = function (i) {
+          return typeof i === 'string' ? i.replace(/[\.,]/g, '').replace(/[^\d\-]/g, '') *
+            1 :
+            typeof i === 'number' ? i : 0;
+        };
+
+        var totalNominal = api.column(5, {
+          page: 'current'
+        }).nodes().reduce(function (a, b) {
+          return a + intVal($(b).data('biaya'));
+        }, 0);
+
+        $('#totalBiaya').html('Rp ' + totalNominal.toLocaleString('id-ID'));
+      }
+    });
+
+    function filterByDate() {
+      var startDate = $('#start_date').val();
+      var endDate = $('#end_date').val();
+
+      $.fn.dataTable.ext.search.pop(); // Hapus filter lama agar tidak tumpang tindih
+
+      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        var date = $(tablePemeliharaan.row(dataIndex).node()).find('td[data-tanggal]').data(
+          'tanggal');
+
+        if (startDate && date < startDate) {
+          return false;
+        }
+        if (endDate && date > endDate) {
+          return false;
+        }
+        return true;
+      });
+
+      tablePemeliharaan.draw();
     }
 
     $('#start_date, #end_date').on('change', filterByDate);

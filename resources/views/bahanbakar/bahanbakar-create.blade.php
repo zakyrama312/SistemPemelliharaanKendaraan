@@ -119,7 +119,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <button type="submit" class="btn btn-primary float-end ms-3">Simpan</button>
-                                        <a href="/pemeliharaan" class="btn btn-outline-primary float-end">Kembali</a>
+                                        <a href="/pengeluaran-bbm" class="btn btn-outline-primary float-end">Kembali</a>
                                     </div>
                                 </div>
                             </form>
@@ -160,19 +160,25 @@
                                                 <td>{{ $pm->jumlah_liter }}</td>
                                                 <td>{{ FormatHelper::formatRupiah($pm->nominal) }}</td>
                                                 <td>
-                                                    <a href="{{ asset('strukImage/' . $pm->foto_struk) }}"
-                                                        data-lightbox="gallery">
-                                                        <img src="{{ asset('strukImage/' . $pm->foto_struk) }}" width="100">
-                                                    </a>
+                                                    @if ($pm->foto_struk != null)
+                                                        <a href="{{ asset('strukImage/' . $pm->foto_struk) }}"
+                                                            data-lightbox="gallery">
+                                                            <img src="{{ asset('strukImage/' . $pm->foto_struk) }}" width="100">
+                                                        </a>
+                                                    @else
+                                                        <span>-</span>
+                                                    @endif
                                                 </td>
                                                 <td>{{ FormatHelper::formatTanggal($pm->created_at) }}</td>
                                                 <td class="text-center">
                                                     <a href="#" data-bs-toggle="modal"
                                                         data-bs-target="#largeModal{{ $pm->id }}"><i
                                                             class="bi bi-pencil-square text-warning"></i></a>
-                                                    <a href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#basicModal{{ $pm->id }}"><i
-                                                            class="bi bi-trash text-danger"></i></a>
+                                                    @if (Auth::user()->role == 'admin')
+                                                        <a href="#" data-bs-toggle="modal"
+                                                            data-bs-target="#basicModal{{ $pm->id }}"><i
+                                                                class="bi bi-trash text-danger"></i></a>
+                                                    @endif
 
                                                 </td>
                                             </tr>

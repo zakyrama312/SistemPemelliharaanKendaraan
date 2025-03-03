@@ -45,6 +45,9 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
   <style>
@@ -79,6 +82,53 @@
     ul.list-group::-webkit-scrollbar-track {
       background: transparent;
       /* Warna latar belakang scrollbar */
+    }
+
+    .dt-buttons {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .dataTables_filter {
+      margin-top: 20px;
+    }
+
+    .dataTables_length {
+      margin-top: 25px;
+      margin-left: 15px;
+      margin-bottom: 10px;
+    }
+
+    .dt-buttons .buttons-excel {
+      background-color: #28a745 !important;
+      /* Warna hijau */
+      color: white !important;
+      border-radius: 5px;
+      border: none;
+      padding: 8px 12px;
+    }
+
+    .dt-buttons .buttons-print {
+      background-color: #007bff !important;
+      /* Warna biru */
+      color: white !important;
+      border-radius: 5px;
+      border: none;
+      padding: 8px 12px;
+    }
+
+    /* Efek hover */
+    .dt-buttons .btn-export-excel:hover {
+      background-color: #218838 !important;
+    }
+
+    .dt-buttons .btn-export-print:hover {
+      background-color: #0056b3 !important;
+    }
+
+    /* Agar ikon lebih besar */
+    .dt-buttons button i {
+      font-size: 16px;
     }
   </style>
 </head>

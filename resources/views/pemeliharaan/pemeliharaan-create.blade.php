@@ -188,9 +188,11 @@
                                                     <a href="#" data-bs-toggle="modal"
                                                         data-bs-target="#largeModal{{ $pm->id }}"><i
                                                             class="bi bi-pencil-square text-warning"></i></a>
-                                                    <a href="#" data-bs-toggle="modal"
+                                                    @if (Auth::user()->role == 'admin')<a href="#" data-bs-toggle="modal"
                                                         data-bs-target="#basicModal{{ $pm->id }}"><i
                                                             class="bi bi-trash text-danger"></i></a>
+
+                                                    @endif
 
                                                 </td>
                                             </tr>

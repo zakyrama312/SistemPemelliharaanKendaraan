@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
 
                 //pemeliharaan
                 Route::get('/pemeliharaan', [PemeliharaanController::class, 'index'])->name('pemeliharaan.index');
+                Route::get('/data-pemeliharaan', [PemeliharaanController::class, 'data'])->name('pemeliharaan.pemeliharaan-data');
                 Route::delete('/pemeliharaan/{id}', [PemeliharaanController::class, 'destroy']);
 
                 //bbm

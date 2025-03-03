@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                            class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -42,7 +42,7 @@
                                             <th class="border border-gray-400 px-4 py-2 text-center">No</th>
                                             <th class="border border-gray-400 px-4 py-2">Status</th>
                                             <th class="border border-gray-400 px-4 py-2">Nomor Polisi</th>
-                                            <th class="border border-gray-400 px-4 py-2">Frekuensi</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Frekuensi</th>
                                             <th class="border border-gray-400 px-4 py-2">Jadwal Berikutnya</th>
                                             <th class="border border-gray-400 px-4 py-2">Total Biaya</th>
                                             <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th>
@@ -56,7 +56,7 @@
                                                 <td>{{ $kendaraan->no_polisi }} - {{ $kendaraan->merk }} -
                                                     {{ $kendaraan->model }}
                                                 </td>
-                                                <td>{{ $kendaraan->pemeliharaan_count }}</td>
+                                                <td class="text-center">{{ $kendaraan->pemeliharaan_count }}</td>
                                                 <td>{{ FormatHelper::formatTanggal(optional($kendaraan->pemeliharaan->first())->tanggal_pemeliharaan_berikutnya ?? '-') }}
                                                 </td>
                                                 <td>{{ FormatHelper::formatRupiah($kendaraan->pemeliharaan_sum_biaya) }}</td>

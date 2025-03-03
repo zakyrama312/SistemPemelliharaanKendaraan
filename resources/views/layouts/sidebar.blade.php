@@ -30,6 +30,12 @@
       </a>
     </li>
     <li class="nav-item">
+      <a class="nav-link {{ Request::is('data-pemeliharaan') ? 'active' : 'collapsed' }}" href="/data-pemeliharaan">
+      <i class="bi bi-journal"></i>
+      <span>Data Pemeliharaan</span>
+      </a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link {{ Request::is('pengeluaran') ? 'active' : 'collapsed' }}" href="/pengeluaran">
       <i class="bi bi-journal"></i>
       <span>Data Pengeluaran</span>
