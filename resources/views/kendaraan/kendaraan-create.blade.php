@@ -116,7 +116,8 @@
                                             class="text-danger">*</sup></label>
                                     <input type="text"
                                         class="form-control format-rupiah @error('biaya_pemeliharaan') is-invalid @enderror"
-                                        name="biaya_pemeliharaan" value="{{ old('biaya_pemeliharaan') }}">
+                                        name="biaya_pemeliharaan" inputmode="numeric"
+                                        value="{{ old('biaya_pemeliharaan') }}">
                                     @error('biaya_pemeliharaan')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>

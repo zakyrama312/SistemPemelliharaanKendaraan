@@ -67,8 +67,9 @@
                                     <label for="inputEmail" class="col-sm-2 col-form-label">Frekuensi per berapa bulan <sup
                                             class="text-danger">*</sup></label>
                                     <div class="col-sm-3">
-                                        <input type="text" class="form-control @error('frekuensi') is-invalid @enderror"
-                                            name="frekuensi" value="{{ old('frekuensi') }}">
+                                        <input type="text" inputmode="numeric"
+                                            class="form-control @error('frekuensi') is-invalid @enderror" name="frekuensi"
+                                            value="{{ old('frekuensi') }}">
 
                                         @error('frekuensi')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -106,7 +107,7 @@
                                     <label for="inputEmail" class="col-sm-2 col-form-label">Biaya <sup
                                             class="text-danger">*</sup></label>
                                     <div class="col-sm-10">
-                                        <input type="text"
+                                        <input type="text" inputmode="numeric"
                                             class="form-control format-rupiah @error('biaya') is-invalid @enderror"
                                             name="biaya" value="{{ old('biaya') }}">
                                         @error('biaya')

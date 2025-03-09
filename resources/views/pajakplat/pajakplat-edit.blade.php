@@ -47,6 +47,7 @@
                             <div class="col-sm-8">
                                 <input type="text"
                                     class="form-control format-rupiahEdit @error('biaya') is-invalid @enderror" name="biaya"
+                                    inputmode="numeric"
                                     value="{{ old('biaya', FormatHelper::formatRupiah($pm->nominal)) }}">
                                 @error('biaya')
                                     <div class="invalid-feedback">{{ $message }}</div>

@@ -45,7 +45,7 @@
                             <label for="inputEmail" class="col-sm-4 col-form-label">Biaya <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-sm-8">
-                                <input type="text"
+                                <input type="text" inputmode="numeric"
                                     class="form-control format-rupiahEdit @error('biaya') is-invalid @enderror" name="biaya"
                                     value="{{ old('biaya', FormatHelper::formatRupiah($pm->nominal)) }}">
                                 @error('biaya')

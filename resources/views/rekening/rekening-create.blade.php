@@ -40,7 +40,7 @@
                                     <label for="inputEmail" class="col-sm-2 col-form-label">Saldo <sup
                                             class="text-danger">*</sup></label>
                                     <div class="col-sm-10">
-                                        <input type="text"
+                                        <input type="text" inputmode="numeric"
                                             class="form-control format-rupiah @error('saldo') is-invalid @enderror"
                                             name="saldo" value="{{ old('saldo') }}">
                                         @error('saldo')

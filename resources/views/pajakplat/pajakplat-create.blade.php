@@ -92,7 +92,7 @@
                                     <div class="col-sm-10">
                                         <input type="text"
                                             class="form-control format-rupiah @error('biaya') is-invalid @enderror"
-                                            name="biaya" value="{{ old('biaya') }}">
+                                            name="biaya" inputmode="numeric" value="{{ old('biaya') }}">
                                         @error('biaya')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

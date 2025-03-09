@@ -18,8 +18,9 @@
                             <label for="inputEmail" class="col-sm-4 col-form-label">Frekuensi per berapa bulan <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control @error('frekuensi') is-invalid @enderror"
-                                    name="frekuensi" value="{{ old('frekuensi', $pm->interval_bulan) }}">
+                                <input type="text" inputmode="numeric"
+                                    class="form-control @error('frekuensi') is-invalid @enderror" name="frekuensi"
+                                    value="{{ old('frekuensi', $pm->interval_bulan) }}">
 
                                 @error('frekuensi')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -57,7 +58,7 @@
                             <label for="inputEmail" class="col-sm-4 col-form-label">Biaya <sup
                                     class="text-danger">*</sup></label>
                             <div class="col-sm-8">
-                                <input type="text"
+                                <input type="text" inputmode="numeric"
                                     class="form-control format-rupiahEdit @error('biaya') is-invalid @enderror" name="biaya"
                                     value="{{ old('biaya', FormatHelper::formatRupiah($pm->biaya)) }}">
                                 @error('biaya')
