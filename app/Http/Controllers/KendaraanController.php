@@ -49,6 +49,9 @@ class KendaraanController extends Controller
 
         $request->validate([
             'no_polisi' => 'required|string|max:20|unique:kendaraan,no_polisi',
+            'kode_barang' => 'required|string',
+            'no_register' => 'required|string',
+            'nama_barang' => 'required|string',
             'merk' => 'required|string|max:50',
             'model' => 'required|string|max:50',
             'warna' => 'required|string|max:30',
@@ -68,6 +71,9 @@ class KendaraanController extends Controller
             'id_rek' => 'required|exists:rekening,id',
         ], [
             'no_polisi.required' => 'Nomor Polisi wajib diisi.',
+            'kode_barang.required' => 'Nomor Kode Barang wajib diisi.',
+            'no_register.required' => 'Nomor Register wajib diisi.',
+            'nama_barang.required' => 'Nama Barang wajib diisi.',
             'no_polisi.unique' => 'Nomor Polisi sudah digunakan.',
             'merk.required' => 'Merk wajib diisi.',
             'model.required' => 'Model wajib diisi.',
@@ -120,6 +126,9 @@ class KendaraanController extends Controller
 
             $kendaraan = Kendaraan::create([
                 'id_users' => $request->id_users,
+                'kode_barang' => $request->kode_barang,
+                'no_register' => $request->no_register,
+                'nama_barang' => $request->nama_barang,
                 'no_polisi' => $request->no_polisi,
                 'slug' => Str::slug($request->no_polisi),
                 'merk' => $request->merk,
@@ -353,6 +362,9 @@ class KendaraanController extends Controller
 
         $kendaraan = Kendaraan::where('slug', $slug)->firstOrFail();
         $request->validate([
+            'kode_barang' => 'required|string',
+            'no_register' => 'required|string',
+            'nama_barang' => 'required|string',
             'no_polisi' => [
                 'required',
                 'string',
@@ -386,6 +398,9 @@ class KendaraanController extends Controller
             'id_rek' => 'required|exists:rekening,id',
             'status' => 'required|in:aktif,nonaktif',
         ], [
+            'kode_barang.required' => 'Nomor Kode Barang wajib diisi.',
+            'no_register.required' => 'Nomor Register wajib diisi.',
+            'nama_barang.required' => 'Nama Barang wajib diisi.',
             'no_polisi.required' => 'Nomor Polisi wajib diisi.',
             'no_polisi.unique' => 'Nomor Polisi sudah digunakan.',
             'merk.required' => 'Merk wajib diisi.',
@@ -433,6 +448,9 @@ class KendaraanController extends Controller
 
         Kendaraan::where('id', $kendaraan->id)->update([
             'id_users' => $request->id_users,
+            'kode_barang' => $request->kode_barang,
+            'no_register' => $request->no_register,
+            'nama_barang' => $request->nama_barang,
             'no_polisi' => $request->no_polisi,
             'slug' => Str::slug($request->no_polisi),
             'merk' => $request->merk,

@@ -21,5 +21,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Carbon::setLocale('id');
+        require_once app_path('Helpers/formatHelper.php');
     }
 }

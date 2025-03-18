@@ -1,19 +1,19 @@
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
-  <div class="copyright">
-    <!-- &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved -->
-  </div>
-  <div class="credits">
-    <!-- All the links in the footer should remain intact. -->
-    <!-- You can delete the links only if you purchased the pro version. -->
-    <!-- Licensing information: https://bootstrapmade.com/license/ -->
-    <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-    <!-- Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> -->
-  </div>
+    <div class="copyright">
+        <!-- &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved -->
+    </div>
+    <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        <!-- Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> -->
+    </div>
 </footer><!-- End Footer -->
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-    class="bi bi-arrow-up-short"></i></a>
+        class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -50,198 +50,198 @@
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script>
-  new AutoNumeric('.format-rupiah', {
+new AutoNumeric('.format-rupiah', {
     digitGroupSeparator: '.',
     decimalCharacter: ',',
     currencySymbol: 'Rp ',
     currencySymbolPlacement: 'p',
     unformatOnSubmit: true
-  });
+});
 </script>
 <script>
-  new AutoNumeric('.format-rupiahEdit', {
+new AutoNumeric('.format-rupiahEdit', {
     digitGroupSeparator: '.',
     decimalCharacter: ',',
     currencySymbol: 'Rp ',
     currencySymbolPlacement: 'p',
     unformatOnSubmit: true
-  });
+});
 </script>
 <script>
-  $(".select2").select2({
+$(".select2").select2({
     placeholder: "Pilih Nama",
     allowClear: true,
     theme: "bootstrap-5",
-  });
+});
 
-  $('#modalCreate').on('shown.bs.modal', function () {
+$('#modalCreate').on('shown.bs.modal', function() {
     $('.select2').select2({
-      dropdownParent: $('#modalCreate') // Set parent dropdown ke modal
+        dropdownParent: $('#modalCreate') // Set parent dropdown ke modal
     });
-  });
+});
 </script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     flatpickr(".format-tanggal", {
-      enableTime: false, // Aktifkan pilihan jam & menit
-      dateFormat: "d/m/Y", // Format seperti di gambar (DD/MM/YYYY HH:mm)
-      time_24hr: true, // Gunakan format 24 jam
-      locale: "id",
-      defaultDate: null, // Bisa set default ke hari ini,
+        enableTime: false, // Aktifkan pilihan jam & menit
+        dateFormat: "d/m/Y", // Format seperti di gambar (DD/MM/YYYY HH:mm)
+        time_24hr: true, // Gunakan format 24 jam
+        locale: "id",
+        defaultDate: null, // Bisa set default ke hari ini,
     });
-  });
+});
 </script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     new simpleDatatables.DataTable(".datatable");
-  });
+});
 </script>
 <script>
-  $(document).ready(function () {
+$(document).ready(function() {
     // Inisialisasi DataTable
     var tableKeuangan = $('#tableKeuangan').DataTable({
-      lengthMenu: [
-        [10, 25, 50, 100, -1],
-        [10, 25, 50, 100, "All"]
-      ],
-      dom: 'Blfrtip',
-      buttons: [{
-        extend: 'excelHtml5',
-        footer: true,
-        text: '<i class="fa-solid fa-file-excel"></i>',
-        exportOptions: {
-          modifier: {
-            page: 'all'
-          }
-        },
-      },
-      {
-        extend: 'print',
-        footer: true,
-        text: '<i class="fa-solid fa-print"></i>',
-        exportOptions: {
-          modifier: {
-            page: 'all'
-          }
+        lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, "All"]
+        ],
+        dom: 'Blfrtip',
+        buttons: [{
+                extend: 'excelHtml5',
+                footer: true,
+                text: '<i class="fa-solid fa-file-excel"></i>',
+                exportOptions: {
+                    modifier: {
+                        page: 'all'
+                    }
+                },
+            },
+            {
+                extend: 'print',
+                footer: true,
+                text: '<i class="fa-solid fa-print"></i>',
+                exportOptions: {
+                    modifier: {
+                        page: 'all'
+                    }
+                }
+            }
+        ],
+        footerCallback: function(row, data, start, end, display) {
+            var api = this.api();
+
+            var intVal = function(i) {
+                return typeof i === 'string' ? i.replace(/[\.,]/g, '').replace(/[^\d\-]/g, '') *
+                    1 :
+                    typeof i === 'number' ? i : 0;
+            };
+
+            var totalNominal = api.column(4, {
+                page: 'current'
+            }).nodes().reduce(function(a, b) {
+                return a + intVal($(b).data('nominal'));
+            }, 0);
+
+            $('#totalNominal').html('Rp ' + totalNominal.toLocaleString('id-ID'));
         }
-      }
-      ],
-      footerCallback: function (row, data, start, end, display) {
-        var api = this.api();
-
-        var intVal = function (i) {
-          return typeof i === 'string' ? i.replace(/[\.,]/g, '').replace(/[^\d\-]/g, '') *
-            1 :
-            typeof i === 'number' ? i : 0;
-        };
-
-        var totalNominal = api.column(4, {
-          page: 'current'
-        }).nodes().reduce(function (a, b) {
-          return a + intVal($(b).data('nominal'));
-        }, 0);
-
-        $('#totalNominal').html('Rp ' + totalNominal.toLocaleString('id-ID'));
-      }
     });
 
     function filterByDate() {
-      var startDate = $('#start_date').val();
-      var endDate = $('#end_date').val();
+        var startDate = $('#start_date').val();
+        var endDate = $('#end_date').val();
 
-      $.fn.dataTable.ext.search.pop(); // Hapus filter lama agar tidak tumpang tindih
+        $.fn.dataTable.ext.search.pop(); // Hapus filter lama agar tidak tumpang tindih
 
-      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        var date = $(tableKeuangan.row(dataIndex).node()).find('td[data-tanggal]').data('tanggal');
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            var date = $(tableKeuangan.row(dataIndex).node()).find('td[data-tanggal]').data('tanggal');
 
-        if (startDate && date < startDate) {
-          return false;
-        }
-        if (endDate && date > endDate) {
-          return false;
-        }
-        return true;
-      });
+            if (startDate && date < startDate) {
+                return false;
+            }
+            if (endDate && date > endDate) {
+                return false;
+            }
+            return true;
+        });
 
-      tableKeuangan.draw();
+        tableKeuangan.draw();
     }
 
     $('#start_date, #end_date').on('change', filterByDate);
-  });
+});
 </script>
 <script>
-  $(document).ready(function () {
+$(document).ready(function() {
     // Inisialisasi DataTable
     var tablePemeliharaan = $('#tablePemeliharaan').DataTable({
-      lengthMenu: [
-        [10, 25, 50, 100, -1],
-        [10, 25, 50, 100, "All"]
-      ],
-      dom: 'Blfrtip',
-      buttons: [{
-        extend: 'excelHtml5',
-        footer: true,
-        text: '<i class="fa-solid fa-file-excel"></i>',
-        exportOptions: {
-          modifier: {
-            page: 'all'
-          }
-        },
-      },
-      {
-        extend: 'print',
-        footer: true,
-        text: '<i class="fa-solid fa-print"></i>',
-        exportOptions: {
-          modifier: {
-            page: 'all'
-          }
+        lengthMenu: [
+            [10, 25, 50, 100, -1],
+            [10, 25, 50, 100, "All"]
+        ],
+        dom: 'Blfrtip',
+        buttons: [{
+                extend: 'excelHtml5',
+                footer: true,
+                text: '<i class="fa-solid fa-file-excel"></i>',
+                exportOptions: {
+                    modifier: {
+                        page: 'all'
+                    }
+                },
+            },
+            {
+                extend: 'print',
+                footer: true,
+                text: '<i class="fa-solid fa-print"></i>',
+                exportOptions: {
+                    modifier: {
+                        page: 'all'
+                    }
+                }
+            }
+        ],
+        footerCallback: function(row, data, start, end, display) {
+            var api = this.api();
+
+            var intVal = function(i) {
+                return typeof i === 'string' ? i.replace(/[\.,]/g, '').replace(/[^\d\-]/g, '') *
+                    1 :
+                    typeof i === 'number' ? i : 0;
+            };
+
+            var totalNominal = api.column(7, {
+                page: 'current'
+            }).nodes().reduce(function(a, b) {
+                return a + intVal($(b).data('biaya'));
+            }, 0);
+
+            $('#totalBiaya').html('Rp ' + totalNominal.toLocaleString('id-ID'));
         }
-      }
-      ],
-      footerCallback: function (row, data, start, end, display) {
-        var api = this.api();
-
-        var intVal = function (i) {
-          return typeof i === 'string' ? i.replace(/[\.,]/g, '').replace(/[^\d\-]/g, '') *
-            1 :
-            typeof i === 'number' ? i : 0;
-        };
-
-        var totalNominal = api.column(5, {
-          page: 'current'
-        }).nodes().reduce(function (a, b) {
-          return a + intVal($(b).data('biaya'));
-        }, 0);
-
-        $('#totalBiaya').html('Rp ' + totalNominal.toLocaleString('id-ID'));
-      }
     });
 
     function filterByDate() {
-      var startDate = $('#start_date').val();
-      var endDate = $('#end_date').val();
+        var startDate = $('#start_date').val();
+        var endDate = $('#end_date').val();
 
-      $.fn.dataTable.ext.search.pop(); // Hapus filter lama agar tidak tumpang tindih
+        $.fn.dataTable.ext.search.pop(); // Hapus filter lama agar tidak tumpang tindih
 
-      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        var date = $(tablePemeliharaan.row(dataIndex).node()).find('td[data-tanggal]').data(
-          'tanggal');
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            var date = $(tablePemeliharaan.row(dataIndex).node()).find('td[data-tanggal]').data(
+                'tanggal');
 
-        if (startDate && date < startDate) {
-          return false;
-        }
-        if (endDate && date > endDate) {
-          return false;
-        }
-        return true;
-      });
+            if (startDate && date < startDate) {
+                return false;
+            }
+            if (endDate && date > endDate) {
+                return false;
+            }
+            return true;
+        });
 
-      tablePemeliharaan.draw();
+        tablePemeliharaan.draw();
     }
 
     $('#start_date, #end_date').on('change', filterByDate);
-  });
+});
 </script>
 </body>
 

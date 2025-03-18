@@ -25,20 +25,20 @@ class Pemeliharaan extends Model
     {
         parent::boot();
 
-        static::creating(function ($pemeliharaan) {
-            if (!$pemeliharaan->tanggal_pemeliharaan_berikutnya) {
-                $kendaraan = Kendaraan::find($pemeliharaan->id_kendaraan);
-                $intervalBulan = $pemeliharaan->interval_bulan ?? $kendaraan->interval_bulan ?? 3; // Ambil dari pemeliharaan dulu, jika null baru ambil dari kendaraan
-                $pemeliharaan->tanggal_pemeliharaan_berikutnya = date('Y-m-d', strtotime($pemeliharaan->tanggal_pemeliharaan_sebelumnya . " +{$intervalBulan} months"));
-            }
-        });
+        // static::creating(function ($pemeliharaan) {
+        //     if (!$pemeliharaan->tanggal_pemeliharaan_berikutnya) {
+        //         $kendaraan = Kendaraan::find($pemeliharaan->id_kendaraan);
+        //         $intervalBulan = $pemeliharaan->interval_bulan ?? $kendaraan->interval_bulan ?? 3; // Ambil dari pemeliharaan dulu, jika null baru ambil dari kendaraan
+        //         $pemeliharaan->tanggal_pemeliharaan_berikutnya = date('Y-m-d', strtotime($pemeliharaan->tanggal_pemeliharaan_sebelumnya . " +{$intervalBulan} months"));
+        //     }
+        // });
 
-        static::updating(function ($pemeliharaan) {
-            if ($pemeliharaan->isDirty(['tanggal_pemeliharaan_sebelumnya', 'interval_bulan'])) {
-                $intervalBulan = $pemeliharaan->interval_bulan ?? $pemeliharaan->kendaraan->interval_bulan ?? 3;
-                $pemeliharaan->tanggal_pemeliharaan_berikutnya = date('Y-m-d', strtotime($pemeliharaan->tanggal_pemeliharaan_sebelumnya . " +{$intervalBulan} months"));
-            }
-        });
+        // static::updating(function ($pemeliharaan) {
+        //     if ($pemeliharaan->isDirty(['tanggal_pemeliharaan_sebelumnya', 'interval_bulan'])) {
+        //         $intervalBulan = $pemeliharaan->interval_bulan ?? $pemeliharaan->kendaraan->interval_bulan ?? 3;
+        //         $pemeliharaan->tanggal_pemeliharaan_berikutnya = date('Y-m-d', strtotime($pemeliharaan->tanggal_pemeliharaan_sebelumnya . " +{$intervalBulan} months"));
+        //     }
+        // });
     }
 
 }

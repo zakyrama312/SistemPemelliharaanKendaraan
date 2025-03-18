@@ -13,6 +13,9 @@ return new class extends Migration {
         Schema::create('kendaraan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_users')->constrained('users')->cascadeOnDelete();
+            $table->string('kode_barang');
+            $table->string('no_register');
+            $table->string('nama_barang');
             $table->string('no_polisi');
             $table->string('slug')->unique();
             $table->string('merk');

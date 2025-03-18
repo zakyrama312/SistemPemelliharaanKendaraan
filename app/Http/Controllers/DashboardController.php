@@ -59,7 +59,7 @@ class DashboardController extends Controller
                         $no_plat = $kendaraan->no_polisi . '-' . $kendaraan->model;
 
                         if ($hariSisa > 0 && $hariSisa <= 7) {
-                            $peringatan = "<strong>$no_plat $hariSisa hari</strong> lagi segera membayar ";
+                            $peringatan = "<strong>$no_plat $hariSisa hari</strong> lagi segera membayar $jenis_pajak";
                             $status = 'warning';
                             $icon = 'bi-exclamation-triangle';
                             $route = $routes;
@@ -350,8 +350,8 @@ class DashboardController extends Controller
 
         // // Ambil total transaksi per bulan dan sumber_transaksi
         // $keuangan = Keuangan::selectRaw("
-        //     DATE_FORMAT(tanggal, '%Y-%m') as bulan_tahun, 
-        //     sumber_transaksi, 
+        //     DATE_FORMAT(tanggal, '%Y-%m') as bulan_tahun,
+        //     sumber_transaksi,
         //     SUM(nominal) as total
         // ")
         //     ->where('jenis_transaksi', 'pengeluaran') // Hanya pengeluaran

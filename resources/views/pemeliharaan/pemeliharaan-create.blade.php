@@ -64,21 +64,21 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label for="inputEmail" class="col-sm-2 col-form-label">Frekuensi per berapa bulan <sup
-                                            class="text-danger">*</sup></label>
-                                    <div class="col-sm-3">
-                                        <input type="text" inputmode="numeric"
-                                            class="form-control @error('frekuensi') is-invalid @enderror" name="frekuensi"
-                                            value="{{ old('frekuensi') }}">
+                                    <label for="inputEmail" class="col-sm-2 col-form-label">Jadwal Berikutnya
+                                        <sup class="text-danger">*</sup></label>
+                                    <div class="col-sm-10">
+                                        <input type="text"
+                                            class="form-control format-tanggal @error('jadwal') is-invalid @enderror"
+                                            name="jadwal" value="{{ old('jadwal') }}">
 
-                                        @error('frekuensi')
+                                        @error('jadwal')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <label class="col-sm-2 col-form-label">Bulan</label>
+                                    <!-- <label class="col-sm-2 col-form-label">Bulan</label> -->
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="row ">
                                     <div class="col-sm-10">
                                         <input type="hidden" readonly class="form-control " name="id_kendaraan"
                                             value="{{ old('id_kendaraan', $pemeliharaan->id_kendaraan) }}">

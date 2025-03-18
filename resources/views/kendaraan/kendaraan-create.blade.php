@@ -21,6 +21,28 @@
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-sm-4 mb-3">
+                                    <label class="col-form-label">No Kode Barang <sup
+                                            class="text-danger">*</sup></label>
+                                    <input type="text" class="form-control @error('kode_barang') is-invalid @enderror"
+                                        autofocus name="kode_barang" value="{{ old('kode_barang') }}">
+                                    @error('kode_barang')
+                                    <div class=" invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-sm-4 mb-3">
+                                    <label class="col-form-label">No Register <sup class="text-danger">*</sup></label>
+                                    <input type="text" class="form-control @error('no_register') is-invalid @enderror"
+                                        autofocus name="no_register" value="{{ old('no_register') }}">
+                                    @error('no_register')
+                                    <div class=" invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-sm-4 mb-3">
+                                    <label class="col-form-label">Nama Barang <sup class="text-danger">*</sup></label>
+                                    <input type="text" class="form-control @error('nama_barang') is-invalid @enderror"
+                                        autofocus name="nama_barang" value="{{ old('nama_barang') }}">
+                                    @error('nama_barang')
+                                    <div class=" invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">No Polisi <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @error('no_polisi') is-invalid @enderror"
                                         autofocus name="no_polisi" value="{{ old('no_polisi') }}">

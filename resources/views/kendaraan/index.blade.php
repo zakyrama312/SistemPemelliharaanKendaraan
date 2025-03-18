@@ -39,10 +39,13 @@
                                     <thead>
                                         <tr>
                                             <th class="border border-gray-400 px-4 py-2 text-center">No</th>
-                                            <th class="border border-gray-400 px-4 py-2">Nomor Polisi</th>
-                                            <th class="border border-gray-400 px-4 py-2">Foto</th>
-                                            <th class="border border-gray-400 px-4 py-2">Pengguna</th>
-                                            <th class="border border-gray-400 px-4 py-2">Status</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">No Kode Barang</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">No Register</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Nama Barang</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Nomor Polisi</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Foto</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Pengguna</th>
+                                            <th class="border border-gray-400 px-4 py-2 text-center">Status</th>
                                             <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th>
                                         </tr>
                                     </thead>
@@ -50,6 +53,9 @@
                                         @foreach ($kendaraan as $kndr)
                                             <tr>
                                                 <td class="text-center">{{ $loop->iteration }}</td>
+                                                <td>{{ $kndr->kode_barang }}</td>
+                                                <td>{{ $kndr->no_register }}</td>
+                                                <td>{{ $kndr->nama_barang }}</td>
                                                 <td>{{ $kndr->no_polisi }} - {{ $kndr->merk }} - {{ $kndr->model }}</td>
                                                 <td>
                                                     @if (empty($kndr->foto))

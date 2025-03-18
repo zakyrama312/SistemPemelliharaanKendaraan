@@ -95,21 +95,24 @@ class PemeliharaanController extends Controller
         $request->validate([
             'nama_bengkel' => 'required|string|max:255',
             'biaya' => 'required|min:0',
+            'jadwal' => 'required',
         ], [
             'nama_bengkel.required' => 'Nama Bengkel wajib diisi!',
             'biaya.required' => 'Biaya wajib diisi!',
             'biaya.min' => 'Biaya tidak boleh kurang dari 0!',
             'deskripsi.required' => 'Deskripsi wajib diisi!',
+            'jadwal.required' => 'Jadwal wajib diisi!',
         ]);
 
-
+        $jadwal = Carbon::createFromFormat('d/m/Y', $request->jadwal)->format('Y-m-d');
 
         $pemeliharaan = Pemeliharaan::create([
             'id_kendaraan' => $request->id_kendaraan,
             'tanggal_pemeliharaan_sebelumnya' => now(),
+            'tanggal_pemeliharaan_berikutnya' => $jadwal,
             'bengkel' => $request->nama_bengkel ?? '-',
             'deskripsi' => $request->deskripsi ?? '-',
-            'interval_bulan' => $request->frekuensi,
+            'interval_bulan' => 0,
             'biaya' => $request->biaya ?? 0,
             'id_rekening' => $request->id_rekening
         ]);
@@ -169,13 +172,13 @@ class PemeliharaanController extends Controller
             'nama_bengkel' => 'required|string|max:255',
             'biaya' => 'required|numeric|min:0',
             'deskripsi' => 'required|string',
-            'frekuensi' => 'required|integer|min:1',
+            'jadwal' => 'required',
         ], [
             'nama_bengkel.required' => 'Nama Bengkel wajib diisi!',
             'biaya.required' => 'Biaya wajib diisi!',
             'biaya.min' => 'Biaya tidak boleh kurang dari 0!',
             'deskripsi.required' => 'Deskripsi wajib diisi!',
-            'frekuensi.required' => 'Frekuensi wajib diisi!',
+            'jadwal.required' => 'Jadwal wajib diisi!',
         ]);
         DB::beginTransaction(); // Mulai transaksi database
 
@@ -202,10 +205,12 @@ class PemeliharaanController extends Controller
                 $tanggalBerikutnya = $pemeliharaan->tanggal_pemeliharaan_berikutnya;
             }
 
+
+            $jadwal = Carbon::createFromFormat('d/m/Y', $request->jadwal)->format('Y-m-d');
             // Update data pemeliharaan
             $pemeliharaan->update([
-                'interval_bulan' => $request->frekuensi,
-                'tanggal_pemeliharaan_berikutnya' => $tanggalBerikutnya,
+
+                'tanggal_pemeliharaan_berikutnya' => $jadwal,
                 'bengkel' => $request->nama_bengkel,
                 'biaya' => $request->biaya,
                 'deskripsi' => $request->deskripsi,
