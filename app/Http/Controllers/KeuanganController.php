@@ -42,6 +42,7 @@ class KeuanganController extends Controller
                 'keuangan_union'
             )
             ->orderBy('keuangan_union.created_at', 'desc')
+            ->where('nominal', '!=', 0)
             ->get();
 
         return view('pengeluaran.index', compact('keuangan'));

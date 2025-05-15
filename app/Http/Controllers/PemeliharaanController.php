@@ -18,43 +18,32 @@ class PemeliharaanController extends Controller
     {
         $kendaraanData = Kendaraan::with([
             'pemeliharaan' => function ($query) {
-                $query->orderByDesc('tanggal_pemeliharaan_sebelumnya')->limit(1); // Ambil pemeliharaan terbaru
+                $query->whereNotNull('tanggal_pemeliharaan_sebelumnya') // Pastikan tidak null
+                    ->orderByDesc('tanggal_pemeliharaan_berikutnya')
+                    ->limit(1); // Ambil pemeliharaan terbaru
             }
         ])
-            ->withCount('pemeliharaan') // Hitung frekuensi pemeliharaan
-            ->withSum('pemeliharaan', 'biaya') // Hitung total biaya
+            ->withCount([
+                'pemeliharaan as total_pemeliharaan' => function ($query) {
+                    $query->whereNotNull('tanggal_pemeliharaan_sebelumnya')
+                        ->where('biaya', '!=', 0);
+                }
+            ]) // Hitung frekuensi pemeliharaan hanya jika tanggal tidak kosong
+            ->withSum([
+                'pemeliharaan as total_biaya_pemeliharaan' => function ($query) {
+                    $query->whereNotNull('tanggal_pemeliharaan_sebelumnya')
+                        ->where('biaya', '!=', 0);
+                }
+            ], 'biaya') // Hitung total biaya hanya jika tanggal tidak kosong
+            ->orderBy('created_at', 'desc')
             ->get();
         // Tambahkan status berdasarkan tanggal pemeliharaan berikutnya
         $kendaraanData->transform(function ($kendaraan) {
             $tanggalBerikutnya = optional($kendaraan->pemeliharaan->first())->tanggal_pemeliharaan_berikutnya;
 
-            // if ($tanggalBerikutnya) {
-            //     $hariIni = now();
-            //     $selisihHari = $hariIni->diffInDays($tanggalBerikutnya, false);
-
-            //     // Format "H+X" atau "H-X"
-            //     $kendaraan->status_hari = $selisihHari >= 0 ? "H+$selisihHari" : "H$selisihHari";
-
-            //     // Tentukan status berdasarkan selisih hari
-            //     if ($selisihHari < 0) {
-            //         $kendaraan->status_pemeliharaan = "Sudah lewat jatuh tempo pemeliharaan";
-            //         $kendaraan->icon = "bi-exclamation-octagon";
-            //         $kendaraan->alert = "alert-danger";
-            //     } elseif ($selisihHari <= 5) {
-            //         $kendaraan->status_pemeliharaan = "Persiapan memasuki masa pemeliharaan";
-            //         $kendaraan->icon = "bi-exclamation-triangle";
-            //         $kendaraan->alert = "alert-warning";
-            //     } else {
-            //         $kendaraan->status_pemeliharaan = "Masih dalam masa aman";
-            //         $kendaraan->icon = "bi-check-circle";
-            //         $kendaraan->alert = "alert-success";
-            //     }
-            // } else {
-            //     $kendaraan->status_hari = "H-?";
-            //     $kendaraan->status_pemeliharaan = "Jadwal pemeliharaan belum tersedia";
-            //     $kendaraan->warna_status = "bg-gray-500 text-white";
-            // }
-            if ($tanggalBerikutnya) {
+            // Pastikan tanggal valid sebelum menggunakan Carbon
+            if (!empty($tanggalBerikutnya) && $tanggalBerikutnya !== '-' && strtotime($tanggalBerikutnya) !== false) {
+                $tanggalBerikutnya = Carbon::parse($tanggalBerikutnya)->format('Y-m-d');
                 $hariIni = now()->format('Y-m-d');
                 $batasPeringatan = now()->addDays(5)->format('Y-m-d');
 
@@ -83,7 +72,10 @@ class PemeliharaanController extends Controller
      */
     public function data()
     {
-        $kendaraanData = Pemeliharaan::with('kendaraan')->get();
+        $kendaraanData = Pemeliharaan::with('kendaraan')
+            ->where('biaya', '!=', 0)
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('pemeliharaan.pemeliharaan-data', compact('kendaraanData'));
     }
 

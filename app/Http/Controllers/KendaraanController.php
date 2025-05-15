@@ -27,7 +27,9 @@ class KendaraanController extends Controller
      */
     public function index()
     {
-        $kendaraan = Kendaraan::with('user')->get();
+        $kendaraan = Kendaraan::with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('kendaraan.index', compact('kendaraan'));
     }
 
@@ -172,12 +174,12 @@ class KendaraanController extends Controller
             $pemeliharaan = Pemeliharaan::create([
                 'id_kendaraan' => $kendaraan->id,
                 'id_rekening' => $request->id_rek,
-                'tanggal_pemeliharaan_sebelumnya' => $tanggal_pemeliharaan,
-                'tanggal_pemeliharaan_berikutnya' => $tanggalPemeliharaanBerikutnya,
+                'tanggal_pemeliharaan_sebelumnya' => now(),
+                'tanggal_pemeliharaan_berikutnya' => $tanggal_pemeliharaan,
                 'bengkel' => '-',
-                'interval_bulan' => 3,
+                'interval_bulan' => 0,
                 'deskripsi' => '-',
-                'biaya' => $request->biaya_pemeliharaan
+                'biaya' => 0
             ]);
 
             // Kurangi saldo rekening

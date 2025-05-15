@@ -103,7 +103,7 @@
                                         class="form-control format-tanggal @error('tahun_pembuatan') is-invalid @enderror"
                                         name="tahun_pembuatan" value="{{ old('tahun_pembuatan') }}">
                                     @error('tahun_pembuatan')
-                                        <div class=" invalid-feedback">{{ $message }}</div>
+                                    <div class=" invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-sm-4 mb-3">
@@ -125,7 +125,7 @@
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-sm-4 mb-3">
-                                    <label class="col-form-label">Tanggal Pemeliharaan Sebelumnya <sup
+                                    <label class="col-form-label">Tanggal Pemeliharaan Berikutnya <sup
                                             class="text-danger">*</sup></label>
                                     <input type="text"
                                         class="form-control format-tanggal @error('tanggal_pemeliharaan') is-invalid @enderror"
@@ -133,16 +133,15 @@
                                     @error('tanggal_pemeliharaan')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-sm-4 mb-3">
-                                    <label class="col-form-label">Biaya Pemeliharaan Sebelumnya <sup
-                                            class="text-danger">*</sup></label>
-                                    <input type="text"
-                                        class="form-control format-rupiah @error('biaya_pemeliharaan') is-invalid @enderror"
-                                        name="biaya_pemeliharaan" inputmode="numeric"
-                                        value="{{ old('biaya_pemeliharaan') }}">
-                                    @error('biaya_pemeliharaan')
-                                    <div class=" invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
+                                <!-- <div class="col-sm-4"> -->
+                                <!-- <label class="col-form-label">Biaya Pemeliharaan Sebelumnya <sup
+                                            class="text-danger">*</sup></label> -->
+                                <input type="hidden"
+                                    class="form-control format-rupiah @error('biaya_pemeliharaan') is-invalid @enderror"
+                                    name="biaya_pemeliharaan" inputmode="numeric" value="0">
+                                @error('biaya_pemeliharaan')
+                                <div class=" invalid-feedback">{{ $message }}</div>@enderror
+                                <!-- </div> -->
                                 <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Nomor Rangka <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @error('no_rangka') is-invalid @enderror"
@@ -176,7 +175,7 @@
                                         name="id_users">
                                         <option value="">--Pilih Pengguna--</option>
                                         @foreach ($user as $usr)
-                                            <option value="{{ $usr->id }}">{{ $usr->name }}</option>
+                                        <option value="{{ $usr->id }}">{{ $usr->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('id_users')
@@ -187,7 +186,7 @@
                                     <select class="form-control @error('id_rek') is-invalid @enderror" name="id_rek">
                                         <option value="">--Pilih Rekening--</option>
                                         @foreach ($rekening as $rek)
-                                            <option value="{{ $rek->id }}">{{ $rek->nama_rekening }}</option>
+                                        <option value="{{ $rek->id }}">{{ $rek->nama_rekening }}</option>
                                         @endforeach
                                     </select>
                                     @error('id_rek')

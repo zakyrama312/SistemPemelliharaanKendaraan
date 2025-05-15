@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                                class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                        class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -56,10 +56,11 @@
                                                 <td>{{ $kendaraan->no_polisi }} - {{ $kendaraan->merk }} -
                                                     {{ $kendaraan->model }}
                                                 </td>
-                                                <td class="text-center">{{ $kendaraan->pemeliharaan_count }}</td>
+                                                <td class="text-center">{{ $kendaraan->total_pemeliharaan ?? 0 }}</td>
                                                 <td>{{ FormatHelper::formatTanggal(optional($kendaraan->pemeliharaan->first())->tanggal_pemeliharaan_berikutnya ?? '-') }}
                                                 </td>
-                                                <td>{{ FormatHelper::formatRupiah($kendaraan->pemeliharaan_sum_biaya) }}</td>
+                                                <td>{{ FormatHelper::formatRupiah($kendaraan->total_biaya_pemeliharaan) ?? 0 }}
+                                                </td>
 
 
                                                 <td class="text-center">
