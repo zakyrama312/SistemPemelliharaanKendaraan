@@ -55,7 +55,7 @@ class KendaraanController extends Controller
             'no_register' => 'required|string',
             'nama_barang' => 'required|string',
             'merk' => 'required|string|max:50',
-            'model' => 'required|string|max:50',
+            // 'model' => 'required|string|max:50',
             'warna' => 'required|string|max:30',
             'bahan_bakar' => 'required|string|max:30',
             'jenis' => 'required|in:Mobil,Motor,Truk,Alat Berat',
@@ -63,7 +63,7 @@ class KendaraanController extends Controller
             'tahun_pembuatan' => 'required',
             'masa_aktif_pajak_tahunan' => 'required',
             'masa_aktif_plat' => 'required',
-            'tanggal_pemeliharaan' => 'required',
+            // 'tanggal_pemeliharaan' => 'required',
             'biaya_pemeliharaan' => 'required|integer',
             'no_rangka' => 'required|string|max:50|unique:kendaraan,no_rangka',
             'no_mesin' => 'required|string|max:50|unique:kendaraan,no_mesin',
@@ -71,6 +71,7 @@ class KendaraanController extends Controller
             'bidang' => 'required|string|max:50',
             'id_users' => 'required|exists:users,id',
             'id_rek' => 'required|exists:rekening,id',
+            'penanggungjawab' => 'required|string|max:50',
         ], [
             'no_polisi.required' => 'Nomor Polisi wajib diisi.',
             'kode_barang.required' => 'Nomor Kode Barang wajib diisi.',
@@ -78,7 +79,7 @@ class KendaraanController extends Controller
             'nama_barang.required' => 'Nama Barang wajib diisi.',
             'no_polisi.unique' => 'Nomor Polisi sudah digunakan.',
             'merk.required' => 'Merk wajib diisi.',
-            'model.required' => 'Model wajib diisi.',
+            // 'model.required' => 'Model wajib diisi.',
             'warna.required' => 'Warna wajib diisi.',
             'bahan_bakar.required' => 'Bahan bakar wajib diisi.',
             'jenis.required' => 'Jenis kendaraan wajib dipilih.',
@@ -88,7 +89,7 @@ class KendaraanController extends Controller
             'tahun_pembuatan.required' => 'Tahun pembuatan wajib diisi.',
             'masa_aktif_pajak_tahunan.required' => 'Masa aktif pajak tahunan wajib diisi.',
             'masa_aktif_plat.required' => 'Masa aktif plat wajib diisi.',
-            'tanggal_pemeliharaan.required' => 'Tanggal pemeliharaan wajib diisi.',
+            // 'tanggal_pemeliharaan.required' => 'Tanggal pemeliharaan wajib diisi.',
             'biaya_pemeliharaan.required' => 'Biaya pemeliharaan sebelumnya wajib diisi.',
             'biaya_pemeliharaan.integer' => 'Biaya pemeliharaan harus berupa angka.',
             'no_rangka.required' => 'Nomor rangka wajib diisi.',
@@ -98,6 +99,7 @@ class KendaraanController extends Controller
             'jumlah_roda.integer' => 'Jumlah roda harus berupa angka.',
             'jumlah_roda.min' => 'Jumlah roda minimal 2.',
             'bidang.required' => 'Bidang wajib diisi.',
+            'penanggungjawab.required' => 'Penanggung jawab wajib diisi.',
             'id_users.required' => 'Pengguna wajib dipilih.',
             'id_users.exists' => 'Pengguna tidak valid.',
             'id_rek.required' => 'Rekening wajib dipilih.',
@@ -134,7 +136,7 @@ class KendaraanController extends Controller
                 'no_polisi' => $request->no_polisi,
                 'slug' => Str::slug($request->no_polisi),
                 'merk' => $request->merk,
-                'model' => $request->model,
+                'model' => "",
                 'jenis' => $request->jenis,
                 'foto' => $fotoPath,
                 'tahun_pembuatan' => $tahun_pembuatan,
@@ -147,7 +149,8 @@ class KendaraanController extends Controller
                 'jumlah_roda' => $request->jumlah_roda,
                 'bidang' => $request->bidang,
                 'status' => 'aktif',
-                'id_rekening' => $request->id_rek
+                'id_rekening' => $request->id_rek,
+                'penanggung_jawab' => $request->penanggungjawab,
             ]);
 
             Pajak::create([
@@ -166,16 +169,16 @@ class KendaraanController extends Controller
                 'nominal' => 0
             ]);
 
-            $tanggal_pemeliharaan = Carbon::createFromFormat('d/m/Y', $request->tanggal_pemeliharaan)->format('Y-m-d');
+            // $tanggal_pemeliharaan = Carbon::createFromFormat('d/m/Y', $request->tanggal_pemeliharaan)->format('Y-m-d');
 
             $intervalBulan = $kendaraan->interval_bulan ?? 3;
-            $tanggalPemeliharaanBerikutnya = date('Y-m-d', strtotime($tanggal_pemeliharaan . " +{$intervalBulan} months"));
+            // $tanggalPemeliharaanBerikutnya = date('Y-m-d', strtotime($tanggal_pemeliharaan . " +{$intervalBulan} months"));
 
             $pemeliharaan = Pemeliharaan::create([
                 'id_kendaraan' => $kendaraan->id,
                 'id_rekening' => $request->id_rek,
-                'tanggal_pemeliharaan_sebelumnya' => now(),
-                'tanggal_pemeliharaan_berikutnya' => $tanggal_pemeliharaan,
+                // 'tanggal_pemeliharaan_sebelumnya' => now(),
+                // 'tanggal_pemeliharaan_berikutnya' => now(),
                 'bengkel' => '-',
                 'interval_bulan' => 0,
                 'deskripsi' => '-',
@@ -374,7 +377,7 @@ class KendaraanController extends Controller
                 Rule::unique('kendaraan', 'no_polisi')->ignore($kendaraan->id),
             ],
             'merk' => 'required|string|max:50',
-            'model' => 'required|string|max:50',
+            // 'model' => 'required|string|max:50',
             'warna' => 'required|string|max:30',
             'bahan_bakar' => 'required|string|max:30',
             'jenis' => 'required|in:Mobil,Motor,Truk,Alat Berat',
@@ -399,6 +402,7 @@ class KendaraanController extends Controller
             'id_users' => 'required|exists:users,id',
             'id_rek' => 'required|exists:rekening,id',
             'status' => 'required|in:aktif,nonaktif',
+            'penanggung_jawab' => 'required|string|max:50',
         ], [
             'kode_barang.required' => 'Nomor Kode Barang wajib diisi.',
             'no_register.required' => 'Nomor Register wajib diisi.',
@@ -406,7 +410,7 @@ class KendaraanController extends Controller
             'no_polisi.required' => 'Nomor Polisi wajib diisi.',
             'no_polisi.unique' => 'Nomor Polisi sudah digunakan.',
             'merk.required' => 'Merk wajib diisi.',
-            'model.required' => 'Model wajib diisi.',
+            // 'model.required' => 'Model wajib diisi.',
             'warna.required' => 'Warna wajib diisi.',
             'bahan_bakar.required' => 'Bahan bakar wajib diisi.',
             'jenis.required' => 'Jenis kendaraan wajib dipilih.',
@@ -423,6 +427,7 @@ class KendaraanController extends Controller
             'jumlah_roda.integer' => 'Jumlah roda harus berupa angka.',
             'jumlah_roda.min' => 'Jumlah roda minimal 2.',
             'bidang.required' => 'Bidang wajib diisi.',
+            'penanggung_jawab.required' => 'Penanggung jawab wajib diisi.',
             'id_users.required' => 'Pengguna wajib dipilih.',
             'id_users.exists' => 'Pengguna tidak valid.',
             'id_rek.required' => 'Rekening wajib dipilih.',
@@ -456,7 +461,7 @@ class KendaraanController extends Controller
             'no_polisi' => $request->no_polisi,
             'slug' => Str::slug($request->no_polisi),
             'merk' => $request->merk,
-            'model' => $request->model,
+            // 'model' => $request->model,
             'jenis' => $request->jenis,
             'foto' => $fotoPath,
             'tahun_pembuatan' => $request->tahun_pembuatan,
@@ -468,6 +473,7 @@ class KendaraanController extends Controller
             'bahan_bakar' => $request->bahan_bakar,
             'jumlah_roda' => $request->jumlah_roda,
             'bidang' => $request->bidang,
+            'penanggung_jawab' => $request->penanggung_jawab,
             'id_rekening' => $request->id_rek,
             'status' => $request->status,
         ]);

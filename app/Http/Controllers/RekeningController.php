@@ -31,9 +31,11 @@ class RekeningController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'no_rek' => 'required|string|max:255',
             'nama_rek' => 'required|string|max:255',
             'saldo' => 'required|min:0',
         ], [
+            'no_rek.required' => 'No Rekening wajib diisi!',
             'nama_rek.required' => 'Nama Rekening wajib diisi!',
             'nama_rek.string' => 'Nama Rekening harus berupa teks!',
             'saldo.required' => 'Saldo wajib diisi!',
@@ -42,6 +44,7 @@ class RekeningController extends Controller
         ]);
 
         Rekening::create([
+            'no_rekening' => $request->no_rek,
             'nama_rekening' => $request->nama_rek,
             'slug' => Str::slug($request->nama_rek),
             'saldo_awal' => $request->saldo,
@@ -69,6 +72,7 @@ class RekeningController extends Controller
 
         $rekening = Rekening::where('slug', $slug)->firstOrFail();
         $request->validate([
+            'no_rek' => 'required|string|max:255',
             'nama_rek' => 'required|string|max:255',
             'saldo' => 'required|min:0',
         ], [
@@ -82,6 +86,7 @@ class RekeningController extends Controller
 
         $saldo_akhir = $request->saldo - $selisih;
         Rekening::where('id', $rekening->id)->update([
+            'no_rekening' => $request->no_rek,
             'nama_rekening' => $request->nama_rek,
             'slug' => Str::slug($request->nama_rek),
             'saldo_awal' => $request->saldo,

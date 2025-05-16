@@ -28,6 +28,17 @@
                                 @method('PUT')
 
                                 <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">No Rekening <sup
+                                            class="text-danger">*</sup></label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control @error('no_rek') is-invalid @enderror"
+                                            name="no_rek" value="{{ old('no_rek', $rekening->no_rekening) }}">
+                                        @error('no_rek')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Nama Rekening <sup
                                             class="text-danger">*</sup></label>
                                     <div class="col-sm-10">

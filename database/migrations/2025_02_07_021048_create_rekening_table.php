@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('rekening', function (Blueprint $table) {
             $table->id();
+            $table->string('no_rekening');
             $table->string('nama_rekening');
             $table->string('slug')->unique();
             $table->integer("saldo_awal");

@@ -31,6 +31,7 @@ return new class extends Migration {
             $table->string('bahan_bakar')->nullable();
             $table->string('jumlah_roda')->nullable();
             $table->string('bidang')->nullable();
+            $table->string('penanggung_jawab')->nullable();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });

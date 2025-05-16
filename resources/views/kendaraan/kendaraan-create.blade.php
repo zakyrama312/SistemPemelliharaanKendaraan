@@ -50,19 +50,19 @@
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-sm-4 mb-3">
-                                    <label class="col-form-label">Merk <sup class="text-danger">*</sup></label>
+                                    <label class="col-form-label">Merk/Type <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @error('merk') is-invalid @enderror"
                                         name="merk" value="{{ old('merk') }}">
                                     @error('merk')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-sm-4 mb-3">
+                                <!-- <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Model <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @error('model') is-invalid @enderror"
                                         name="model" value="{{ old('model') }}">
                                     @error('model')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
+                                </div> -->
                                 <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Warna <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @error('warna') is-invalid @enderror"
@@ -72,8 +72,12 @@
                                 </div>
                                 <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Bahan Bakar<sup class="text-danger">*</sup></label>
-                                    <input type="text" class="form-control @error('bahan_bakar') is-invalid @enderror"
-                                        name="bahan_bakar" value="{{ old('bahan_bakar') }}">
+                                    <select class="form-control @error('bahan_bakar') is-invalid @enderror"
+                                        name="bahan_bakar">
+                                        <option value="">--Pilih Bahan Bakar--</option>
+                                        <option value="Pertamax">Pertamax</option>
+                                        <option value="Dexlite">Dexlite</option>
+                                    </select>
                                     @error('bahan_bakar')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
@@ -103,7 +107,7 @@
                                         class="form-control format-tanggal @error('tahun_pembuatan') is-invalid @enderror"
                                         name="tahun_pembuatan" value="{{ old('tahun_pembuatan') }}">
                                     @error('tahun_pembuatan')
-                                    <div class=" invalid-feedback">{{ $message }}</div>
+                                        <div class=" invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-sm-4 mb-3">
@@ -124,7 +128,7 @@
                                     @error('masa_aktif_plat')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-sm-4 mb-3">
+                                <!-- <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Tanggal Pemeliharaan Berikutnya <sup
                                             class="text-danger">*</sup></label>
                                     <input type="text"
@@ -132,7 +136,7 @@
                                         name="tanggal_pemeliharaan" value="{{ old('tanggal_pemeliharaan') }}">
                                     @error('tanggal_pemeliharaan')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
+                                </div> -->
                                 <!-- <div class="col-sm-4"> -->
                                 <!-- <label class="col-form-label">Biaya Pemeliharaan Sebelumnya <sup
                                             class="text-danger">*</sup></label> -->
@@ -161,11 +165,26 @@
                                     <input type="text" class="form-control" name="jumlah_roda"
                                         value="{{ old('jumlah_roda') }}">
                                 </div>
-                                <div class=" col-sm-4 mb-3">
+                                <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Bidang <sup class="text-danger">*</sup></label>
-                                    <input type="text" class="form-control @error('bidang') is-invalid @enderror"
-                                        name="bidang" value="{{ old('bidang') }}">
+                                    <select class="form-control @error('bidang') is-invalid @enderror" name="bidang">
+                                        <option value="">--Pilih Bidang--</option>
+                                        <option value="Sekretariat">Sekretariat</option>
+                                        <option value="Bina Marga">Bina Marga</option>
+                                        <option value="Cipta Karya">Cipta Karya</option>
+                                        <option value="PSDA">PSDA</option>
+                                        <option value="Tata Ruang">Tata Ruang</option>
+                                    </select>
                                     @error('bidang')
+                                    <div class=" invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class=" col-sm-4 mb-3">
+                                    <label class="col-form-label">Penanggung Jawab <sup
+                                            class="text-danger">*</sup></label>
+                                    <input type="text"
+                                        class="form-control @error('penanggungjawab') is-invalid @enderror"
+                                        name="penanggungjawab" value="{{ old('penanggungjawab') }}">
+                                    @error('penanggungjawab')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-sm-4 mb-3">
@@ -175,7 +194,7 @@
                                         name="id_users">
                                         <option value="">--Pilih Pengguna--</option>
                                         @foreach ($user as $usr)
-                                        <option value="{{ $usr->id }}">{{ $usr->name }}</option>
+                                            <option value="{{ $usr->id }}">{{ $usr->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('id_users')
@@ -186,7 +205,7 @@
                                     <select class="form-control @error('id_rek') is-invalid @enderror" name="id_rek">
                                         <option value="">--Pilih Rekening--</option>
                                         @foreach ($rekening as $rek)
-                                        <option value="{{ $rek->id }}">{{ $rek->nama_rekening }}</option>
+                                            <option value="{{ $rek->id }}">{{ $rek->nama_rekening }}</option>
                                         @endforeach
                                     </select>
                                     @error('id_rek')

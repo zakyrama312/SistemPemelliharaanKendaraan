@@ -52,17 +52,31 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label for="inputEmail" class="col-sm-2 col-form-label">Model </label>
+                                    <label for="inputEmail" class="col-sm-2 col-form-label">Nama Rekening </label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control @error('model') is-invalid @enderror"
-                                            name="model" value="{{ old('model', $pemeliharaan->kendaraan->model) }}"
-                                            readonly>
-                                        @error('model')
+                                        <input type="text" class="form-control @error('nama_rek') is-invalid @enderror"
+                                            name="nama_rek"
+                                            value="{{ old('nama_rek', $pemeliharaan->rekening->nama_rekening) }}" readonly>
+                                        @error('nama_rek')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
 
+                                <div class="row mb-3">
+                                    <label for="inputEmail" class="col-sm-2 col-form-label">Tanggal Pemeliharaan
+                                        <sup class="text-danger">*</sup></label>
+                                    <div class="col-sm-10">
+                                        <input type="text"
+                                            class="form-control format-tanggal @error('tanggal') is-invalid @enderror"
+                                            name="tanggal" value="{{ old('tanggal') }}">
+
+                                        @error('tanggal')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <!-- <label class="col-sm-2 col-form-label">Bulan</label> -->
+                                </div>
                                 <div class="row mb-3">
                                     <label for="inputEmail" class="col-sm-2 col-form-label">Jadwal Berikutnya
                                         <sup class="text-danger">*</sup></label>
@@ -178,9 +192,23 @@
                                         @foreach ($view_pemeliharaan as $pm)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ FormatHelper::formatTanggal($pm->tanggal_pemeliharaan_sebelumnya) }}</td>
-                                                <td>{{ FormatHelper::formatTanggal($pm->tanggal_pemeliharaan_berikutnya) }}</td>
-                                                <!-- <td>{{ $pm->kendaraan->no_polisi }}</td> -->
+                                                <!-- <td>{{ FormatHelper::formatTanggal($pm->tanggal_pemeliharaan_sebelumnya) }}</td> -->
+                                                <td>
+                                                    @if ($pm->tanggal_pemeliharaan_sebelumnya)
+                                                        <span
+                                                            class="">{{ FormatHelper::formatTanggal($pm->tanggal_pemeliharaan_sebelumnya) }}</span>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($pm->tanggal_pemeliharaan_berikutnya)
+                                                        <span
+                                                            class="">{{ FormatHelper::formatTanggal($pm->tanggal_pemeliharaan_berikutnya) }}</span>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
 
                                                 <td>{{ $pm->bengkel }}</td>
                                                 <td>{{ $pm->deskripsi }}</td>

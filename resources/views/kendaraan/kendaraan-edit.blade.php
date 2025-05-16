@@ -57,19 +57,19 @@
                                     <div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-sm-4 mb-3">
-                                    <label class="col-form-label">Merk <sup class="text-danger">*</sup></label>
+                                    <label class="col-form-label">Merk/Type <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @error('merk') is-invalid @enderror"
                                         name="merk" value="{{ old('merk', $kendaraan->merk) }}">
                                     @error('merk')
                                     <div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-sm-4 mb-3">
+                                <!-- <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Model <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @error('model') is-invalid @enderror"
                                         name="model" value="{{ old('model', $kendaraan->model) }}">
                                     @error('model')
                                     <div class="invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
+                                </div> -->
                                 <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Warna <sup class="text-danger">*</sup></label>
                                     <input type="text" class="form-control @error('warna') is-invalid @enderror"
@@ -79,8 +79,17 @@
                                 </div>
                                 <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Bahan Bakar<sup class="text-danger">*</sup></label>
-                                    <input type="text" class="form-control @error('bahan_bakar') is-invalid @enderror"
-                                        name="bahan_bakar" value="{{ old('bahan_bakar', $kendaraan->bahan_bakar) }}">
+                                    <select class="form-control @error('bahan_bakar') is-invalid @enderror"
+                                        name="bahan_bakar">
+                                        <option value="">--Pilih Bahan Bakar--</option>
+                                        <option value="Pertamax"
+                                            {{ old('bahan_bakar', $kendaraan->bahan_bakar ?? '') == 'Pertamax' ? 'selected' : '' }}>
+                                            Pertamax</option>
+                                        <option value="Dexlite"
+                                            {{ old('bahan_bakar', $kendaraan->bahan_bakar ?? '') == 'Dexlite' ? 'selected' : '' }}>
+                                            Dexlite</option>
+                                    </select>
+
                                     @error('bahan_bakar')
                                     <div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
@@ -167,9 +176,38 @@
                                 </div>
                                 <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Bidang <sup class="text-danger">*</sup></label>
-                                    <input type="text" class="form-control @error('bidang') is-invalid @enderror"
-                                        name="bidang" value="{{ old('bidang', $kendaraan->bidang) }}">
+                                    <select class="form-control @error('bidang') is-invalid @enderror" name="bidang">
+                                        <option value="">--Pilih Bidang--</option>
+                                        <option value="Sekretariat"
+                                            {{ (old('bidang', $kendaraan->bidang ?? '') == 'Sekretariat') ? 'selected' : '' }}>
+                                            Sekretariat
+                                        </option>
+                                        <option value="Bina Marga"
+                                            {{ (old('bidang', $kendaraan->bidang ?? '') == 'Bina Marga') ? 'selected' : '' }}>
+                                            Bina Marga
+                                        </option>
+                                        <option value="Cipta Karya"
+                                            {{ (old('bidang', $kendaraan->bidang ?? '') == 'Cipta Karya') ? 'selected' : '' }}>
+                                            Cipta Karya
+                                        </option>
+                                        <option value="PSDA"
+                                            {{ (old('bidang', $kendaraan->bidang ?? '') == 'PSDA') ? 'selected' : '' }}>
+                                            PSDA
+                                        </option>
+                                        <option value="Tata Ruang"
+                                            {{ (old('bidang', $kendaraan->bidang ?? '') == 'Tata Ruang') ? 'selected' : '' }}>
+                                            Tata Ruang
+                                        </option>
+                                    </select>
+
                                     @error('bidang')
+                                    <div class=" invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-sm-4 mb-3">
+                                    <label class="col-form-label">Penanggung Jawab</label>
+                                    <input type="text" class="form-control" name="penanggung_jawab"
+                                        value="{{ old('penanggung_jawab"', $kendaraan->penanggung_jawab) }}">
+                                    @error('penanggung_jawab')
                                     <div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-sm-4 mb-3">

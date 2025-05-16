@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <!-- <a href="/rekening/tambah-rekening"
-                                                                                                                                                                                                                                                                                                                            class="btn btn-outline-primary">Tambah Rekening</a> -->
+                                                                                                                                                                                                                                                                                                                                class="btn btn-outline-primary">Tambah Rekening</a> -->
                             </h5>
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -71,8 +71,7 @@
                                                 <td>{{ $kendaraan->kendaraan->kode_barang }}</td>
                                                 <td>{{ $kendaraan->kendaraan->no_register }}</td>
                                                 <td>{{ $kendaraan->kendaraan->nama_barang }}</td>
-                                                <td>{{ $kendaraan->kendaraan->no_polisi }} - {{ $kendaraan->kendaraan->merk }} -
-                                                    {{ $kendaraan->kendaraan->model }}
+                                                <td>{{ $kendaraan->kendaraan->no_polisi }} - {{ $kendaraan->kendaraan->merk }}
                                                 </td>
                                                 <!-- <td class="text-center">{{ $kendaraan->kendaraan->jenis }}</td> -->
                                                 <td class="text-center">{{ $kendaraan->bengkel }}</td>
