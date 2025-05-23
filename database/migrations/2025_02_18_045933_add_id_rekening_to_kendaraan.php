@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('kendaraan', function (Blueprint $table) {
-            $table->foreignId('id_rekening')->constrained('rekening')->cascadeOnDelete();
+            $table->foreignId('id_rekening')->constrained('rekening')->cascadeOnDelete()->nullable();
         });
     }
 

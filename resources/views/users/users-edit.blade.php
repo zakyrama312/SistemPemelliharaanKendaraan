@@ -61,8 +61,14 @@
                                 <label class="col-sm-2 col-form-label">Password (Kosongkan jika tidak ingin
                                     diubah)</label>
                                 <div class="col-sm-10">
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                        name="password">
+                                    <div class="input-group">
+                                        <input type="password" id="password"
+                                            class="form-control @error('password') is-invalid @enderror"
+                                            name="password">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                            <i class="bi bi-eye" id="eyeIcon"></i>
+                                        </button>
+                                    </div>
                                     @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -76,7 +82,7 @@
                                     <select class="form-select @error('role') is-invalid @enderror" name="role">
                                         <option value="">--Pilih-Role--</option>
                                         <!-- <option value="super admin"
-                                            {{ old('role', $pegawai->role) == 'super admin' ? 'selected' : '' }}>                                            SuperAdmin</option> -->
+                                                {{ old('role', $pegawai->role) == 'super admin' ? 'selected' : '' }}>                                            SuperAdmin</option> -->
                                         <option value="admin"
                                             {{ old('role', $pegawai->role) == 'admin' ? 'selected' : '' }}>Admin
                                         </option>

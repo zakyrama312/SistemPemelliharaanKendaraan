@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,9 +13,9 @@ return new class extends Migration
         Schema::create('pajak', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_kendaraan')->constrained('kendaraan')->cascadeOnDelete();
-            $table->foreignId('id_rekening')->constrained('rekening')->cascadeOnDelete();
+            $table->foreignId('id_rekening')->constrained('rekening')->cascadeOnDelete()->nullable();
             $table->date('masa_berlaku');
-            $table->enum("jenis_pajak",['pajak_tahunan', 'pajak_plat'])->default('pajak_tahunan');
+            $table->enum("jenis_pajak", ['pajak_tahunan', 'pajak_plat'])->default('pajak_tahunan');
             $table->integer('nominal');
 
             $table->timestamps();

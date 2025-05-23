@@ -49,6 +49,8 @@ class KendaraanController extends Controller
     public function store(Request $request)
     {
 
+
+
         $request->validate([
             'no_polisi' => 'required|string|max:20|unique:kendaraan,no_polisi',
             'kode_barang' => 'required|string',
@@ -59,7 +61,7 @@ class KendaraanController extends Controller
             'warna' => 'required|string|max:30',
             'bahan_bakar' => 'required|string|max:30',
             'jenis' => 'required|in:Mobil,Motor,Truk,Alat Berat',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2024',
             'tahun_pembuatan' => 'required',
             'masa_aktif_pajak_tahunan' => 'required',
             'masa_aktif_plat' => 'required',
@@ -70,7 +72,7 @@ class KendaraanController extends Controller
             'jumlah_roda' => 'nullable|integer|min:2',
             'bidang' => 'required|string|max:50',
             'id_users' => 'required|exists:users,id',
-            'id_rek' => 'required|exists:rekening,id',
+            // 'id_rek' => 'required|exists:rekening,id',
             'penanggungjawab' => 'required|string|max:50',
         ], [
             'no_polisi.required' => 'Nomor Polisi wajib diisi.',
@@ -85,7 +87,7 @@ class KendaraanController extends Controller
             'jenis.required' => 'Jenis kendaraan wajib dipilih.',
             'foto.image' => 'Foto harus berupa gambar.',
             'foto.mimes' => 'Foto harus dalam format jpeg, png, atau jpg.',
-            'foto.max' => 'Ukuran foto tidak boleh lebih dari 1MB.',
+            'foto.max' => 'Ukuran foto tidak boleh lebih dari 2MB.',
             'tahun_pembuatan.required' => 'Tahun pembuatan wajib diisi.',
             'masa_aktif_pajak_tahunan.required' => 'Masa aktif pajak tahunan wajib diisi.',
             'masa_aktif_plat.required' => 'Masa aktif plat wajib diisi.',
@@ -102,9 +104,11 @@ class KendaraanController extends Controller
             'penanggungjawab.required' => 'Penanggung jawab wajib diisi.',
             'id_users.required' => 'Pengguna wajib dipilih.',
             'id_users.exists' => 'Pengguna tidak valid.',
-            'id_rek.required' => 'Rekening wajib dipilih.',
-            'id_rek.exists' => 'Rekening tidak valid.',
+            // 'id_rek.required' => 'Rekening wajib dipilih.',
+            // 'id_rek.exists' => 'Rekening tidak valid.',
         ]);
+        // dd('Lolos validasi');
+
         DB::beginTransaction();
 
         try {
@@ -124,6 +128,22 @@ class KendaraanController extends Controller
                 $fotoPath = "{$filename}";
             }
 
+            // online
+            // if ($request->hasFile('foto')) {
+            //     $file = $request->file('foto');
+            //     $filename = time() . '.jpg';
+
+            //     $manager = new ImageManager(new Driver());
+            //     $image = $manager->read($file)
+            //         ->scale(width: 800)
+            //         ->toJpeg(75);
+
+            //    $savePath = $_SERVER['DOCUMENT_ROOT'] . "/kendaraanImage/{$filename}";
+            //     $image->save($savePath);
+            //     // $fotoPath = "kendaraanImage/{$filename}";
+            //     // $image->save(public_path("kendaraanImage/{$filename}"));
+            //     $fotoPath = "{$filename}";
+            // }
             $tahun_pembuatan = Carbon::createFromFormat('d/m/Y', $request->tahun_pembuatan)->format('Y-m-d');
             $masa_aktif_pajak_tahunan = Carbon::createFromFormat('d/m/Y', $request->masa_aktif_pajak_tahunan)->format('Y-m-d');
             $masa_aktif_plat = Carbon::createFromFormat('d/m/Y', $request->masa_aktif_plat)->format('Y-m-d');
@@ -149,13 +169,13 @@ class KendaraanController extends Controller
                 'jumlah_roda' => $request->jumlah_roda,
                 'bidang' => $request->bidang,
                 'status' => 'aktif',
-                'id_rekening' => $request->id_rek,
+                'id_rekening' => null,
                 'penanggung_jawab' => $request->penanggungjawab,
             ]);
 
             Pajak::create([
                 'id_kendaraan' => $kendaraan->id,
-                'id_rekening' => $request->id_rek,
+                'id_rekening' => null,
                 'masa_berlaku' => $kendaraan->masa_aktif_pajak_tahunan,
                 'jenis_pajak' => 'pajak_tahunan',
                 'nominal' => 0
@@ -163,7 +183,7 @@ class KendaraanController extends Controller
 
             Pajak::create([
                 'id_kendaraan' => $kendaraan->id,
-                'id_rekening' => $request->id_rek,
+                'id_rekening' => null,
                 'masa_berlaku' => $kendaraan->masa_aktif_plat,
                 'jenis_pajak' => 'pajak_plat',
                 'nominal' => 0
@@ -176,7 +196,7 @@ class KendaraanController extends Controller
 
             $pemeliharaan = Pemeliharaan::create([
                 'id_kendaraan' => $kendaraan->id,
-                'id_rekening' => $request->id_rek,
+                'id_rekening' => null,
                 // 'tanggal_pemeliharaan_sebelumnya' => now(),
                 // 'tanggal_pemeliharaan_berikutnya' => now(),
                 'bengkel' => '-',
@@ -185,20 +205,6 @@ class KendaraanController extends Controller
                 'biaya' => 0
             ]);
 
-            // Kurangi saldo rekening
-            $rekening = Rekening::findOrFail($request->id_rek);
-            $saldo_akhir = $rekening->saldo_akhir - $request->biaya_pemeliharaan;
-            $rekening->update(['saldo_akhir' => $saldo_akhir]);
-            // Tambahkan transaksi keuangan untuk pengeluaran pemeliharaan
-            Keuangan::create([
-                'id_rekening' => $request->id_rek,
-                'id_sumber' => $pemeliharaan->id,
-                'tanggal' => now(),
-                'jenis_transaksi' => 'pengeluaran',
-                'sumber_transaksi' => 'Pemeliharaan',
-                'nominal' => $request->biaya_pemeliharaan,
-                'saldo_setelah' => $saldo_akhir
-            ]);
 
             DB::commit();
 
@@ -381,7 +387,7 @@ class KendaraanController extends Controller
             'warna' => 'required|string|max:30',
             'bahan_bakar' => 'required|string|max:30',
             'jenis' => 'required|in:Mobil,Motor,Truk,Alat Berat',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2024',
             'tahun_pembuatan' => 'required|date',
             'masa_aktif_pajak_tahunan' => 'required|date',
             'masa_aktif_plat' => 'required|date',
@@ -400,7 +406,7 @@ class KendaraanController extends Controller
             'jumlah_roda' => 'nullable|integer|min:2',
             'bidang' => 'required|string|max:50',
             'id_users' => 'required|exists:users,id',
-            'id_rek' => 'required|exists:rekening,id',
+            // 'id_rek' => 'required|exists:rekening,id',
             'status' => 'required|in:aktif,nonaktif',
             'penanggung_jawab' => 'required|string|max:50',
         ], [
@@ -416,7 +422,7 @@ class KendaraanController extends Controller
             'jenis.required' => 'Jenis kendaraan wajib dipilih.',
             'foto.image' => 'Foto harus berupa gambar.',
             'foto.mimes' => 'Foto harus dalam format jpeg, png, atau jpg.',
-            'foto.max' => 'Ukuran foto tidak boleh lebih dari 1MB.',
+            'foto.max' => 'Ukuran foto tidak boleh lebih dari 2MB.',
             'tahun_pembuatan.required' => 'Tahun pembuatan wajib diisi.',
             'masa_aktif_pajak_tahunan.required' => 'Masa aktif pajak tahunan wajib diisi.',
             'masa_aktif_plat.required' => 'Masa aktif plat wajib diisi.',
@@ -430,9 +436,9 @@ class KendaraanController extends Controller
             'penanggung_jawab.required' => 'Penanggung jawab wajib diisi.',
             'id_users.required' => 'Pengguna wajib dipilih.',
             'id_users.exists' => 'Pengguna tidak valid.',
-            'id_rek.required' => 'Rekening wajib dipilih.',
+            // 'id_rek.required' => 'Rekening wajib dipilih.',
             'status.required' => 'Status wajib dipilih.',
-            'id_rek.exists' => 'Rekening tidak valid.',
+            // 'id_rek.exists' => 'Rekening tidak valid.',
         ]);
         $fotoPath = $kendaraan->foto;
         if ($request->hasFile('foto')) {
@@ -451,7 +457,27 @@ class KendaraanController extends Controller
             $image->save(public_path("kendaraanImage/{$filename}"));
             $fotoPath = "{$filename}";
         }
+        //online
+        // if ($request->hasFile('foto')) {
+        //     $file = $request->file('foto');
+        //     $filename = time() . '.jpg';
 
+        //     // Hapus foto lama jika ada
+        //     if ($kendaraan->foto && file_exists($_SERVER['DOCUMENT_ROOT'] . '/kendaraanImage/' . $kendaraan->foto)) {
+        //         unlink($_SERVER['DOCUMENT_ROOT'] . '/kendaraanImage/' . $kendaraan->foto);
+        //     }
+
+        //     $manager = new ImageManager(new Driver());
+        //     $image = $manager->read($file)
+        //         ->scale(width: 800)
+        //         ->toJpeg(75);
+
+        //     $savePath = $_SERVER['DOCUMENT_ROOT'] . "/kendaraanImage/{$filename}";
+        //     $image->save($savePath);
+        //     // $fotoPath = "kendaraanImage/{$filename}";
+        //     // $image->save(public_path("kendaraanImage/{$filename}"));
+        //     $fotoPath = "{$filename}";
+        // }
 
         Kendaraan::where('id', $kendaraan->id)->update([
             'id_users' => $request->id_users,
@@ -474,7 +500,6 @@ class KendaraanController extends Controller
             'jumlah_roda' => $request->jumlah_roda,
             'bidang' => $request->bidang,
             'penanggung_jawab' => $request->penanggung_jawab,
-            'id_rekening' => $request->id_rek,
             'status' => $request->status,
         ]);
 
@@ -482,7 +507,7 @@ class KendaraanController extends Controller
         Pajak::updateOrCreate(
             ['id_kendaraan' => $kendaraan->id, 'jenis_pajak' => 'pajak_tahunan'],
             [
-                'id_rekening' => $request->id_rek,
+                // 'id_rekening' => $request->id_rek,
                 'masa_berlaku' => $kendaraan->masa_aktif_pajak_tahunan,
             ]
         );
@@ -491,18 +516,15 @@ class KendaraanController extends Controller
         Pajak::updateOrCreate(
             ['id_kendaraan' => $kendaraan->id, 'jenis_pajak' => 'pajak_plat'],
             [
-                'id_rekening' => $request->id_rek,
                 'masa_berlaku' => $kendaraan->masa_aktif_plat,
             ]
         );
 
         Pemeliharaan::where('id_kendaraan', $kendaraan->id)->update([
             'id_kendaraan' => $kendaraan->id,
-            'id_rekening' => $request->id_rek,
         ]);
         Bahanbakar::where('id_kendaraan', $kendaraan->id)->update([
             'id_kendaraan' => $kendaraan->id,
-            'id_rekening' => $request->id_rek,
         ]);
 
         return redirect('kendaraan')->with('success', 'Kendaraan berhasil diedit.');
@@ -522,18 +544,18 @@ class KendaraanController extends Controller
             $id = $kendaraan->id;
 
             // Ambil semua pajak, pemeliharaan, dan pengeluaran BBM terkait kendaraan ini
-            // $pajaks = Pajak::where('id_kendaraan', $id)->get();
+            $pajaks = Pajak::where('id_kendaraan', $id)->get();
             $pemeliharaans = Pemeliharaan::where('id_kendaraan', $id)->get();
             $pengeluaranBBMs = Bahanbakar::where('id_kendaraan', $id)->get();
 
             // Proses pengembalian saldo ke rekening terkait
-            // foreach ($pajaks as $pajak) {
-            //     $rekening = Rekening::find($pajak->id_rekening);
-            //     if ($rekening) {
-            //         $rekening->saldo_akhir += $pajak->nominal;
-            //         $rekening->save();
-            //     }
-            // }
+            foreach ($pajaks as $pajak) {
+                $rekening = Rekening::find($pajak->id_rekening);
+                if ($rekening) {
+                    $rekening->saldo_akhir += $pajak->nominal;
+                    $rekening->save();
+                }
+            }
 
             foreach ($pemeliharaans as $pemeliharaan) {
                 $rekening = Rekening::find($pemeliharaan->id_rekening);
@@ -552,7 +574,7 @@ class KendaraanController extends Controller
             }
 
             // Hapus semua data terkait sebelum menghapus kendaraan
-            // Pajak::where('id_kendaraan', $id)->delete();
+            Pajak::where('id_kendaraan', $id)->delete();
             Pemeliharaan::where('id_kendaraan', $id)->delete();
             Bahanbakar::where('id_kendaraan', $id)->delete();
 

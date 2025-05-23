@@ -56,7 +56,7 @@
                                                 <td>{{ $kndr->kode_barang }}</td>
                                                 <td>{{ $kndr->no_register }}</td>
                                                 <td>{{ $kndr->nama_barang }}</td>
-                                                <td>{{ $kndr->no_polisi }} - {{ $kndr->merk }} - {{ $kndr->model }}</td>
+                                                <td>{{ $kndr->no_polisi }} - {{ $kndr->merk }} </td>
                                                 <td>
                                                     @if (empty($kndr->foto))
                                                         -

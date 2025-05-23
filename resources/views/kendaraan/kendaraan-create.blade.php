@@ -10,6 +10,16 @@
             </ol>
         </nav>
     </div>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
 
     <section class="section">
         <div class="row">
@@ -200,7 +210,7 @@
                                     @error('id_users')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-sm-4 mb-3">
+                                <!-- <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Rekening <sup class="text-danger">*</sup></label>
                                     <select class="form-control @error('id_rek') is-invalid @enderror" name="id_rek">
                                         <option value="">--Pilih Rekening--</option>
@@ -210,7 +220,7 @@
                                     </select>
                                     @error('id_rek')
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
+                                </div> -->
                             </div>
                             <div class="row mb-3">
                                 <div class="col-sm-6">

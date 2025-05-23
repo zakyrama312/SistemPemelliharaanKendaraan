@@ -13,10 +13,13 @@ return new class extends Migration {
         Schema::create('pengeluaran_bbm', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_kendaraan')->constrained('kendaraan')->cascadeOnDelete();
-            $table->foreignId('id_rekening')->constrained('rekening')->cascadeOnDelete();
+            $table->foreignId('id_rekening')->constrained('rekening')->cascadeOnDelete()->nullable();
             $table->string('foto_struk')->nullable();
             $table->integer('jumlah_liter')->nullable();
+            $table->integer('harga_bbm')->nullable();
             $table->integer('nominal');
+            $table->string('spbu')->nullable();
+            $table->date('tanggal_pengisian')->nullable();
             $table->timestamps();
         });
     }

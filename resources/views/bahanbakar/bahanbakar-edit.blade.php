@@ -1,5 +1,6 @@
 @php
     use App\Helpers\FormatHelper;
+    use Carbon\Carbon;
 @endphp
 @foreach ($view_bbm as $pm)
     <div class="modal fade" id="largeModal{{ $pm->id }}" tabindex="-1">
@@ -36,11 +37,11 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-2 col-form-label">Model </label>
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Nama SPBU </label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control @error('model') is-invalid @enderror" name="model"
-                                    value="{{ old('model', $kendaraan->model) }}" readonly>
-                                @error('model')
+                                <input type="text" class="form-control @error('spbu') is-invalid @enderror" name="spbu"
+                                    value="{{ old('spbu', $pm->spbu) }}">
+                                @error('spbu')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -59,8 +60,35 @@
                             </div>
                             <label class="col-sm-2 col-form-label">Liter</label>
                         </div>
-
                         <div class="row mb-3">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Harga BBM / Liter <sup
+                                    class="text-danger">*</sup></label>
+                            <div class="col-sm-10">
+                                <input type="text"
+                                    class="form-control format-rupiahEdit @error('harga_bbm') is-invalid @enderror"
+                                    name="harga_bbm" inputmode="numeric"
+                                    value="{{ old('harga_bbm', FormatHelper::formatRupiah($pm->harga_bbm)) }}">
+                                @error('harga_bbm')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Tanggal Pengisian <sup
+                                    class="text-danger">*</sup></label>
+
+                            <div class="col-sm-10">
+                                <input type="text"
+                                    class="form-control format-tanggal @error('tanggal') is-invalid @enderror"
+                                    name="tanggal"
+                                    value="{{ old('tanggal', Carbon::parse($pm->tanggal_pengisian)->format('d/m/Y')) }}">
+
+                                @error('tanggal')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-10">
                                 <input type="hidden" readonly class="form-control " name="id_kendaraan"
                                     value="{{ old('id_kendaraan', $kendaraan->id) }}">
@@ -93,8 +121,8 @@
                                     class="text-danger">*</sup></label>
                             <div class="col-sm-10">
                                 <input type="text"
-                                    class="form-control format-rupiahEdit @error('biaya') is-invalid @enderror" name="biaya"
-                                    inputmode="numeric"
+                                    class="form-control format-rupiahEdit1 @error('biaya') is-invalid @enderror"
+                                    name="biaya" inputmode="numeric"
                                     value="{{ old('biaya', FormatHelper::formatRupiah($pm->nominal)) }}">
                                 @error('biaya')
                                     <div class="invalid-feedback">{{ $message }}</div>

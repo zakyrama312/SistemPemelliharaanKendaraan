@@ -49,24 +49,25 @@
                                         @enderror
                                     </div>
                                 </div>
-
                                 <div class="row mb-3">
-                                    <label for="inputEmail" class="col-sm-2 col-form-label">Model </label>
+                                    <label for="inputEmail" class="col-sm-2 col-form-label">Nama Rekening </label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control @error('model') is-invalid @enderror"
-                                            name="model" value="{{ old('model', $kendaraan->model) }}" readonly>
-                                        @error('model')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                        <select class="form-control @error('id_rekening') is-invalid @enderror"
+                                            name="id_rekening">
+                                            <option value="">--Pilih Rekening--</option>
+                                            @foreach ($rekening as $rek)
+                                                <option value="{{ $rek->id }}">{{ $rek->nama_rekening }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('id_rekening')
+                                        <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="row">
                                     <div class="col-sm-10">
                                         <input type="hidden" readonly class="form-control " name="id_kendaraan"
                                             value="{{ old('id_kendaraan', $kendaraan->id) }}">
-                                        <input type="hidden" readonly class="form-control " name="id_rekening"
-                                            value="{{ old('id_rekening', $kendaraan->id_rekening) }}">
                                         <input type="hidden" readonly class="form-control " name="slug"
                                             value="{{ old('slug', $kendaraan->slug) }}">
 

@@ -225,7 +225,7 @@
                                     @error('id_users')
                                     <div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-sm-4 mb-3">
+                                <!-- <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Rekening <sup class="text-danger">*</sup></label>
                                     <select class="form-control @error('id_rek') is-invalid @enderror" name="id_rek">
                                         <option value="">--Pilih Rekening--</option>
@@ -238,7 +238,7 @@
                                     </select>
                                     @error('id_rek')
                                     <div class="invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
+                                </div> -->
                                 <div class="col-sm-4 mb-3">
                                     <label class="col-form-label">Status Kendaraan <sup
                                             class="text-danger">*</sup></label>

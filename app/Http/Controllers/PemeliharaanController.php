@@ -89,12 +89,14 @@ class PemeliharaanController extends Controller
             'biaya' => 'required|min:0',
             'tanggal' => 'required',
             'jadwal' => 'required',
+            'id_rekening' => 'required',
         ], [
             'nama_bengkel.required' => 'Nama Bengkel wajib diisi!',
             'biaya.required' => 'Biaya wajib diisi!',
             'biaya.min' => 'Biaya tidak boleh kurang dari 0!',
             'deskripsi.required' => 'Deskripsi wajib diisi!',
             'tanggal.required' => 'Tanggal wajib diisi!',
+            'id_rekening.required' => 'Rekening wajib diisi!',
             'jadwal.required' => 'Jadwal wajib diisi!',
         ]);
 
@@ -139,14 +141,15 @@ class PemeliharaanController extends Controller
     public function show(string $slug)
     {
         $kendaraan = Kendaraan::where('slug', $slug)->first();
+        $rekening = Rekening::all();
         $view_pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraan->id)
-            ->with('kendaraan', 'rekening')
+            ->with('kendaraan')
             ->orderBy('created_at', 'desc') // Urut dari yang terbaru
             ->get();
         $pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraan->id)->with('kendaraan', 'rekening')->first();
 
 
-        return view('pemeliharaan.pemeliharaan-create', compact('pemeliharaan', 'view_pemeliharaan'));
+        return view('pemeliharaan.pemeliharaan-create', compact('pemeliharaan', 'view_pemeliharaan', 'rekening'));
     }
 
     /**

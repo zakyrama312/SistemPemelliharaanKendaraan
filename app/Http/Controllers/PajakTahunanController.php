@@ -89,11 +89,13 @@ class PajakTahunanController extends Controller
     {
         $request->validate([
             'biaya' => 'required|numeric|min:0',
-            'masa_berlaku' => 'required'
+            'masa_berlaku' => 'required',
+            'id_rekening' => 'required'
         ], [
             'biaya.required' => 'Biaya wajib diisi!',
             'biaya.min' => 'Biaya tidak boleh kurang dari 0!',
             'masa_berlaku.required' => 'Masa Berlaku wajib diisi!',
+            'id_rekening.required' => 'Rekening wajib dipilih!'
         ]);
 
         DB::beginTransaction();
@@ -145,6 +147,7 @@ class PajakTahunanController extends Controller
     public function show(string $slug)
     {
         $kendaraan = Kendaraan::where('slug', $slug)->with('rekening', 'pajak')->first();
+        $rekening = Rekening::all();
         $view_pajakTahunan = Pajak::where('id_kendaraan', $kendaraan->id)
             ->where('jenis_pajak', 'pajak_tahunan')
             ->with('kendaraan', 'rekening')
@@ -155,7 +158,7 @@ class PajakTahunanController extends Controller
             ->first();
         $masa_berlaku = $pajakTerbaru ? Carbon::parse($pajakTerbaru->masa_berlaku)->format('d/m/Y') : null;
 
-        return view('pajaktahunan.pajaktahunan-create', compact('kendaraan', 'view_pajakTahunan', 'masa_berlaku'));
+        return view('pajaktahunan.pajaktahunan-create', compact('kendaraan', 'view_pajakTahunan', 'masa_berlaku', 'rekening'));
     }
 
     /**

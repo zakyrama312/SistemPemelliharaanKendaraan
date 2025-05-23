@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Keuangan;
 use App\Models\Rekening;
 use App\Models\Kendaraan;
@@ -43,12 +44,22 @@ class BahanbakarController extends Controller
     {
         $request->validate([
             'biaya' => 'required|numeric|min:0',
-            'jumlah_liter' => 'required|numeric|min:0'
+            'jumlah_liter' => 'required|numeric|min:0',
+            'spbu' => 'required|string|max:255',
+            'harga_bbm' => 'required|numeric|min:0',
+            'tanggal' => 'required',
+            'id_rekening' => 'required'
         ], [
             'biaya.required' => 'Biaya wajib diisi!',
             'biaya.min' => 'Biaya tidak boleh kurang dari 0!',
             'jumlah_liter.required' => 'Jumlah liter wajib diisi!',
             'jumlah_liter.min' => 'Jumlah liter tidak boleh kurang dari 0!',
+            'spbu.required' => 'SPBU wajib diisi!',
+            'spbu.string' => 'SPBU harus berupa teks!',
+            'harga_bbm.required' => 'Harga BBM wajib diisi!',
+            'harga_bbm.min' => 'Harga BBM tidak boleh kurang dari 0!',
+            'tanggal.required' => 'Tanggal wajib diisi!',
+            'id_rekening.required' => 'Rekening wajib dipilih!',
         ]);
 
         DB::beginTransaction();
@@ -75,14 +86,17 @@ class BahanbakarController extends Controller
                 $image->save(public_path("strukImage/{$filename}"));
                 $fotoPath = "{$filename}";
             }
-
+            $tanggal = Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y-m-d');
             // Simpan transaksi pengeluaran BBM
             $bbm = Bahanbakar::create([
                 'id_kendaraan' => $request->id_kendaraan,
                 'id_rekening' => $request->id_rekening,
                 'foto_struk' => $fotoPath,
                 'jumlah_liter' => $request->jumlah_liter,
-                'nominal' => $request->biaya
+                'nominal' => $request->biaya,
+                'spbu' => $request->spbu,
+                'harga_bbm' => $request->harga_bbm,
+                'tanggal_pengisian' => $tanggal,
             ]);
             // Kurangi saldo rekening
             $rekening = Rekening::findOrFail($request->id_rekening);
@@ -96,7 +110,7 @@ class BahanbakarController extends Controller
                 'id_sumber' => $bbm->id, // Relasi ke tabel pengeluaran BBM
                 'sumber_transaksi' => 'Pengeluaran BBM',
                 'nominal' => $request->biaya,
-                'tanggal' => now(),
+                'tanggal' => $tanggal,
                 'saldo_setelah' => $saldo_akhir
             ]);
 
@@ -114,12 +128,13 @@ class BahanbakarController extends Controller
     public function show(string $slug)
     {
         $kendaraan = Kendaraan::where('slug', $slug)->with('rekening')->first();
+        $rekening = Rekening::all();
         $view_bbm = Bahanbakar::where('id_kendaraan', $kendaraan->id)
             ->with('kendaraan', 'rekening')
             ->orderBy('created_at', 'desc') // Urut dari yang terbaru
             ->get();
 
-        return view('bahanbakar.bahanbakar-create', compact('kendaraan', 'view_bbm'));
+        return view('bahanbakar.bahanbakar-create', compact('kendaraan', 'view_bbm', 'rekening'));
 
     }
 
@@ -140,11 +155,19 @@ class BahanbakarController extends Controller
             'biaya' => 'required|numeric|min:0',
             'jumlah_liter' => 'required|numeric|min:0',
             'foto_struk' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'spbu' => 'required|string|max:255',
+            'harga_bbm' => 'required|numeric|min:0',
+            'tanggal' => 'required',
         ], [
             'biaya.required' => 'Biaya wajib diisi!',
             'biaya.min' => 'Biaya tidak boleh kurang dari 0!',
             'jumlah_liter.required' => 'Jumlah liter wajib diisi!',
             'jumlah_liter.min' => 'Jumlah liter tidak boleh kurang dari 0!',
+            'spbu.required' => 'SPBU wajib diisi!',
+            'spbu.string' => 'SPBU harus berupa teks!',
+            'harga_bbm.required' => 'Harga BBM wajib diisi!',
+            'harga_bbm.min' => 'Harga BBM tidak boleh kurang dari 0!',
+            'tanggal.required' => 'Tanggal wajib diisi!',
         ]);
 
         DB::beginTransaction();
@@ -152,7 +175,7 @@ class BahanbakarController extends Controller
             // Cari data bahan bakar
             $bahanbakar = Bahanbakar::findOrFail($id);
             $rekening = Rekening::findOrFail($bahanbakar->id_rekening);
-
+            $tanggal = Carbon::createFromFormat('d/m/Y', $request->tanggal)->format('Y-m-d');
             // Ambil transaksi keuangan terkait bahan bakar ini
             $keuangan = Keuangan::where('id_sumber', $bahanbakar->id)
                 ->where('sumber_transaksi', 'Pengeluaran BBM')
@@ -198,12 +221,16 @@ class BahanbakarController extends Controller
             $bahanbakar->update([
                 'foto_struk' => $fotoPath,
                 'jumlah_liter' => $request->jumlah_liter,
-                'nominal' => $request->biaya
+                'nominal' => $request->biaya,
+                'spbu' => $request->spbu,
+                'harga_bbm' => $request->harga_bbm,
+                'tanggal_pengisian' => $tanggal
             ]);
 
             // Update data keuangan
             $keuangan->update([
                 'nominal' => $request->biaya,
+                'tanggal' => $tanggal,
                 'saldo_setelah' => $rekening->saldo_akhir
             ]);
 
@@ -261,4 +288,22 @@ class BahanbakarController extends Controller
             return redirect()->back()->with('error', 'Gagal menghapus data bahan bakar: ' . $e->getMessage());
         }
     }
+    public function print(Request $request, string $slug)
+    {
+        $kendaraan = Kendaraan::where('slug', $slug)->with('rekening', 'user')->firstOrFail();
+
+        $start = $request->query('start_date');
+        $end = $request->query('end_date');
+
+        $data = Bahanbakar::where('id_kendaraan', $kendaraan->id)
+            ->whereBetween('tanggal_pengisian', [$start, $end])
+            ->orderBy('tanggal_pengisian')
+            ->get();
+
+        $totalLiter = $data->sum('jumlah_liter');
+        $totalBiaya = $data->sum('nominal');
+
+        return view('bahanbakar.bahanbakar-print', compact('kendaraan', 'data', 'start', 'end', 'totalLiter', 'totalBiaya'));
+    }
+
 }

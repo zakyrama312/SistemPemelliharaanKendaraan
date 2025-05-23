@@ -82,11 +82,14 @@ class PajakPlatController extends Controller
     {
         $request->validate([
             'biaya' => 'required|numeric|min:0',
-            'masa_berlaku' => 'required'
+            'masa_berlaku' => 'required',
+            'id_rekening' => 'required'
         ], [
             'biaya.required' => 'Biaya wajib diisi!',
             'biaya.min' => 'Biaya tidak boleh kurang dari 0!',
             'masa_berlaku.required' => 'Masa Berlaku wajib diisi!',
+            'id_rekening.required' => 'Rekening wajib dipilih!'
+
         ]);
 
         DB::beginTransaction();
@@ -138,6 +141,7 @@ class PajakPlatController extends Controller
     public function show(string $slug)
     {
         $kendaraan = Kendaraan::where('slug', $slug)->with('rekening', 'pajak')->first();
+        $rekening = Rekening::all();
         $view_pajakPlat = Pajak::where('id_kendaraan', $kendaraan->id)
             ->where('jenis_pajak', 'pajak_plat')
             ->with('kendaraan', 'rekening')
@@ -148,7 +152,7 @@ class PajakPlatController extends Controller
             ->first();
         $masa_berlaku = $pajakTerbaru ? Carbon::parse($pajakTerbaru->masa_berlaku)->format('d/m/Y') : null;
 
-        return view('pajakplat.pajakplat-create', compact('kendaraan', 'view_pajakPlat', 'masa_berlaku'));
+        return view('pajakplat.pajakplat-create', compact('kendaraan', 'view_pajakPlat', 'masa_berlaku', 'rekening'));
     }
 
     /**
