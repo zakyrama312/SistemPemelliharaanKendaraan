@@ -10,7 +10,7 @@ use App\Helpers\FormatHelper;
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/pengeluaran-bbm">Kembali</a></li>
-                <li class="breadcrumb-item active">Tambah Data Pemeliharaan</li>
+                <li class="breadcrumb-item active">Tambah Pengeluaran Bahan Bakar</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -78,7 +78,7 @@ use App\Helpers\FormatHelper;
                                         class="text-danger">*</sup></label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control @error('jumlah_liter') is-invalid @enderror"
-                                        name="jumlah_liter" value="{{ old('jumlah_liter') }}">
+                                        name="jumlah_liter" id="jumlah_liter" value="{{ old('jumlah_liter') }}">
 
                                     @error('jumlah_liter')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -92,7 +92,8 @@ use App\Helpers\FormatHelper;
                                 <div class="col-sm-10">
                                     <input type="text"
                                         class="form-control format-rupiah @error('harga_bbm') is-invalid @enderror"
-                                        name="harga_bbm" inputmode="numeric" value="{{ old('harga_bbm') }}">
+                                        name="harga_bbm" id="harga_bbm" inputmode="numeric"
+                                        value="{{ old('harga_bbm') }}">
                                     @error('harga_bbm')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -137,7 +138,7 @@ use App\Helpers\FormatHelper;
                                 <div class="col-sm-10">
                                     <input type="text"
                                         class="form-control format-rupiah1 @error('biaya') is-invalid @enderror"
-                                        name="biaya" inputmode="numeric" value="{{ old('biaya') }}">
+                                        name="biaya" id="biaya" inputmode="numeric" value="{{ old('biaya') }}" readonly>
                                     @error('biaya')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
