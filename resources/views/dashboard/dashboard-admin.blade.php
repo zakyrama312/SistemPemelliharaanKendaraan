@@ -9,13 +9,12 @@
 
     <section class="section">
         <div class="row">
-            <div class="col-lg-4">
-
-                <div class="card">
+            <div class="col-lg-4 d-flex">
+                <div class="card w-100 d-flex flex-column">
                     <div class="card-body">
                         <h5 class="card-title">Total Kendaraan</h5>
-                        <h1><strong>{{ $totalKendaraan }} Kendaraan</strong></h1>
-                        <ul class="list-group overflow-auto mt-3" style="max-height: 135px;">
+                        <h3><strong>{{ $totalKendaraan }} Kendaraan</strong></h3>
+                        <ul class="list-group overflow-auto" style="max-height: 300px;">
                             @foreach ($jumlahKendaraanPerJenis as $jenis => $total)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     {{ ucfirst($jenis) }}
@@ -28,15 +27,16 @@
                 </div>
 
             </div>
-            <div class="col-lg-4">
-                <div class="card">
+            <div class="col-lg-4 d-flex">
+                <div class="card w-100 d-flex flex-column">
                     <div class="card-body">
                         <h5 class="card-title">Daftar Kendaraan yang Perlu Pemeliharan</h5>
+                        <h3><strong>{{ $totalKendaraanPerluPemeliharaan }} Kendaraan</strong></h3>
 
                         <!-- List group With Scrollable -->
                         <ul class="list-group overflow-auto" style="max-height: 300px;">
                             @foreach ($kendaraanData as $kendaraan)
-                                @if ($kendaraan->alert != 'alert-success')
+                                @if ($kendaraan->alert != 'alert-success' && $kendaraan->status_pemeliharaan != '❓ Tidak Ada Jadwal')
                                     <a href="pemeliharaan/{{ $kendaraan->slug }}/show">
                                         <div class="alert {{ $kendaraan->alert }} alert-dismissible fade show" role="alert">
                                             <i class="bi {{ $kendaraan->icon }} me-1"></i>
@@ -53,11 +53,11 @@
                 </div>
 
             </div>
-            <div class="col-lg-4">
-                <div class="card">
+            <div class="col-lg-4 d-flex">
+                <div class="card w-100 d-flex flex-column">
                     <div class="card-body">
                         <h5 class="card-title">Daftar Kendaraan yang Perlu Membayar Pajak</h5>
-
+                        <h3><strong>{{ $totalKendaraanPerluBayarPajak  }} Kendaraan</strong></h3>
                         <!-- List group With Scrollable -->
                         <ul class="list-group overflow-auto" style="max-height: 300px;">
                             @foreach ($pajakTerbaru as $index => $p)

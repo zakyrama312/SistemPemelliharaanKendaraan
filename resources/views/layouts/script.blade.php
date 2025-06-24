@@ -24,7 +24,9 @@ use App\Helpers\FormatHelper;
         decimalCharacter: ',',
         currencySymbol: 'Rp ',
         currencySymbolPlacement: 'p',
-        unformatOnSubmit: true
+        unformatOnSubmit: true,
+        minimumValue: '0',
+        modifyValueOnWheel: false
     });
 </script>
 <script>
@@ -33,7 +35,9 @@ use App\Helpers\FormatHelper;
         decimalCharacter: ',',
         currencySymbol: 'Rp ',
         currencySymbolPlacement: 'p',
-        unformatOnSubmit: true
+        unformatOnSubmit: true,
+        minimumValue: '0',
+        modifyValueOnWheel: false
     });
 </script>
 <script>
@@ -46,7 +50,9 @@ use App\Helpers\FormatHelper;
                         decimalCharacter: ',',
                         currencySymbol: 'Rp ',
                         currencySymbolPlacement: 'p',
-                        unformatOnSubmit: true
+                        unformatOnSubmit: true,
+                        minimumValue: '0',
+                        modifyValueOnWheel: false
                     });
                 });
 
@@ -56,7 +62,9 @@ use App\Helpers\FormatHelper;
                         decimalCharacter: ',',
                         currencySymbol: 'Rp ',
                         currencySymbolPlacement: 'p',
-                        unformatOnSubmit: true
+                        unformatOnSubmit: true,
+                        minimumValue: '0',
+                        modifyValueOnWheel: false
                     });
                 });
 

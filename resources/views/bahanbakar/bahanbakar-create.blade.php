@@ -77,7 +77,7 @@ use App\Helpers\FormatHelper;
                                 <label for="inputEmail" class="col-sm-2 col-form-label">Jumlah Liter <sup
                                         class="text-danger">*</sup></label>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control @error('jumlah_liter') is-invalid @enderror"
+                                    <input type="number" min="0" class="form-control @error('jumlah_liter') is-invalid @enderror"
                                         name="jumlah_liter" id="jumlah_liter" value="{{ old('jumlah_liter') }}">
 
                                     @error('jumlah_liter')

@@ -27,6 +27,24 @@ class DashboardController extends Controller
             $totalBiayaPajakTahunan = Pajak::where('jenis_pajak', 'pajak_tahunan')->sum('nominal');
 
             $totalPengeluaran = $totalBiayaPemeliharaan + $totalBiayaBBM + $totalBiayaPajakPlat + $totalBiayaPajakTahunan;
+            // Ambil semua kendaraan yang perlu pemeliharaan (tanggal berikutnya lewat/today)
+            $today = Carbon::today();
+                //  yang sudah jatuh tempo
+            $threshold = $today->copy()->addDays(30); // ambil yang akan jatuh tempo dalam 30 hari
+            // total kendaraan yang perlu pemeliharaan
+            $kendaraanPerluPemeliharaan = Pemeliharaan::with('kendaraan')
+                ->whereDate('tanggal_pemeliharaan_berikutnya', '<=', $threshold)
+                ->get();
+                  // Hitung total kendaraan unik yang perlu pemeliharaan
+            $totalKendaraanPerluPemeliharaan = $kendaraanPerluPemeliharaan->pluck('id_kendaraan')->unique()->count();
+
+            // Ambil pajak yang masa berlakunya dalam 30 hari ke depan atau sudah lewat
+                $pajakPerluDiperpanjang = Pajak::with('kendaraan') // pastikan ada relasi kendaraan()
+                ->whereNotNull('masa_berlaku')
+                ->whereDate('masa_berlaku', '<=', $threshold)
+                ->get();
+            $totalKendaraanPerluBayarPajak = $pajakPerluDiperpanjang->pluck('id_kendaraan')->unique()->count();
+
             $totalKendaraan = Kendaraan::count(); // Hitung total kendaraan
             $jumlahKendaraanPerJenis = Kendaraan::selectRaw('jenis, COUNT(*) as total')
                 ->groupBy('jenis')
@@ -133,7 +151,8 @@ class DashboardController extends Controller
             });
 
 
-            return view('dashboard.index', compact('totalBiayaPemeliharaan', 'totalBiayaBBM', 'totalBiayaPajakPlat', 'totalBiayaPajakTahunan', 'totalKendaraan', 'jumlahKendaraanPerJenis', 'totalPengeluaran', 'rekening', 'pajakTerbaru', 'kendaraanData'));
+            return view('dashboard.index', compact('totalBiayaPemeliharaan', 'totalBiayaBBM', 'totalBiayaPajakPlat', 'totalBiayaPajakTahunan', 'totalKendaraan', 'totalKendaraanPerluPemeliharaan',
+        'totalKendaraanPerluBayarPajak', 'jumlahKendaraanPerJenis', 'totalPengeluaran', 'rekening', 'pajakTerbaru', 'kendaraanData'));
 
         } elseif ($role->role == 'user') {
             $id_user = Auth::user()->id;

@@ -47,9 +47,11 @@ use App\Helpers\FormatHelper;
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php $no = 1; @endphp
                                     @foreach ($pajakPlat as $index => $pajak)
+                                    @if ($pajak['status'] != 'safe')
                                     <tr>
-                                        <td class="text-center align-middle">{{ $loop->iteration }}</td>
+                                        <td class="text-center align-middle">{{ $no++ }}</td>
                                         <td class="align-middle">
                                             @if ($pajak['status'] == 'danger')
                                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -86,6 +88,7 @@ use App\Helpers\FormatHelper;
 
                                         </td>
                                     </tr>
+                                    @endif
                                     @endforeach
                                 </tbody>
                             </table>

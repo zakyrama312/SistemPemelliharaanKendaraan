@@ -61,60 +61,30 @@
                             <div class="card mb-3">
 
                                 <div class="card-body">
-                                    @if (session()->has('success'))
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert"></div>
-                                        <i class="bi bi-check-circle me-1"></i>
-                                        {{ session('success') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                    @endif
-                                    @if ($errors->has('login'))
-                                        <div class="alert alert-danger">
-                                            {{ $errors->first('login') }}
-                                        </div>
-                                    @endif
 
                                     <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Selamat Datang di Sistem
-                                            Pemeliharaan Kendaraan</h5>
-                                        <p class="text-center small">Masukkan Username dan Password anda</p>
+                                        <h5 class="card-title text-center pb-0 fs-4">Reset Password</h5>
+                                        <p class="text-center small">Masukkan Username anda</p>
                                     </div>
 
-                                    <form class="row g-3 needs-validation" action="{{ route('login') }}" method="post"
+                                    <form class="row g-3 needs-validation" action="{{ route('lupa.password.check') }}" method="post"
                                         novalidate>
                                         @csrf
                                         <div class="col-12">
                                             <label for="yourUsername" class="form-label">Username</label>
                                             <div class="input-group has-validation">
                                                 <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"
-                                                    id="yourUsername" >
+                                                    id="yourUsername" value="{{ old('username') }}" required>
                                                 @error('username')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                                <div class="invalid-feedback">
+                                                    {{ $message }} {{-- Akan tampil: "The selected username is invalid." --}}
+                                                </div>
+                                                 @enderror
                                             </div>
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="yourPassword" class="form-label">Password</label>
-                                            <div class="input-group  has-validation">
-                                                <input type="password" id="password"
-                                                    class="form-control @error('password') is-invalid @enderror"
-                                                    name="password">
-                                                <button class="btn btn-outline-secondary border-none" type="button"
-                                                    id="togglePassword">
-                                                    <i class="bi bi-eye" id="eyeIcon"></i>
-                                                </button>
-                                            </div>
-                                            @error('password')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-
-                                        </div>
-                                        <div class="col-12">
-                                            <a class="float-end" href="/lupa-password">Lupa Password?</a>
-                                        </div>
-                                        <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="submit">Login</button>
+                                            <button class="btn btn-primary w-100" type="submit">Lanjut</button>
 
                                         </div>
                                     </form>
@@ -145,22 +115,7 @@
 
     <!-- Template Main JS File -->
     <script src="/assets/js/main.js"></script>
-    <script>
-    document.getElementById("togglePassword").addEventListener("click", function() {
-        const passwordInput = document.getElementById("password");
-        const eyeIcon = document.getElementById("eyeIcon");
 
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            eyeIcon.classList.remove("bi-eye");
-            eyeIcon.classList.add("bi-eye-slash");
-        } else {
-            passwordInput.type = "password";
-            eyeIcon.classList.remove("bi-eye-slash");
-            eyeIcon.classList.add("bi-eye");
-        }
-    });
-</script>
 </body>
 
 </html>

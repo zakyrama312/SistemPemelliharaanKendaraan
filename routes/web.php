@@ -16,6 +16,15 @@ use App\Http\Controllers\PemeliharaanController;
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+
+    // Halaman 1
+    Route::get('/lupa-password', [AuthController::class, 'formUsername'])->name('lupa.password');
+    Route::post('/lupa-password', [AuthController::class, 'checkUsername'])->name('lupa.password.check');
+
+    // Halaman 2
+    Route::get('/reset-password/{username}', [AuthController::class, 'formResetPassword'])->name('reset.password.form');
+    Route::post('/reset-password', [AuthController::class, 'submitResetPassword'])->name('reset.password.submit');
+
 });
 
 Route::middleware(['auth'])->group(function () {
