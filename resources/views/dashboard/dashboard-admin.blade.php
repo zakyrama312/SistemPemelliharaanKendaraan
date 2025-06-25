@@ -31,7 +31,7 @@
                 <div class="card w-100 d-flex flex-column">
                     <div class="card-body">
                         <h5 class="card-title">Daftar Kendaraan yang Perlu Pemeliharan</h5>
-                        <h3><strong>{{ $totalKendaraanPerluPemeliharaan }} Kendaraan</strong></h3>
+                        <h3><strong>{{ $totalKendaraanPerluPemeliharaan ?? 0 }} Kendaraan</strong></h3>
 
                         <!-- List group With Scrollable -->
                         <ul class="list-group overflow-auto" style="max-height: 300px;">
@@ -57,7 +57,7 @@
                 <div class="card w-100 d-flex flex-column">
                     <div class="card-body">
                         <h5 class="card-title">Daftar Kendaraan yang Perlu Membayar Pajak</h5>
-                        <h3><strong>{{ $totalKendaraanPerluBayarPajak  }} Kendaraan</strong></h3>
+                        <h3><strong>{{ $totalKendaraanPerluBayarPajak ?? 0 }} Kendaraan</strong></h3>
                         <!-- List group With Scrollable -->
                         <ul class="list-group overflow-auto" style="max-height: 300px;">
                             @foreach ($pajakTerbaru as $index => $p)

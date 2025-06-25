@@ -143,6 +143,19 @@ use App\Helpers\FormatHelper;
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        flatpickr(".format-tanggalBBM", {
+            enableTime: false, // Aktifkan pilihan jam & menit
+            dateFormat: "d/m/Y", // Format seperti di gambar (DD/MM/YYYY HH:mm)
+            time_24hr: true, // Gunakan format 24 jam
+            locale: "id",
+            defaultDate: null, // Bisa set default ke hari ini,
+            minDate: '01-01-2025',
+            maxDate: new Date() // otomatis hari ini
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
         new simpleDatatables.DataTable(".datatable");
     });
 </script>

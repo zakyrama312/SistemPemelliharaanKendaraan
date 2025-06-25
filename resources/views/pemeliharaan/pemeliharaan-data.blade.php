@@ -66,8 +66,8 @@ use App\Helpers\FormatHelper;
                                             rowspan="2">Tanggal Pemeliharaan</th>
                                         <th class="border border-gray-400 px-4 py-2 text-center align-middle"
                                             rowspan="2">Biaya Pemeliharaan</th>
-                                        <th class="border border-gray-400 px-4 py-2 text-center align-middle"
-                                            rowspan="2">Bukti Pemeliharaan</th>
+                                        <!-- <th class="border border-gray-400 px-4 py-2 text-center align-middle"
+                                            rowspan="2">Bukti Pemeliharaan</th> -->
                                         <th class="border border-gray-400 px-4 py-2 text-center align-middle"
                                             rowspan="2">Ket</th>
                                     </tr>
@@ -96,7 +96,7 @@ use App\Helpers\FormatHelper;
                                         <td data-biaya="{{ $kendaraan->biaya }}">
                                             {{ FormatHelper::formatRupiah($kendaraan->biaya) }}
                                         </td>
-                                        <td>-</td>
+                                        <!-- <td>-</td> -->
                                         <td>{{ $kendaraan->deskripsi }}</td>
                                     </tr>
 
@@ -114,7 +114,7 @@ use App\Helpers\FormatHelper;
                                         <th style="text-align:right">Total</th>
                                         <th id="totalBiaya">Rp 0</th>
                                         <th></th>
-                                        <th></th>
+                                        <!-- <th></th> -->
                                     </tr>
                                 </tfoot>
                             </table>

@@ -112,7 +112,7 @@ use App\Helpers\FormatHelper;
                                     <sup class="text-danger">*</sup></label>
                                 <div class="col-sm-10">
                                     <input type="text"
-                                        class="form-control format-tanggal @error('tanggal') is-invalid @enderror"
+                                        class="form-control format-tanggalBBM @error('tanggal') is-invalid @enderror"
                                         name="tanggal" value="{{ old('tanggal') }}">
 
                                     @error('tanggal')

@@ -49,7 +49,7 @@ use App\Helpers\FormatHelper;
                                 <tbody>
                                     @php $no = 1; @endphp
                                     @foreach ($pajakPlat as $index => $pajak)
-                                    @if ($pajak['status'] != 'safe')
+
                                     <tr>
                                         <td class="text-center align-middle">{{ $no++ }}</td>
                                         <td class="align-middle">
@@ -77,10 +77,11 @@ use App\Helpers\FormatHelper;
                                         </td>
 
                                         <td class="text-center align-middle">
-                                            <a href="{{ url('pajak-plat/' . $pajak['slug'] . '/show') }}"><span
-                                                    class="btn btn-warning "><i
-                                                        class="bi bi-exclamation-triangle me-1"></i> Bayar</span></a>
-
+                                            @if ($pajak['status'] != 'safe')
+                                                <a href="{{ url('pajak-plat/' . $pajak['slug'] . '/show') }}"><span
+                                                        class="btn btn-warning "><i
+                                                            class="bi bi-exclamation-triangle me-1"></i> Bayar</span></a>
+                                            @endif
                                             <a href="{{ url('kendaraan/detail-kendaraan/' . $pajak['slug']) }}"><span
                                                     class="btn btn-info "><i class="bi bi-info-square me-1"></i>
                                                     Detail</span></a>
@@ -88,7 +89,6 @@ use App\Helpers\FormatHelper;
 
                                         </td>
                                     </tr>
-                                    @endif
                                     @endforeach
                                 </tbody>
                             </table>

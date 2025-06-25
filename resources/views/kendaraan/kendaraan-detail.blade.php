@@ -166,10 +166,10 @@ use Laravolt\Avatar\Facade as Avatar;
                                         </h4>
 
                                     </div>
-                                    <div class="card-footer bg-warning text-center">
+                                    <!-- <div class="card-footer bg-warning text-center">
                                         <a href="/pemeliharaan/{{ $kendaraanData->slug }}/show"
                                             class="text-white">Detail <i class="bi bi-arrow-down-right-square"></i></a>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

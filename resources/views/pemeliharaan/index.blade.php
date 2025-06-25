@@ -69,11 +69,14 @@ use App\Helpers\FormatHelper;
 
 
                                         <td class="text-center">
+                                            @if ($kendaraan->status_pemeliharaan != '✅ Aman')
 
                                             <a href="{{ url('pemeliharaan/' . $kendaraan->slug . '/show') }}"><span
                                                     class="btn btn-danger "><i
                                                         class="bi bi-exclamation-triangle me-1"></i> Servis</span></a>
-                                            <a href="{{ url('kendaraan/detail-kendaraan/' . $kendaraan->slug) }}"><span
+
+                                            @endif
+                                                        <a href="{{ url('kendaraan/detail-kendaraan/' . $kendaraan->slug) }}"><span
                                                     class="btn btn-info "><i class="bi bi-info-square me-1"></i>
                                                     Detail</span></a>
 
