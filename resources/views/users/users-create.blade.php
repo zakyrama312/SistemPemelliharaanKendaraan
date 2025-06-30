@@ -24,7 +24,7 @@
                         <form action="{{ url('pegawai') }}" method="POST">
                             @csrf
                             <div class="row mb-3">
-                                <label for="inputText" class="col-sm-2 col-form-label">NIP <sup
+                                <label for="inputText" class="col-sm-2 col-form-label">Nomor Pegawai <sup
                                         class="text-danger">*</sup></label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control @error('nip') is-invalid @enderror"

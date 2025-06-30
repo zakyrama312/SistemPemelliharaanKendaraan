@@ -10,7 +10,7 @@
             </ol>
         </nav>
     </div>
-    @if ($errors->any())
+    <!-- @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
@@ -18,7 +18,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif -->
 
 
     <section class="section">
@@ -117,7 +117,7 @@
                                         class="form-control format-tanggal @error('tahun_pembuatan') is-invalid @enderror"
                                         name="tahun_pembuatan" value="{{ old('tahun_pembuatan') }}">
                                     @error('tahun_pembuatan')
-                                        <div class=" invalid-feedback">{{ $message }}</div>
+                                    <div class=" invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-sm-4 mb-3">
@@ -204,7 +204,7 @@
                                         name="id_users">
                                         <option value="">--Pilih Pengguna--</option>
                                         @foreach ($user as $usr)
-                                            <option value="{{ $usr->id }}">{{ $usr->name }}</option>
+                                        <option value="{{ $usr->id }}">{{ $usr->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('id_users')

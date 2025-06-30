@@ -25,7 +25,8 @@
                             @method('PUT') {{-- Menggunakan metode PUT untuk update data --}}
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">NIP <sup class="text-danger">*</sup></label>
+                                <label class="col-sm-2 col-form-label">Nomor Pegawai <sup
+                                        class="text-danger">*</sup></label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control @error('nip') is-invalid @enderror"
                                         name="nip" value="{{ old('nip', $pegawai->nip) }}">
