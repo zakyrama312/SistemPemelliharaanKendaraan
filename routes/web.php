@@ -24,7 +24,6 @@ Route::middleware(['guest'])->group(function () {
     // Halaman 2
     Route::get('/reset-password/{username}', [AuthController::class, 'formResetPassword'])->name('reset.password.form');
     Route::post('/reset-password', [AuthController::class, 'submitResetPassword'])->name('reset.password.submit');
-
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -60,11 +59,12 @@ Route::middleware(['auth'])->group(function () {
 
         //pemeliharaan
         Route::get('/pemeliharaan', [PemeliharaanController::class, 'index'])->name('pemeliharaan.index');
-        Route::get('/data-pemeliharaan', [PemeliharaanController::class, 'data'])->name('pemeliharaan.pemeliharaan-data');
+        Route::get('/laporan-pemeliharaan', [PemeliharaanController::class, 'data'])->name('pemeliharaan.pemeliharaan-data');
         Route::delete('/pemeliharaan/{id}', [PemeliharaanController::class, 'destroy']);
 
         //bbm
         Route::get('/pengeluaran-bbm', [BahanbakarController::class, 'index'])->name('pengeluaran-bbm.index');
+        Route::get('/laporan-bbm', [BahanbakarController::class, 'data'])->name('pengeluaran-bbm.pengeluaran-data');
         Route::delete('/pengeluaran-bbm/{id}', [BahanbakarController::class, 'destroy']);
 
         //pajak tahunan
@@ -76,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/pajak-plat/{id}', [PajakPlatController::class, 'destroy']);
 
         // pengeluaran keuangan
-        Route::get('/pengeluaran', [KeuanganController::class, 'index'])->name('pajak-plat.index');
+        Route::get('/laporan-pengeluaran', [KeuanganController::class, 'index'])->name('pajak-plat.index');
 
         Route::get('/chart-data', [DashboardController::class, 'getChartData']);
     });
@@ -115,10 +115,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/pajak-plat/{id}', [PajakPlatController::class, 'update'])->name('pajak-plat.update');
         Route::get('/pajak-plat/tambah-pajak-plat', [PajakPlatController::class, 'create'])->name('pajak-plat.pajaktahunan-create');
         Route::post('/pajak-plat/store', [PajakPlatController::class, 'store'])->name('pajak-plat.store');
-
     });
 
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
 });

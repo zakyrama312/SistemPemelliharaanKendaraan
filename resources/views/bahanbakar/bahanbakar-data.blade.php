@@ -6,7 +6,7 @@ use App\Helpers\FormatHelper;
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>Laporan Pemeliharaan Kendaraan</h1>
+        <h1>Laporan Bahan Bakar Kendaraan</h1>
 
     </div><!-- End Page Title -->
 
@@ -49,7 +49,7 @@ use App\Helpers\FormatHelper;
                         </div>
                         <!-- Table with stripped rows -->
                         <div class="table-responsive">
-                            <table class="table table-hover" id="tablePemeliharaan" style="width: 100%">
+                            <table class="table table-hover" id="tableLaporanBBM" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th class="border border-gray-400 px-4 py-2 text-center align-middle"
@@ -57,19 +57,19 @@ use App\Helpers\FormatHelper;
                                         <th class="border border-gray-400 px-4 py-2 text-center" colspan="2">Spesifikasi
                                             Barang</th>
                                         <th class="border border-gray-400 px-4 py-2 text-center align-middle"
-                                            rowspan="2">Nama Barang Yang Dipelihara</th>
+                                            rowspan="2">Nama Barang</th>
                                         <th class="border border-gray-400 px-4 py-2 text-center align-middle"
-                                            rowspan="2">Jenis Pemeliharaan</th>
+                                            rowspan="2">No Polisi</th>
                                         <th class="border border-gray-400 px-4 py-2 text-center align-middle"
-                                            rowspan="2">Yang Memelihara</th>
+                                            rowspan="2">Nama SPBU</th>
                                         <th class="border border-gray-400 px-4 py-2 text-center align-middle"
-                                            rowspan="2">Tanggal Pemeliharaan</th>
+                                            rowspan="2">Tanggal</th>
                                         <th class="border border-gray-400 px-4 py-2 text-center align-middle"
-                                            rowspan="2">Biaya Pemeliharaan</th>
-                                        <!-- <th class="border border-gray-400 px-4 py-2 text-center align-middle"
-                                            rowspan="2">Bukti Pemeliharaan</th> -->
+                                            rowspan="2">Jumlah Liter</th>
                                         <th class="border border-gray-400 px-4 py-2 text-center align-middle"
-                                            rowspan="2">Ket</th>
+                                            rowspan="2">Harga /Liter</th>
+                                        <th class="border border-gray-400 px-4 py-2 text-center align-middle"
+                                            rowspan="2">Biaya</th>
                                     </tr>
                                     <tr>
                                         <th class="border border-gray-400 px-4 py-2 text-center">Kode Barang</th>
@@ -87,17 +87,18 @@ use App\Helpers\FormatHelper;
                                         <td>{{ $kendaraan->kendaraan->no_polisi }} -
                                             {{ $kendaraan->kendaraan->jenis }}
                                         </td>
-                                        <!-- <td class="text-center">{{ $kendaraan->kendaraan->jenis }}</td> -->
-                                        <td class="text-center">{{ $kendaraan->bengkel }}</td>
+                                        <td class="text-center">{{ $kendaraan->spbu }}</td>
+
                                         <td
-                                            data-tanggal="{{ \Carbon\Carbon::parse($kendaraan->created_at)->format('Y-m-d') }}">
-                                            {{ FormatHelper::formatTanggal($kendaraan->created_at) }}
+                                            data-tanggal="{{ \Carbon\Carbon::parse($kendaraan->tanggal_pengisian)->format('Y-m-d') }}">
+                                            {{ FormatHelper::formatTanggal($kendaraan->tanggal_pengisian) }}
                                         </td>
-                                        <td data-biaya="{{ $kendaraan->biaya }}">
-                                            {{ FormatHelper::formatRupiah($kendaraan->biaya) }}
+                                        <td class="text-center">{{ $kendaraan->jumlah_liter }}</td>
+                                        <td class="text-center">{{ FormatHelper::formatRupiah($kendaraan->harga_bbm) }}
                                         </td>
-                                        <!-- <td>-</td> -->
-                                        <td>{{ $kendaraan->deskripsi }}</td>
+                                        <td data-nominal="{{ $kendaraan->nominal }}">
+                                            {{ FormatHelper::formatRupiah($kendaraan->nominal) }}
+                                        </td>
                                     </tr>
 
                                     @endforeach
@@ -108,12 +109,12 @@ use App\Helpers\FormatHelper;
                                         <th></th>
                                         <th></th>
                                         <th></th>
-                                        <!-- <th></th> -->
+                                        <th></th>
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th style="text-align:right">Total</th>
                                         <th id="totalBiaya">Rp 0</th>
-                                        <th></th>
                                         <!-- <th></th> -->
                                     </tr>
                                 </tfoot>

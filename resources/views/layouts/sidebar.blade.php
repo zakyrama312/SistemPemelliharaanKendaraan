@@ -60,17 +60,25 @@
         </li>
         <li class="nav-heading">Laporan</li>
         <li class="nav-item">
-            <a class="nav-link {{ Request::is('data-pemeliharaan') ? 'active' : 'collapsed' }}"
-                href="/data-pemeliharaan">
+            <a class="nav-link {{ Request::is('laporan-pemeliharaan') ? 'active' : 'collapsed' }}"
+                href="/laporan-pemeliharaan">
                 <i class="bi bi-journal"></i>
                 <span>Laporan Pemeliharaan</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ Request::is('pengeluaran') ? 'active' : 'collapsed' }}" href="/pengeluaran">
+            <a class="nav-link {{ Request::is('laporan-bbm') ? 'active' : 'collapsed' }}" href="/laporan-bbm">
+                <i class="bi bi-journal"></i>
+                <span>Laporan Bahan Bakar</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ Request::is('laporan-pengeluaran') ? 'active' : 'collapsed' }}"
+                href="/laporan-pengeluaran">
                 <i class="bi bi-journal"></i>
                 <span>Laporan Pengeluaran</span>
             </a>
+
         </li>
         @endif
     </ul>

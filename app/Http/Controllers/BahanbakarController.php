@@ -29,12 +29,13 @@ class BahanbakarController extends Controller
         return view('bahanbakar.index', compact('kendaraanData'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function data()
     {
-        //
+        $kendaraanData = Bahanbakar::with('kendaraan')
+            ->where('nominal', '!=', 0)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('bahanbakar.bahanbakar-data', compact('kendaraanData'));
     }
 
     /**
@@ -135,7 +136,6 @@ class BahanbakarController extends Controller
             ->get();
 
         return view('bahanbakar.bahanbakar-create', compact('kendaraan', 'view_bbm', 'rekening'));
-
     }
 
     /**
@@ -305,5 +305,4 @@ class BahanbakarController extends Controller
 
         return view('bahanbakar.bahanbakar-print', compact('kendaraan', 'data', 'start', 'end', 'totalLiter', 'totalBiaya'));
     }
-
 }

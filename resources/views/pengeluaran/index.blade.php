@@ -6,7 +6,7 @@ use App\Helpers\FormatHelper;
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>Data Pengeluaran</h1>
+        <h1>Laporan Pengeluaran</h1>
 
     </div><!-- End Page Title -->
 
