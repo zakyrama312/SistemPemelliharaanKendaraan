@@ -236,6 +236,7 @@ class KendaraanController extends Controller
             ->withCount('pengeluaran_bbm') // Hitung frekuensi pemeliharaan
             ->withSum('pemeliharaan', 'biaya') // Hitung total biaya pemeliharaan
             ->withSum('pengeluaran_bbm', 'nominal') // Hitung total biaya pemeliharaan
+            ->withSum('pajak', 'nominal')
             ->withCount([
                 'pajak as total_pajak_plat' => function ($query) {
                     $query->where('jenis_pajak', 'pajak_plat');
@@ -247,8 +248,8 @@ class KendaraanController extends Controller
             ->firstOrFail();
 
         // ===========================
-// CEK STATUS PAJAK PLAT
-// ===========================
+        // CEK STATUS PAJAK PLAT
+        // ===========================
         $pajakPlat = $kendaraanData->pajak->where('jenis_pajak', 'pajak_plat')->sortByDesc('masa_berlaku')->first();
 
         if ($pajakPlat) {
@@ -360,8 +361,7 @@ class KendaraanController extends Controller
         $rekening = Rekening::all();
         $user = User::where('role', 'user')->get();
         $kendaraan = Kendaraan::where('slug', $slug)->firstOrFail();
-        $pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraan->id)->firstOrFail();
-        ;
+        $pemeliharaan = Pemeliharaan::where('id_kendaraan', $kendaraan->id)->firstOrFail();;
         return view('kendaraan.kendaraan-edit', compact('kendaraan', 'user', 'rekening', 'pemeliharaan'));
     }
 

@@ -145,6 +145,33 @@ use Laravolt\Avatar\Facade as Avatar;
                                 </div>
                             </div>
                             <div class="col-sm-4">
+                                <div class="card mt-3 bg-warning">
+                                    <div class="card-body text-white">
+                                        <h4 class="card-title text-white">Pajak Tahunan</h4>
+                                        <h4 class="text-center ">
+                                            <b>{{ $kendaraanData->total_pajak_tahunan ?? '0' }}x</b>
+                                        </h4>
+                                    </div>
+                                    <div class="card-footer bg-warning text-center">
+                                        <a href="/pajak-tahunan/{{ $kendaraanData->slug }}/show"
+                                            class="text-white">Detail <i class="bi bi-arrow-down-right-square"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="card mt-3" style="background-color: purple;">
+                                    <div class="card-body text-white">
+                                        <h4 class="card-title text-white">Pajak 5 Tahunan</h4>
+                                        <h4 class="text-center "><b>{{ $kendaraanData->total_pajak_plat ?? '0' }}x</b>
+                                        </h4>
+                                    </div>
+                                    <div class="card-footer text-center" style="background-color: purple;">
+                                        <a href="/pajak-plat/{{ $kendaraanData->slug }}/show" class="text-white">Detail
+                                            <i class="bi bi-arrow-down-right-square"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
                                 <div class="card mt-3 bg-danger">
                                     <div class="card-body text-white">
                                         <h4 class="card-title text-white">Pembelian BBM</h4>
@@ -157,12 +184,12 @@ use Laravolt\Avatar\Facade as Avatar;
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="card mt-3 bg-warning">
+                            <div class="col-sm-8">
+                                <div class="card mt-3 bg-success">
                                     <div class="card-body text-white">
                                         <h4 class="card-title text-white">Total Biaya</h4>
-                                        <h4 class="text-center ">
-                                            <b>{{ FormatHelper::formatRupiah($kendaraanData->pemeliharaan_sum_biaya + $kendaraanData->pengeluaran_bbm_sum_nominal) }}</b>
+                                        <h4 class=" ">
+                                            <b>{{ FormatHelper::formatRupiah($kendaraanData->pemeliharaan_sum_biaya + $kendaraanData->pengeluaran_bbm_sum_nominal + $kendaraanData->pajak_sum_nominal) }}</b>
                                         </h4>
 
                                     </div>
