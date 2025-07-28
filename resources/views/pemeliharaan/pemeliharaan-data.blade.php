@@ -90,8 +90,8 @@ use App\Helpers\FormatHelper;
                                         <!-- <td class="text-center">{{ $kendaraan->kendaraan->jenis }}</td> -->
                                         <td class="text-center">{{ $kendaraan->bengkel }}</td>
                                         <td
-                                            data-tanggal="{{ \Carbon\Carbon::parse($kendaraan->created_at)->format('Y-m-d') }}">
-                                            {{ FormatHelper::formatTanggal($kendaraan->created_at) }}
+                                            data-tanggal="{{ \Carbon\Carbon::parse($kendaraan->tanggal_pemeliharaan_sebelumnya)->format('Y-m-d') }}">
+                                            {{ FormatHelper::formatTanggal($kendaraan->tanggal_pemeliharaan_sebelumnya) }}
                                         </td>
                                         <td data-biaya="{{ $kendaraan->biaya }}">
                                             {{ FormatHelper::formatRupiah($kendaraan->biaya) }}

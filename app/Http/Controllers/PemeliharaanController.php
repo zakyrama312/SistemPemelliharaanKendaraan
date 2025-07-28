@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Carbon\Carbon;
 use App\Models\Keuangan;
 use App\Models\Rekening;
@@ -74,7 +75,7 @@ class PemeliharaanController extends Controller
     {
         $kendaraanData = Pemeliharaan::with('kendaraan')
             ->where('biaya', '!=', 0)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('tanggal_pemeliharaan_sebelumnya', 'desc')
             ->get();
         return view('pemeliharaan.pemeliharaan-data', compact('kendaraanData'));
     }
@@ -226,6 +227,7 @@ class PemeliharaanController extends Controller
             if ($transaksi) {
                 $transaksi->update([
                     'nominal' => $request->biaya,
+                    'tanggal' => $tanggal,
                     'saldo_setelah' => $rekening->saldo_akhir
                 ]);
             }

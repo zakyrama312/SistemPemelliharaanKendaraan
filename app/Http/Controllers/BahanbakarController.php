@@ -33,7 +33,7 @@ class BahanbakarController extends Controller
     {
         $kendaraanData = Bahanbakar::with('kendaraan')
             ->where('nominal', '!=', 0)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('tanggal_pengisian', 'desc')
             ->get();
         return view('bahanbakar.bahanbakar-data', compact('kendaraanData'));
     }
