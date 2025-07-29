@@ -11,7 +11,7 @@ use App\Helpers\FormatHelper;
         {{-- <h1>Data Rekening</h1> --}}
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/pemeliharaan">Kembali</a></li>
+                <li class="breadcrumb-item"><a href="/pajak-plat">Kembali</a></li>
                 <li class="breadcrumb-item active">Tambah Data Pajak Plat</li>
             </ol>
         </nav>

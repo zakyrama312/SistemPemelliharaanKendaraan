@@ -234,33 +234,34 @@ class PajakTahunanController extends Controller
             // Ambil data Pajak yang akan dihapus
             $pajakTahunan = Pajak::findOrFail($id);
 
-            // Ambil data rekening terkait
-            $rekening = Rekening::findOrFail($pajakTahunan->id_rekening);
+            // Cek dan ambil rekening hanya jika ID-nya ada
+            $rekening = null;
+            if ($pajakTahunan->id_rekening) {
+                $rekening = Rekening::find($pajakTahunan->id_rekening);
 
-            // Ambil data keuangan yang terkait dengan bahan bakar ini
+                // Kalau rekening ditemukan, kembalikan saldo
+                if ($rekening) {
+                    $rekening->saldo_akhir += $pajakTahunan->nominal;
+                    $rekening->save();
+                }
+            }
+
+            // Ambil data keuangan yang terkait
             $keuangan = Keuangan::where('id_sumber', $pajakTahunan->id)
                 ->where('sumber_transaksi', 'Pajak Tahunan')
                 ->first();
 
-            // Jika data keuangan ada, hapus dulu sebelum hapus bahan bakar
             if ($keuangan) {
                 $keuangan->delete();
             }
 
-            // Kembalikan saldo rekening dengan nominal bahan bakar yang dihapus
-            $rekening->saldo_akhir += $pajakTahunan->nominal;
-            $rekening->save();
-
-
-            // Hapus data bahan bakar
+            // Hapus data pajak tahunan
             $pajakTahunan->delete();
 
-            // Commit transaksi jika semuanya berhasil
             DB::commit();
 
-            return redirect()->back()->with('success', 'Data Pajak Tahunan berhasil dihapus dan saldo rekening diperbarui.');
+            return redirect()->back()->with('success', 'Data Pajak Tahunan berhasil dihapus.' . ($rekening ? ' Saldo rekening diperbarui.' : ''));
         } catch (\Exception $e) {
-            // Rollback jika ada kesalahan
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menghapus data Pajak Tahunan: ' . $e->getMessage());
         }

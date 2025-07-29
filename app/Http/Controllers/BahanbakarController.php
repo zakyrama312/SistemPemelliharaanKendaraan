@@ -250,44 +250,46 @@ class BahanbakarController extends Controller
         DB::beginTransaction();
 
         try {
-            // Ambil data bahan bakar yang akan dihapus
+            // Ambil data bahan bakar
             $bahanbakar = Bahanbakar::findOrFail($id);
 
-            // Ambil data rekening terkait
-            $rekening = Rekening::findOrFail($bahanbakar->id_rekening);
+            // Ambil rekening jika ada
+            $rekening = null;
+            if ($bahanbakar->id_rekening) {
+                $rekening = Rekening::find($bahanbakar->id_rekening);
+                if ($rekening) {
+                    $rekening->saldo_akhir += $bahanbakar->nominal;
+                    $rekening->save();
+                }
+            }
 
-            // Ambil data keuangan yang terkait dengan bahan bakar ini
+            // Ambil data keuangan yang terkait
             $keuangan = Keuangan::where('id_sumber', $bahanbakar->id)
                 ->where('sumber_transaksi', 'Pengeluaran BBM')
                 ->first();
 
-            // Jika data keuangan ada, hapus dulu sebelum hapus bahan bakar
             if ($keuangan) {
                 $keuangan->delete();
             }
 
-            // Kembalikan saldo rekening dengan nominal bahan bakar yang dihapus
-            $rekening->saldo_akhir += $bahanbakar->nominal;
-            $rekening->save();
-
             // Hapus foto struk jika ada
-            if ($bahanbakar->foto_struk && file_exists(public_path('strukImage/' . $bahanbakar->foto_struk))) {
-                unlink(public_path('strukImage/' . $bahanbakar->foto_struk));
+            $strukPath = public_path('strukImage/' . $bahanbakar->foto_struk);
+            if ($bahanbakar->foto_struk && file_exists($strukPath)) {
+                unlink($strukPath);
             }
 
             // Hapus data bahan bakar
             $bahanbakar->delete();
 
-            // Commit transaksi jika semuanya berhasil
             DB::commit();
 
-            return redirect()->back()->with('success', 'Data bahan bakar berhasil dihapus dan saldo rekening diperbarui.');
+            return redirect()->back()->with('success', 'Data bahan bakar berhasil dihapus.' . ($rekening ? ' Saldo rekening diperbarui.' : ''));
         } catch (\Exception $e) {
-            // Rollback jika ada kesalahan
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menghapus data bahan bakar: ' . $e->getMessage());
         }
     }
+
     public function print(Request $request, string $slug)
     {
         $kendaraan = Kendaraan::where('slug', $slug)->with('rekening', 'user')->firstOrFail();

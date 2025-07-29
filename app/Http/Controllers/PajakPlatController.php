@@ -225,36 +225,35 @@ class PajakPlatController extends Controller
         DB::beginTransaction();
 
         try {
-            // Ambil data Pajak yang akan dihapus
+            // Ambil data Pajak Plat yang akan dihapus
             $pajakPlat = Pajak::findOrFail($id);
 
-            // Ambil data rekening terkait
-            $rekening = Rekening::findOrFail($pajakPlat->id_rekening);
+            // Ambil data rekening terkait jika ada
+            $rekening = null;
+            if ($pajakPlat->id_rekening) {
+                $rekening = Rekening::find($pajakPlat->id_rekening);
+                if ($rekening) {
+                    $rekening->saldo_akhir += $pajakPlat->nominal;
+                    $rekening->save();
+                }
+            }
 
-            // Ambil data keuangan yang terkait dengan bahan bakar ini
+            // Ambil data keuangan yang terkait
             $keuangan = Keuangan::where('id_sumber', $pajakPlat->id)
                 ->where('sumber_transaksi', 'Pajak Plat')
                 ->first();
 
-            // Jika data keuangan ada, hapus dulu sebelum hapus bahan bakar
             if ($keuangan) {
                 $keuangan->delete();
             }
 
-            // Kembalikan saldo rekening dengan nominal bahan bakar yang dihapus
-            $rekening->saldo_akhir += $pajakPlat->nominal;
-            $rekening->save();
-
-
-            // Hapus data bahan bakar
+            // Hapus data pajak plat
             $pajakPlat->delete();
 
-            // Commit transaksi jika semuanya berhasil
             DB::commit();
 
-            return redirect()->back()->with('success', 'Data Pajak Plat berhasil dihapus dan saldo rekening diperbarui.');
+            return redirect()->back()->with('success', 'Data Pajak Plat berhasil dihapus.' . ($rekening ? ' Saldo rekening diperbarui.' : ''));
         } catch (\Exception $e) {
-            // Rollback jika ada kesalahan
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menghapus data Pajak Plat: ' . $e->getMessage());
         }

@@ -248,45 +248,44 @@ class PemeliharaanController extends Controller
      */
     public function destroy($id)
     {
-        // Gunakan transaction untuk memastikan data konsisten
         DB::beginTransaction();
 
         try {
-            // Ambil data pemeliharaan yang akan dihapus
+            // Ambil data pemeliharaan
             $pemeliharaan = Pemeliharaan::findOrFail($id);
 
-            // Ambil data kendaraan terkait
+            // Ambil data kendaraan
             $kendaraan = Kendaraan::where('id', $pemeliharaan->id_kendaraan)->first();
 
-            // Ambil data rekening terkait
-            $rekening = Rekening::findOrFail($pemeliharaan->id_rekening);
+            // Ambil rekening jika ada
+            $rekening = null;
+            if ($pemeliharaan->id_rekening) {
+                $rekening = Rekening::find($pemeliharaan->id_rekening);
+                if ($rekening) {
+                    $rekening->saldo_akhir += $pemeliharaan->biaya;
+                    $rekening->save();
+                }
+            }
 
-            // Ambil data keuangan yang terkait dengan pemeliharaan ini
+            // Ambil data keuangan yang terkait
             $keuangan = Keuangan::where('id_sumber', $pemeliharaan->id)
                 ->where('sumber_transaksi', 'Pemeliharaan')
                 ->first();
 
-            // Jika ada data di keuangan, hapus terlebih dahulu
             if ($keuangan) {
                 $keuangan->delete();
             }
 
-            // Kembalikan biaya pemeliharaan ke saldo rekening
-            $rekening->saldo_akhir += $pemeliharaan->biaya;
-            $rekening->save();
-
             // Hapus data pemeliharaan
             $pemeliharaan->delete();
 
-            // Commit transaksi jika semuanya berhasil
             DB::commit();
 
             return redirect('pemeliharaan/' . $kendaraan->slug . '/show')
-                ->with('success', 'Data pemeliharaan berhasil dihapus dan saldo rekening diperbarui.');
+                ->with('success', 'Data pemeliharaan berhasil dihapus.' . ($rekening ? ' Saldo rekening diperbarui.' : ''));
         } catch (\Exception $e) {
-            // Rollback jika ada kesalahan
             DB::rollBack();
-            return redirect('pemeliharaan/' . $kendaraan->slug . '/show')
+            return redirect('pemeliharaan/' . ($kendaraan->slug ?? '-') . '/show')
                 ->with('error', 'Gagal menghapus data pemeliharaan: ' . $e->getMessage());
         }
     }
