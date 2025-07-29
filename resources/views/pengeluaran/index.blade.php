@@ -57,8 +57,8 @@ use App\Helpers\FormatHelper;
                                         <th class="border border-gray-400 px-4 py-2">Nomor Polisi</th>
                                         <th class="border border-gray-400 px-4 py-2">Tanggal Pengeluaran</th>
                                         <th class="border border-gray-400 px-4 py-2">Jenis Transaksi</th>
-                                        <th class="border border-gray-400 px-4 py-2">Nominal</th>
-                                        <!-- <th class="border border-gray-400 px-4 py-2 text-center">Aksi</th> -->
+                                        <th class="border border-gray-400 px-4 py-2" style="width: 150px;">Nominal</th>
+                                        <th class="border border-gray-400 px-4 py-2">Rekening</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -73,6 +73,7 @@ use App\Helpers\FormatHelper;
                                         <td data-nominal="{{ $p->nominal }}">
                                             {{ FormatHelper::formatRupiah($p->nominal) }}
                                         </td>
+                                        <td>{{ $p->nama_rekening }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -83,6 +84,8 @@ use App\Helpers\FormatHelper;
                                         <th></th>
                                         <th style="text-align:right">Total</th>
                                         <th id="totalNominal">Rp 0</th>
+                                        <th></th>
+
                                     </tr>
                                 </tfoot>
                             </table>

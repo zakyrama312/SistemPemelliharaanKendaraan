@@ -9,7 +9,6 @@ class KeuanganController extends Controller
 {
     public function index()
     {
-
         $keuangan = DB::query()
             ->fromSub(
                 DB::table('keuangan')
@@ -17,8 +16,9 @@ class KeuanganController extends Controller
                         $join->on('keuangan.id_sumber', '=', 'pajak.id')
                             ->whereIn('keuangan.sumber_transaksi', ['Pajak Tahunan', 'Pajak Plat']);
                     })
+                    ->join('rekening', 'keuangan.id_rekening', '=', 'rekening.id')
                     ->join('kendaraan', 'pajak.id_kendaraan', '=', 'kendaraan.id')
-                    ->select('keuangan.*', 'kendaraan.no_polisi', 'kendaraan.merk', 'kendaraan.model')
+                    ->select('keuangan.*', 'rekening.nama_rekening', 'kendaraan.no_polisi', 'kendaraan.merk', 'kendaraan.model')
 
                     ->union(
                         DB::table('keuangan')
@@ -26,8 +26,9 @@ class KeuanganController extends Controller
                                 $join->on('keuangan.id_sumber', '=', 'pengeluaran_bbm.id')
                                     ->where('keuangan.sumber_transaksi', '=', 'Pengeluaran BBM');
                             })
+                            ->join('rekening', 'keuangan.id_rekening', '=', 'rekening.id')
                             ->join('kendaraan', 'pengeluaran_bbm.id_kendaraan', '=', 'kendaraan.id')
-                            ->select('keuangan.*', 'kendaraan.no_polisi', 'kendaraan.merk', 'kendaraan.model')
+                            ->select('keuangan.*', 'rekening.nama_rekening', 'kendaraan.no_polisi', 'kendaraan.merk', 'kendaraan.model')
                     )
 
                     ->union(
@@ -36,8 +37,9 @@ class KeuanganController extends Controller
                                 $join->on('keuangan.id_sumber', '=', 'pemeliharaan.id')
                                     ->where('keuangan.sumber_transaksi', '=', 'Pemeliharaan');
                             })
+                            ->join('rekening', 'keuangan.id_rekening', '=', 'rekening.id')
                             ->join('kendaraan', 'pemeliharaan.id_kendaraan', '=', 'kendaraan.id')
-                            ->select('keuangan.*', 'kendaraan.no_polisi', 'kendaraan.merk', 'kendaraan.model')
+                            ->select('keuangan.*', 'rekening.nama_rekening', 'kendaraan.no_polisi', 'kendaraan.merk', 'kendaraan.model')
                     ),
                 'keuangan_union'
             )
