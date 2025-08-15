@@ -71,105 +71,15 @@ class PemeliharaanController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function data(Request $request)
+    public function data()
     {
-        // 1. Ambil semua parameter dari request
-        $mode = $request->input('mode', 'periode');
-        $month = $request->input('month', now()->month);
-        $year = $request->input('year', now()->year);
-        $year2 = $request->input('year2', now()->year - 1);
-
-        // Menyesuaikan input name yang berbeda dari form
-        if ($mode === 'compare_year') {
-            $month = $request->input('month_cy', $month);
-            $year = $request->input('year_cy', $year);
-            $year2 = $request->input('year2_cy', $year2);
-        }
-
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-
-        // 2. Inisialisasi variabel (gunakan collect() agar aman)
-        $dataA = collect();
-        $summaryA = ['total_biaya' => 0, 'jumlah_servis' => 0];
-        $labelA = 'Laporan';
-
-        $dataB = collect();
-        $summaryB = ['total_biaya' => 0, 'jumlah_servis' => 0];
-        $labelB = '';
-
-        // 3. Logika untuk setiap mode filter
-        if ($mode === 'compare_month') {
-            // Ambil dari request form baru
-            $monthA = $request->input('month_a', now()->month);
-            $yearA  = $request->input('year_a', now()->year);
-            $monthB = $request->input('month_b', now()->subMonth()->month);
-            $yearB  = $request->input('year_b', now()->subMonth()->year);
-
-            // Buat objek Carbon untuk label
-            $dateA = Carbon::createFromDate($yearA, $monthA, 1);
-            $dateB = Carbon::createFromDate($yearB, $monthB, 1);
-
-            // Ambil data
-            $dataA = $this->getDataForMonth($dateA->year, $dateA->month);
-            $dataB = $this->getDataForMonth($dateB->year, $dateB->month);
-
-            // Label untuk ditampilkan di view
-            $labelA = $dateA->isoFormat('MMMM YYYY');
-            $labelB = $dateB->isoFormat('MMMM YYYY');
-        } elseif ($mode === 'compare_year') {
-            $dateA = Carbon::createFromDate($year, $month, 1);
-            $dateB = Carbon::createFromDate($year2, $month, 1);
-            $dataA = $this->getDataForMonth($dateA->year, $dateA->month);
-            $dataB = $this->getDataForMonth($dateB->year, $dateB->month);
-            $labelA = $dateA->isoFormat('MMMM YYYY');
-            $labelB = $dateB->isoFormat('MMMM YYYY');
-        } else { // Mode 'periode' atau default
-            $query = Pemeliharaan::with('kendaraan')->where('biaya', '!=', 0);
-            if ($startDate && $endDate) {
-                $query->whereBetween('tanggal_pemeliharaan_sebelumnya', [$startDate, $endDate]);
-                $labelA = 'Periode ' . Carbon::parse($startDate)->isoFormat('D MMM YYYY') . ' - ' . Carbon::parse($endDate)->isoFormat('D MMM YYYY');
-            } else {
-                $labelA = 'Semua Periode';
-            }
-            $dataA = $query->orderBy('tanggal_pemeliharaan_sebelumnya', 'desc')->get();
-        }
-
-        // 4. Hitung summary untuk setiap set data
-        if ($dataA->isNotEmpty()) {
-            $summaryA = [
-                'total_biaya' => $dataA->sum('biaya'),
-                'jumlah_servis' => $dataA->count()
-            ];
-        }
-        if ($dataB->isNotEmpty()) {
-            $summaryB = [
-                'total_biaya' => $dataB->sum('biaya'),
-                'jumlah_servis' => $dataB->count()
-            ];
-        }
-
-        // 5. Kirim semua data yang dibutuhkan ke view
-        return view('pemeliharaan.pemeliharaan-data', compact(
-            'mode', // ← variabel $mode dikirim
-            'dataA',
-            'summaryA',
-            'labelA',
-            'dataB',
-            'summaryB',
-            'labelB'
-        ));
-    }
-
-    private function getDataForMonth($year, $month)
-    {
-        return Pemeliharaan::with('kendaraan')
+        $kendaraanData = Pemeliharaan::with('kendaraan')
             ->where('biaya', '!=', 0)
-            ->whereYear('tanggal_pemeliharaan_sebelumnya', $year)
-            ->whereMonth('tanggal_pemeliharaan_sebelumnya', $month)
             ->orderBy('tanggal_pemeliharaan_sebelumnya', 'desc')
             ->get();
+        return view('pemeliharaan.pemeliharaan-data', compact('kendaraanData'));
     }
+
     /**
      * Store a newly created resource in storage.
      */

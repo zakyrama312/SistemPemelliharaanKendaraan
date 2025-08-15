@@ -26,7 +26,7 @@ use App\Helpers\FormatHelper;
                         <h5 class="card-title">Tambah Pajak Plat</h5>
 
                         <!-- General Form Elements -->
-                        <form action="{{ route('pajak-plat.store') }}" method="POST">
+                        <form action="{{ route('pajak-plat.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="row mb-3">
                                 <label for="inputText" class="col-sm-2 col-form-label">Kendaraan </label>
@@ -87,7 +87,16 @@ use App\Helpers\FormatHelper;
                                     <div class=" invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                             </div>
-
+                            <div class="row mb-3">
+                                <label for="inputEmail" class="col-sm-2 col-form-label">Foto Struk</label>
+                                <div class="col-sm-10">
+                                    <input type="file" class="form-control @error('foto_struk') is-invalid @enderror"
+                                        name="foto_struk" value="{{ old('foto_struk') }}">
+                                    @error('foto_struk')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="row mb-3">
                                 <label for="inputEmail" class="col-sm-2 col-form-label">Biaya <sup
                                         class="text-danger">*</sup></label>
@@ -139,6 +148,7 @@ use App\Helpers\FormatHelper;
                                     <tr>
                                         <th class="border border-gray-400 px-4 py-2">No.</th>
                                         <th class="border border-gray-400 px-4 py-2">Masa Aktif</th>
+                                        <th class="border border-gray-400 px-4 py-2">Foto Struk</th>
                                         <th class="border border-gray-400 px-4 py-2">Biaya</th>
                                         <th class="border border-gray-400 px-4 py-2">Aksi</th>
                                     </tr>
@@ -148,6 +158,16 @@ use App\Helpers\FormatHelper;
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ FormatHelper::formatTanggal($pm->masa_berlaku) }}</td>
+                                        <td>
+                                            @if ($pm->foto_struk != null)
+                                            <a href="{{ asset('strukPajak/' . $pm->foto_struk) }}"
+                                                data-lightbox="gallery">
+                                                <img src="{{ asset('strukPajak/' . $pm->foto_struk) }}" width="100">
+                                            </a>
+                                            @else
+                                            <span>-</span>
+                                            @endif
+                                        </td>
                                         <td>{{ FormatHelper::formatRupiah($pm->nominal) }}</td>
                                         <td class="text-center">
                                             <a href="#" data-bs-toggle="modal"

@@ -9,6 +9,8 @@ use App\Models\Rekening;
 use App\Models\Kendaraan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class PajakPlatController extends Controller
 {
@@ -104,9 +106,27 @@ class PajakPlatController extends Controller
 
             $masaBerlaku = Carbon::createFromFormat('d/m/Y', $request->masa_berlaku)->format('Y-m-d');
 
+            // Proses upload gambar
+            $fotoPath = null;
+            if ($request->hasFile('foto_struk')) {
+                $file = $request->file('foto_struk');
+                $filename = time() . '.jpg';
+
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($file)
+                    ->scale(width: 800)
+                    ->toJpeg(75);
+
+                $image->save(public_path("strukPajak/{$filename}"));
+                $fotoPath = "{$filename}";
+                // $savePath = $_SERVER['DOCUMENT_ROOT'] . "/strukPajak/{$filename}";
+                // $image->save($savePath);
+                // $fotoPath = "{$filename}";
+            }
             $pajak = Pajak::create([
                 'id_kendaraan' => $request->id_kendaraan,
                 'id_rekening' => $request->id_rekening,
+                'foto_struk' => $fotoPath,
                 'masa_berlaku' => $masaBerlaku,
                 'jenis_pajak' => 'pajak_plat',
                 'nominal' => $request->biaya
@@ -197,7 +217,32 @@ class PajakPlatController extends Controller
 
             $masaBerlaku = Carbon::createFromFormat('d/m/Y', $request->masa_berlaku)->format('Y-m-d');
 
+            // Update foto struk jika ada yang baru
+            $fotoPath = $pajakPlat->foto_struk;
+            if ($request->hasFile('foto_struk')) {
+                $file = $request->file('foto_struk');
+                $filename = time() . '.jpg';
+
+                // Hapus foto lama jika ada
+                if ($pajakPlat->foto_struk && file_exists(public_path('strukPajak/' . $pajakPlat->foto_struk))) {
+                    unlink(public_path('strukPajak/' . $pajakPlat->foto_struk));
+                    // unlink($_SERVER['DOCUMENT_ROOT'] . '/strukImage/' . $pajakPlat->foto_struk);
+                }
+
+                // Simpan foto baru
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($file)
+                    ->scale(width: 800)
+                    ->toJpeg(75);
+                $image->save(public_path("strukPajak/{$filename}"));
+                $fotoPath = "{$filename}";
+                // $savePath = $_SERVER['DOCUMENT_ROOT'] . "/strukPajak/{$filename}";
+                // $image->save($savePath);
+                // $fotoPath = "{$filename}";
+            }
+
             $pajakPlat->update([
+                'foto_struk' => $fotoPath,
                 'masa_berlaku' => $masaBerlaku,
                 'nominal' => $request->biaya
             ]);

@@ -51,9 +51,9 @@ use Carbon\Carbon;
                         <label for="inputEmail" class="col-sm-2 col-form-label">Jumlah Liter <sup
                                 class="text-danger">*</sup></label>
                         <div class="col-sm-3">
-                            <input type="number" min="1" class="form-control @error('jumlah_liter') is-invalid @enderror"
-                                name="jumlah_liter" id="jumlah_liter_edit"
-                                value="{{ old('jumlah_liter', $pm->jumlah_liter) }}">
+                            <input type="number" min="1"
+                                class="form-control @error('jumlah_liter') is-invalid @enderror" name="jumlah_liter"
+                                id="jumlah_liter_edit" value="{{ old('jumlah_liter', $pm->jumlah_liter) }}">
 
                             @error('jumlah_liter')
                             <div class="invalid-feedback">{{ $message }}</div>

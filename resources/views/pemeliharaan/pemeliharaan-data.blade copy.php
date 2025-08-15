@@ -51,6 +51,32 @@ use Carbon\Carbon;
     .bg-perbedaan.minus {
         background-color: #dc3545;
     }
+
+    /* Style untuk pesan data kosong */
+    .empty-data-message {
+        text-align: center;
+        padding: 3rem 1rem;
+        background-color: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+
+    .empty-data-message i {
+        font-size: 3rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+
+    .empty-data-message h5 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-data-message p {
+        color: #6c757d;
+        margin: 0;
+    }
 </style>
 
 <main id="main" class="main">
@@ -70,12 +96,9 @@ use Carbon\Carbon;
                                 <div class="col-md-3">
                                     <label for="mode" class="form-label">Pilih Jenis Laporan</label>
                                     <select class="form-select" id="mode" name="mode">
-                                        <option value="periode" @if($mode=='periode' ) selected @endif>Periode Tertentu
-                                        </option>
-                                        <option value="compare_month" @if($mode=='compare_month' ) selected @endif>
-                                            Perbandingan Bulan ke Bulan</option>
-                                        <option value="compare_year" @if($mode=='compare_year' ) selected @endif>
-                                            Perbandingan Bulan di Tahun Berbeda</option>
+                                        <option value="periode" @if($mode=='periode' ) selected @endif>Periode Tertentu</option>
+                                        <option value="compare_month" @if($mode=='compare_month' ) selected @endif>Perbandingan Bulan ke Bulan</option>
+                                        <option value="compare_year" @if($mode=='compare_year' ) selected @endif>Perbandingan Bulan di Tahun Berbeda</option>
                                     </select>
                                 </div>
 
@@ -83,47 +106,27 @@ use Carbon\Carbon;
                                 <div id="filter-periode" class="col-md-6 row">
                                     <div class="col-md-6">
                                         <label for="start_date" class="form-label">Tanggal Mulai</label>
-                                        <input type="date" id="start_date" name="start_date" class="form-control"
-                                            value="{{ request('start_date') }}">
+                                        <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request('start_date') }}">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="end_date" class="form-label">Tanggal Selesai</label>
-                                        <input type="date" id="end_date" name="end_date" class="form-control"
-                                            value="{{ request('end_date') }}">
+                                        <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request('end_date') }}">
                                     </div>
                                 </div>
 
                                 {{-- Filter untuk Perbandingan Bulan ke Bulan --}}
-                                <div id="filter-compare-month" class="col-md-8 row">
-                                    <div class="col-md-3">
-                                        <label for="month_a" class="form-label">Bulan Periode A</label>
-                                        <select class="form-select" name="month_a" id="month_a">
+                                <div id="filter-compare-month" class="col-md-4 row">
+                                    <div class="col-md-7">
+                                        <label for="month_cm" class="form-label">Pilih Bulan</label>
+                                        <select class="form-select" name="month" id="month_cm">
                                             @for ($i = 1; $i <= 12; $i++)
-                                                <option value="{{ $i }}" {{ request('month_a', date('m')) == $i ? 'selected' : '' }}>
-                                                {{ Carbon::create()->month($i)->isoFormat('MMMM') }}
-                                                </option>
+                                                <option value="{{ $i }}" {{ request('month', date('m')) == $i ? 'selected' : '' }}>{{ Carbon::create()->month($i)->isoFormat('MMMM') }}</option>
                                                 @endfor
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label for="year_a" class="form-label">Tahun Periode A</label>
-                                        <input type="number" name="year_a" id="year_a" class="form-control"
-                                            value="{{ request('year_a', date('Y')) }}">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="month_b" class="form-label">Bulan Periode B</label>
-                                        <select class="form-select" name="month_b" id="month_b">
-                                            @for ($i = 1; $i <= 12; $i++)
-                                                <option value="{{ $i }}" {{ request('month_b', date('m')-1) == $i ? 'selected' : '' }}>
-                                                {{ Carbon::create()->month($i)->isoFormat('MMMM') }}
-                                                </option>
-                                                @endfor
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="year_b" class="form-label">Tahun Periode B</label>
-                                        <input type="number" name="year_b" id="year_b" class="form-control"
-                                            value="{{ request('year_b', date('Y')) }}">
+                                    <div class="col-md-5">
+                                        <label for="year_cm" class="form-label">Tahun</label>
+                                        <input type="number" name="year" id="year_cm" class="form-control" value="{{ request('year', date('Y')) }}" placeholder="Tahun">
                                     </div>
                                 </div>
 
@@ -132,26 +135,23 @@ use Carbon\Carbon;
                                     <div class="col-md-4">
                                         <label for="month_cy" class="form-label">Pilih Bulan</label>
                                         <select class="form-select" name="month_cy" id="month_cy">
-                                            @for ($i = 1; $i <= 12; $i++) <option value="{{ $i }}"
-                                                {{ request('month', date('m')) == $i ? 'selected' : '' }}>
-                                                {{ Carbon::create()->month($i)->isoFormat('MMMM') }}</option>
+                                            @for ($i = 1; $i <= 12; $i++)
+                                                <option value="{{ $i }}" {{ request('month', date('m')) == $i ? 'selected' : '' }}>{{ Carbon::create()->month($i)->isoFormat('MMMM') }}</option>
                                                 @endfor
                                         </select>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="year1_cy" class="form-label">Tahun 1</label>
-                                        <input type="number" name="year_cy" id="year1_cy" class="form-control"
-                                            value="{{ request('year', date('Y')) }}" placeholder="Tahun 1">
+                                        <input type="number" name="year_cy" id="year1_cy" class="form-control" value="{{ request('year', date('Y')) }}" placeholder="Tahun 1">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="year2_cy" class="form-label">Tahun 2</label>
-                                        <input type="number" name="year2_cy" id="year2_cy" class="form-control"
-                                            value="{{ request('year2', date('Y')-1) }}" placeholder="Tahun 2">
+                                        <input type="number" name="year2_cy" id="year2_cy" class="form-control" value="{{ request('year2', date('Y')-1) }}" placeholder="Tahun 2">
                                     </div>
                                 </div>
 
                                 <div class="col-md-2">
-                                    <button type="submit" class="btn btn-primary w-100 mt-2">Tampilkan</button>
+                                    <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
                                 </div>
                             </div>
                         </form>
@@ -160,6 +160,16 @@ use Carbon\Carbon;
 
                         {{-- TAMPILAN HASIL --}}
                         @if ($mode === 'compare_month' || $mode === 'compare_year')
+                        {{-- CEK APAKAH ADA DATA UNTUK PERBANDINGAN --}}
+                        @if($dataA->isEmpty() && $dataB->isEmpty())
+                        {{-- PESAN KETIKA KEDUA DATA KOSONG --}}
+                        <div class="empty-data-message">
+                            <i class="bi bi-inbox"></i>
+                            <h5>Tidak Ada Data Pemeliharaan</h5>
+                            <p>Tidak ditemukan data pemeliharaan untuk periode {{ $labelA }} dan {{ $labelB }}.</p>
+                            <p class="mt-2"><small>Silakan pilih periode lain atau pastikan data sudah diinput dengan benar.</small></p>
+                        </div>
+                        @else
                         {{-- BAGIAN RINGKASAN PERBANDINGAN --}}
                         <h5 class="card-title">Ringkasan Perbandingan: {{ $labelA }} vs {{ $labelB }}</h5>
                         @php
@@ -188,19 +198,42 @@ use Carbon\Carbon;
                         <div class="row">
                             <div class="col-lg-6">
                                 <h5 class="card-title">{{ $labelA }}</h5>
+                                @if($dataA->isEmpty())
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle"></i>
+                                    Tidak ada data pemeliharaan untuk periode {{ $labelA }}
+                                </div>
+                                @else
                                 @include('pemeliharaan._tabel_pemeliharaan', ['data' => $dataA, 'tableId' => 'tableA'])
+                                @endif
                             </div>
                             <div class="col-lg-6">
                                 <h5 class="card-title">{{ $labelB }}</h5>
+                                @if($dataB->isEmpty())
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle"></i>
+                                    Tidak ada data pemeliharaan untuk periode {{ $labelB }}
+                                </div>
+                                @else
                                 @include('pemeliharaan._tabel_pemeliharaan', ['data' => $dataB, 'tableId' => 'tableB'])
+                                @endif
                             </div>
                         </div>
+                        @endif
 
                         @else
                         {{-- Tampilan Laporan Periode Biasa --}}
+                        @if($dataA->isEmpty())
+                        <div class="empty-data-message">
+                            <i class="bi bi-inbox"></i>
+                            <h5>Tidak Ada Data Pemeliharaan</h5>
+                            <p>Tidak ditemukan data pemeliharaan untuk {{ $labelA }}.</p>
+                            <p class="mt-2"><small>Silakan pilih periode lain atau pastikan data sudah diinput dengan benar.</small></p>
+                        </div>
+                        @else
                         <h5 class="card-title">{{ $labelA }}</h5>
-                        @include('pemeliharaan._tabel_pemeliharaan', ['data' => $dataA, 'tableId' =>
-                        'tablePemeliharaan'])
+                        @include('pemeliharaan._tabel_pemeliharaan', ['data' => $dataA, 'tableId' => 'tablePemeliharaan'])
+                        @endif
                         @endif
 
                     </div>
